@@ -67,8 +67,8 @@ public class Seeker extends SpaceEntity {
         // Define movement variables for the seeker
         maxAcceleration = 30.0f;
         maxVelocity = 50.0f;
-        maxAngularVelocity = 800.0f;
-        maxAngularAcceleration = 800.0f;
+        maxAngularVelocity = 150.0f;
+        maxAngularAcceleration = 300.0f;
 
         mRadius = DEFAULT_RADIUS; //(int)(Math.random() * 80+50);
         mMass = 10.0f;

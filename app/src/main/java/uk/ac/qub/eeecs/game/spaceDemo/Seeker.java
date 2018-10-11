@@ -7,6 +7,7 @@ import uk.ac.qub.eeecs.gage.util.MathsHelper;
 import uk.ac.qub.eeecs.gage.util.SteeringBehaviours;
 import uk.ac.qub.eeecs.gage.util.Vector2;
 
+
 /**
  * AI controlled spaceship that will seek towards the player.
  *
@@ -24,7 +25,7 @@ public class Seeker extends SpaceEntity {
     /**
      * Default size for the Seeker
      */
-    private static final float DEFAULT_RADIUS = 20;
+    private static final float DEFAULT_RADIUS =(int) (Math.random()*65+30);
 
     /**
      * Distance at which the spaceship should avoid other game objects
@@ -69,7 +70,7 @@ public class Seeker extends SpaceEntity {
         maxAngularVelocity = 150.0f;
         maxAngularAcceleration = 300.0f;
 
-        mRadius = DEFAULT_RADIUS;
+        mRadius = DEFAULT_RADIUS; //(int)(Math.random() * 80+50);
         mMass = 10.0f;
 
         // Define the appearance of the seeker

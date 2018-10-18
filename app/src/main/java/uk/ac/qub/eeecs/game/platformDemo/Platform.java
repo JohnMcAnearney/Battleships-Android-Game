@@ -1,9 +1,12 @@
 package uk.ac.qub.eeecs.game.platformDemo;
 
+import java.util.Vector;
+
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.util.GraphicsHelper;
+import uk.ac.qub.eeecs.gage.util.Vector2;
 import uk.ac.qub.eeecs.gage.world.GameObject;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.gage.world.LayerViewport;
@@ -95,6 +98,9 @@ public class Platform extends GameObject {
      * @param screenViewport Screen viewport
      */
     @Override
+
+
+
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D,
                      LayerViewport layerViewport, ScreenViewport screenViewport) {
 
@@ -128,6 +134,7 @@ public class Platform extends GameObject {
                         graphics2D
                                 .drawBitmap(mBitmap, drawSourceRect, drawScreenRect, null);
                     }
+
                 }
         }
     }

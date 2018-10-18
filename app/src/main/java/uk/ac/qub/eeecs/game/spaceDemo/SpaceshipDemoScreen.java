@@ -38,8 +38,8 @@ public class SpaceshipDemoScreen extends GameScreen {
     /**
      * Width and height of the level
      */
-    private final float LEVEL_WIDTH = 1000.0f;
-    private final float LEVEL_HEIGHT = 1000.0f;
+    private final float LEVEL_WIDTH = (1000.0f)*2;      //simply doubled the size of the level by using multiplication (40203900)
+    private final float LEVEL_HEIGHT = (1000.0f)*2;
 
     /**
      * Define a viewport for the game objects (spaceships, asteroids)
@@ -59,9 +59,9 @@ public class SpaceshipDemoScreen extends GameScreen {
     /**
      * Define the number of objects in the game world
      */
-    private final int NUM_ASTEROIDS = 20;
-    private final int NUM_SEEKERS = 20;
-    private final int NUM_TURRETS = 10;
+    private final int NUM_ASTEROIDS = (20*4);   //simply quadrupled the number of the objects by using multiplication (40203900)
+    private final int NUM_SEEKERS = (20*4);
+    private final int NUM_TURRETS = (10*4);
 
     /**
      * Define storage for the space entities (non-player)
@@ -273,7 +273,7 @@ public class SpaceshipDemoScreen extends GameScreen {
         AudioManager audioManager = getGame().getAudioManager();
         if(!audioManager.isMusicPlaying())
             audioManager.playMusic(
-                    getGame().getAssetManager().getMusic("SpaceBackgroundMusic"));
+                    getGame().getAssetManager().getMusic("RickRoll"));  //added a new song asset in the .json folder and called it "RickRoll"
     }
 
     /**

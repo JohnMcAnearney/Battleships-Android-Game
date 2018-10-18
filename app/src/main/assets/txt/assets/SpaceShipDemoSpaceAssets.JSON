@@ -39,6 +39,12 @@
       "type": "Music",
       "name": "SpaceBackgroundMusic",
       "file": "sound/InPursuitOfSilence.mp3"
+    },
+    {
+      "type": "Music",
+      "name": "RickRoll",
+      "file": "sound/Rick Astley - Never Gonna Give You Up.mp3"
     }
+
   ]
 }

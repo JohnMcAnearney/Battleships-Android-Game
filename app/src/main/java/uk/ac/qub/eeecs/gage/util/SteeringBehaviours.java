@@ -50,16 +50,16 @@ public class SteeringBehaviours {
         // Return if the body has reached the target
         if (targetPosition.x == fleeingSprite.position.x
                 && targetPosition.y == fleeingSprite.position.y) {
-            acceleration.set(Vector2.Zero);
-        } else {
-
-            // Determine the seeking direction
-            acceleration.set(fleeingSprite.position.x - targetPosition.x,
-                    fleeingSprite.position.y - targetPosition.y);
+            acceleration.set(fleeingSprite.position.x + targetPosition.x,
+                    fleeingSprite.position.y + targetPosition.y);
             acceleration.normalise();
             acceleration.multiply(fleeingSprite.maxAcceleration);
+        } else {
+            // Determine the fleeing direction
+            acceleration.set(Vector2.Zero);
         }
     }
+
 
     // /////////////////////////////////////////////////////////////////////////
     // Arrive

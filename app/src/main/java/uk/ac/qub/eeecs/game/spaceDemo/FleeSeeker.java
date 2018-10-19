@@ -7,30 +7,17 @@ import uk.ac.qub.eeecs.gage.util.MathsHelper;
 import uk.ac.qub.eeecs.gage.util.SteeringBehaviours;
 import uk.ac.qub.eeecs.gage.util.Vector2;
 
-
-/**
- * AI controlled spaceship that will seek towards the player.
- *
- * Note: See the course documentation for extension/refactoring stories
- * for this class.
- *
- * @version 1.0
- */
-public class Seeker extends SpaceEntity {
-
-    // /////////////////////////////////////////////////////////////////////////
-    // Properties
-    // /////////////////////////////////////////////////////////////////////////
+public class FleeSeeker extends SpaceEntity {
 
     /**
      * Default size for the Seeker
      */
-    private static final float DEFAULT_RADIUS =(int) (Math.random()*20)+30;
+    private static final float DEFAULT_RADIUS =40;
 
     /**
      * Distance at which the spaceship should avoid other game objects
      */
-    private float mSeparateThreshold = 75.0f;
+    private float mSeparateThreshold = 85.0f;
 
     /**
      * Accumulators used to build up the net steering outcome
@@ -61,20 +48,20 @@ public class Seeker extends SpaceEntity {
      * @param startY        y location of the AI spaceship
      * @param gameScreen    Gamescreen to which AI belongs
      */
-    public Seeker(float startX, float startY, SpaceshipDemoScreen gameScreen) {
+    public FleeSeeker(float startX, float startY, SpaceshipDemoScreen gameScreen) {
         super(startX, startY, DEFAULT_RADIUS*2.0f, DEFAULT_RADIUS*2.0f, null, gameScreen);
 
         // Define movement variables for the seeker
-        maxAcceleration = 30.0f;
-        maxVelocity = 50.0f;
-        maxAngularVelocity = 300.0f;
-        maxAngularAcceleration = 400.0f;
+        maxAcceleration = 75.0f;
+        maxVelocity = 60.0f;
+        maxAngularVelocity = 175.0f;
+        maxAngularAcceleration = 325.0f;
 
-        mRadius = DEFAULT_RADIUS; //(int)(Math.random() * 80+50);
+        mRadius = DEFAULT_RADIUS;
         mMass = 10.0f;
 
         // Define the appearance of the seeker
-        mBitmap = gameScreen.getGame().getAssetManager().getBitmap("Spaceship2");
+        mBitmap = gameScreen.getGame().getAssetManager().getBitmap("Spaceship3");
 
         // Create an offset for the movement emitter based on the size of the spaceship
         movementEmitterOffset = new Vector2(-DEFAULT_RADIUS, 0.0f);
@@ -102,10 +89,13 @@ public class Seeker extends SpaceEntity {
     @Override
     public void update(ElapsedTime elapsedTime) {
 
-        // Seek towards the player
-        SteeringBehaviours.seek(this,
+        // Flee the player
+        SteeringBehaviours.flee(this,
                 ((SpaceshipDemoScreen) mGameScreen).getPlayerSpaceship().position,
                 acceleration);
+        //SteeringBehaviours.seek(this,
+        // ((SpaceshipDemoScreen) mGameScreen).getPlayerSpaceship().position,
+        //acceleration);
 
         // Try to avoid a collision with the player ship
         SteeringBehaviours.separate(this,
@@ -113,10 +103,10 @@ public class Seeker extends SpaceEntity {
                 mSeparateThreshold, 1.0f, mAccComponent);
         mAccAccumulator.set(mAccComponent);
 
-        // Try to avoid a collision with the other space entities
         SteeringBehaviours.separate(this,
                 ((SpaceshipDemoScreen) mGameScreen).getSpaceEntities(),
-                mSeparateThreshold, 1.0f, mAccComponent);
+                // Try to avoid a collision with the other space entities
+                mSeparateThreshold, 0.0f, mAccComponent);
         mAccAccumulator.add(mAccComponent);
 
         // If we are trying to avoid a collision then combine

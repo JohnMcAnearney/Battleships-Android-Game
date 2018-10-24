@@ -43,6 +43,10 @@ public class Asteroid extends SpaceEntity {
         mBitmap = gameScreen.getGame().getAssetManager()
                 .getBitmap(random.nextBoolean() ? "Asteroid1" : "Asteroid2");
 
+        mBitmap = gameScreen.getGame().getAssetManager()
+                .getBitmap(random.nextBoolean() ? "Asteriod3" : "Asteriod4");
+
+
         mRadius = DEFAULT_RADIUS;
         mMass = 1000.0f;
 

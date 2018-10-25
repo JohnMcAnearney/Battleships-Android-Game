@@ -22,7 +22,7 @@ public class Asteroid extends SpaceEntity {
     /**
      * Default size for the asteroid
      */
-    private static final float DEFAULT_RADIUS = 20;
+    private static final float DEFAULT_RADIUS = (float) (20f+(Math.random()*50f));
 
     // /////////////////////////////////////////////////////////////////////////
     // Constructors

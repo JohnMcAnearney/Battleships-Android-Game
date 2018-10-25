@@ -170,14 +170,40 @@ public class ViewportDemoScreen extends GameScreen {
         assetManager.loadAndAddBitmap("Platform", "img/Platform1.png");
 
         Random random = new Random();
-        for (int idx = 0; idx < NUM_GAMEOBJECTS; idx++) {
-            GameObject platform = new GameObject(
-                    random.nextInt((int) WORLD_WIDTH), random.nextInt((int) WORLD_HEIGHT),
-                    GAMEOBJECT_WIDTH, GAMEOBJECT_HEIGHT,
-                    assetManager.getBitmap("Platform"), this);
-            mGameObjects[idx] = platform;
-        }
 
+        GameObject initialPlatform = new GameObject(
+                random.nextInt((int) WORLD_WIDTH), random.nextInt((int) WORLD_HEIGHT),
+                GAMEOBJECT_WIDTH, GAMEOBJECT_HEIGHT,
+                assetManager.getBitmap("Platform"), this);
+        mGameObjects[0] = initialPlatform;
+
+
+
+        for (int c = 1; c < NUM_GAMEOBJECTS; c++){
+            boolean check = true;
+        while (check) {
+            boolean overlap = false;
+            int y = random.nextInt((int) WORLD_HEIGHT);
+            int x = random.nextInt((int) WORLD_WIDTH);
+            for (int i = 0; i < (NUM_GAMEOBJECTS - (NUM_GAMEOBJECTS - c)); i++) {
+                if(checkOverlap(mGameObjects[i], x, y) == true)
+                {
+                    overlap = true;
+                }
+            }
+            if (overlap == false) {
+                    GameObject platform = new GameObject(
+                            x, y,
+                            GAMEOBJECT_WIDTH, GAMEOBJECT_HEIGHT,
+                            assetManager.getBitmap("Platform"), this);
+                    mGameObjects[c] = platform;
+                    check = false;
+                }
+                else
+                    check = true;
+            }
+        }
+        
         // Create a seeker object that will be used to move the viewport about and
         // provide it with an initial target to chase.
 
@@ -193,7 +219,21 @@ public class ViewportDemoScreen extends GameScreen {
     // Methods
     // /////////////////////////////////////////////////////////////////////////
 
-    /**
+    public boolean checkOverlap(GameObject r,int x, int y)
+    {
+        float width =GAMEOBJECT_WIDTH, height = GAMEOBJECT_HEIGHT;
+        boolean check = false;
+
+        if(x < r.position.x + width && x + width > r.position.x && y < r.position.y + height && y + height > r.position.y)
+        {
+            return true;
+        }
+
+        return check;
+    }
+
+
+    /**u
      * Update the asset demo
      *
      * @param elapsedTime Elapsed time information

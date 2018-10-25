@@ -203,7 +203,7 @@ public class ViewportDemoScreen extends GameScreen {
                     check = true;
             }
         }
-        
+
         // Create a seeker object that will be used to move the viewport about and
         // provide it with an initial target to chase.
 

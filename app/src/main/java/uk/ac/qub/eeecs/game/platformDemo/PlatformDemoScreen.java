@@ -116,7 +116,8 @@ public class PlatformDemoScreen extends GameScreen {
         // A simple (but not that useful) approach is used to position the platforms
         // to avoid overlapping.
         Random random = new Random();
-        int numPlatforms = 30, platformOffset = 200;
+        //Updated the amount of platforms that it generated from 30 to 32 for user story 15 - Edgars
+        int numPlatforms = 32, platformOffset = 200;
         float platformWidth = 70, platformHeight = 70, platformX, platformY = platformHeight;
         for (int idx = 0; idx < numPlatforms; idx++) {
             platformX = platformOffset;

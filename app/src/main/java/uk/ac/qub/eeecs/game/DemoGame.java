@@ -31,8 +31,7 @@ public class DemoGame extends Game {
         super.onCreate(savedInstanceState);
 
         // Go with a default 20 UPS/FPS
-        setTargetFramesPerSecond(35); //Modified Target frame from 20 to 35
-                                        //Sprint 2 User Story P4 (Hannah)
+        setTargetFramesPerSecond(35); //Modified Target frame from 20 to 35 - Sprint 2 User Story P4 (Hannah)
     }
 
     @Override

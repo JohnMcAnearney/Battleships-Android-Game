@@ -115,17 +115,17 @@ public class PlatformDemoScreen extends GameScreen {
         // the first 200 units of the level to avoid overlap with the player.
         // A simple (but not that useful) approach is used to position the platforms
         // to avoid overlapping.
-        Random random = new Random();
-        int numPlatforms = 30, platformOffset = 200;
-        float platformWidth = 70, platformHeight = 70, platformX, platformY = platformHeight;
-        for (int idx = 0; idx < numPlatforms; idx++) {
-            platformX = platformOffset;
-            if(random.nextFloat() > 0.33f)
-                platformY = (random.nextFloat() * (LEVEL_HEIGHT - platformHeight));
-            mPlatforms.add(new Platform( platformX, platformY, platformWidth, platformHeight,
-                    "Platform", this));
-            platformOffset += (random.nextFloat() > 0.5f ?
-                    platformWidth : platformWidth + random.nextFloat()*platformWidth);
+            Random random = new Random();
+            int numPlatforms = 30, platformOffset = 200;
+            float platformWidth = 70, platformHeight = 70, platformX, platformY = platformHeight;
+            for (int idx = 0; idx < numPlatforms; idx++) {
+                platformX = platformOffset;
+                if(random.nextFloat() > 0.33f)
+                    platformY = (random.nextFloat() * (LEVEL_HEIGHT - platformHeight));
+                mPlatforms.add(new Platform( platformX, platformY, platformWidth, platformHeight,
+                        "Platform", this));
+                platformOffset += (random.nextFloat() > 0.5f ?
+                        platformWidth : platformWidth + random.nextFloat()*platformWidth);
         }
         //Added a new block of code which adds the 2 new rectangular platforms, user story 15 - Edgars
         int numRectangularPlatforms = 2, rectangularPlatformOffset = 200;

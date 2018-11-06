@@ -21,7 +21,7 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
  */
 public class CardDemoScreen extends GameScreen {
     //blankCard bitmap variable
-    private Bitmap mCard;
+    private Card mCard;
     /**
      * Create the Card game screen
      *
@@ -29,19 +29,9 @@ public class CardDemoScreen extends GameScreen {
      */
     public CardDemoScreen(Game game) {
         super("CardScreen", game);
-
-        //Not too sure if this codes belongs here or the Card class. - Edgars
-        /*AssetManager assetManager = mGame.getAssetManager();
-
-        // Load the blank card Bitmap
-        assetManager.loadAndAddBitmap(
-                "BlankCard", "img/blankCard.png");
-
-        // Retrieve the blank card Bitmap
-        mCard = assetManager.getBitmap("blankCard");
-        */
+        //Initialising a card object within the cardDemoScreen so that it can be drawn by the draw method.
+        mCard = new Card(200,200,this);
     }
-
     // /////////////////////////////////////////////////////////////////////////
     // Methods
     // /////////////////////////////////////////////////////////////////////////
@@ -55,7 +45,6 @@ public class CardDemoScreen extends GameScreen {
         // Process any touch events occurring since the last update
         Input input = mGame.getInput();
     }
-
     /**
      * Draw the card demo screen
      *
@@ -65,18 +54,7 @@ public class CardDemoScreen extends GameScreen {
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         graphics2D.clear(Color.WHITE);
-
-        //Not too sure if this codes belongs here or the Card class. - Edgars
-        /*//Get the screen size for positioning and sizing
-        int width = graphics2D.getSurfaceWidth();
-        int height = graphics2D.getSurfaceHeight();
-        Paint bitmapPaint = new Paint();
-
-        Rect sourceRect = new Rect(
-                0, 0, mCard.getWidth(), mCard.getHeight());
-        Rect destRect = new Rect(
-                (int) (width * 0.1f), (int) (height * 0.1f), (int) (width * 0.9f), (int) (height * 0.35f));
-        graphics2D.drawBitmap(mCard, sourceRect, destRect, bitmapPaint);
-        */
+        //Method to draw card onto the CardDemoScreen
+        mCard.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 }

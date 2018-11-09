@@ -30,7 +30,7 @@ public class CardDemoScreen extends GameScreen {
     public CardDemoScreen(Game game) {
         super("CardScreen", game);
         //Initialising a card object within the cardDemoScreen so that it can be drawn by the draw method.
-        mCard = new Card(200,200,this);
+        mCard = new Card(400,200,this);
     }
     // /////////////////////////////////////////////////////////////////////////
     // Methods
@@ -44,6 +44,7 @@ public class CardDemoScreen extends GameScreen {
     public void update(ElapsedTime elapsedTime) {
         // Process any touch events occurring since the last update
         Input input = mGame.getInput();
+
     }
     /**
      * Draw the card demo screen

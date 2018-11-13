@@ -117,7 +117,7 @@ public class PlatformDemoScreen extends GameScreen {
         // to avoid overlapping.
             Random random = new Random();
             int numPlatforms = 30, platformOffset = 200;
-            float platformWidth = 70, platformHeight = 70, platformX, platformY = platformHeight;
+            float platformWidth = 70, platformHeight = 70, platformX, platformY = platformHeight; //platformWidth * mPlatforms.get(0).getRatio() - possible code for User Story 17, Edgars
             for (int idx = 0; idx < numPlatforms; idx++) {
                 platformX = platformOffset;
                 if(random.nextFloat() > 0.33f)
@@ -129,7 +129,7 @@ public class PlatformDemoScreen extends GameScreen {
         }
         //Added a new block of code which adds the 2 new rectangular platforms, user story 15 - Edgars
         int numRectangularPlatforms = 2, rectangularPlatformOffset = 200;
-        float rectangularPlatformWidth = 120, rectangularPlatformHeight = 50, rectangularPlatformX, rectangularPlatformY = platformHeight;
+        float rectangularPlatformWidth = 120, rectangularPlatformHeight = 60, rectangularPlatformX, rectangularPlatformY = platformHeight;
         for (int idx = 0; idx < numRectangularPlatforms; idx++) {
             rectangularPlatformX = rectangularPlatformOffset;
             if(random.nextFloat() > 0.33f)

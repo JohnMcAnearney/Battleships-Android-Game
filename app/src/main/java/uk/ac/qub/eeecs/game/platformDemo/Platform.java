@@ -46,6 +46,9 @@ public class Platform extends GameObject {
      */
     protected int mTileYCount = 1;
 
+    //The ratio of generated bitmaps - Edgars
+    protected float ratio;
+
     // /////////////////////////////////////////////////////////////////////////
     // Constructors
     // /////////////////////////////////////////////////////////////////////////
@@ -64,6 +67,8 @@ public class Platform extends GameObject {
                     String bitmapName, GameScreen gameScreen) {
         super(x, y, width, height, gameScreen.getGame().getAssetManager()
                 .getBitmap(bitmapName), gameScreen);
+        //Adding a ratio variable to allow appropriate scaling of bitmaps - Edgars
+        ratio = mBitmap.getWidth() / mBitmap.getHeight();
     }
 
     /**
@@ -88,7 +93,10 @@ public class Platform extends GameObject {
     // /////////////////////////////////////////////////////////////////////////
     // Methods
     // /////////////////////////////////////////////////////////////////////////
-
+    public float getRatio()
+    {
+        return ratio;
+    }
     /**
      * Private helper variable used to provide a layer bound for the tile
      * being drawn.

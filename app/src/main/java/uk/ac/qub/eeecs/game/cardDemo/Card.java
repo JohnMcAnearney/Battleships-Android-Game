@@ -1,22 +1,35 @@
 package uk.ac.qub.eeecs.game.cardDemo;
 
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.wifi.hotspot2.pps.Credential;
+
+import java.util.List;
 
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
+import uk.ac.qub.eeecs.gage.engine.input.Input;
+import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.gage.world.LayerViewport;
 import uk.ac.qub.eeecs.gage.world.ScreenViewport;
 import uk.ac.qub.eeecs.gage.world.Sprite;
+
 //General Card class - Edgars
 public class Card extends Sprite {
     //Setting up default size for cards
     private static final int CARD_HEIGHT = 240;
     private static final int CARD_WIDTH = 160;
+
+    //Setting up the variables to store if there are actually any touches occurring
+    protected float[] mAcceleration = new float[3];
+    protected boolean[] mTouchIdExists = new boolean[4];  //boolean array of size 4 as i don't think we will need anymore touches
+    protected float[][] mTouchLocation = new float[mTouchIdExists.length][2]; //basically just gets how many touches there are and then uses it as x value then y value to 2
+
     //Defining the card background bitmap
     private Bitmap cardBackground;
+
     //Setting up constructor from the Sprite super class
     public Card(float x, float y, GameScreen gameScreen) {
         super(x, y, CARD_WIDTH, CARD_HEIGHT, null, gameScreen);
@@ -27,9 +40,11 @@ public class Card extends Sprite {
         //Setting the bitmap of mBitmap, which the constructor uses, to the "cardBackground" bitmap loaction.
         mBitmap = assetManager.getBitmap("cardBackground");
     }
+
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D, LayerViewport layerViewport,
                      ScreenViewport screenViewport) {
         super.draw(elapsedTime, graphics2D, layerViewport, screenViewport);
     }
+
 }

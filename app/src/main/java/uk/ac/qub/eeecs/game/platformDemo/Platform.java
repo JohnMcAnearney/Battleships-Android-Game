@@ -1,5 +1,11 @@
 package uk.ac.qub.eeecs.game.platformDemo;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+
 import java.util.Vector;
 
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
@@ -97,18 +103,18 @@ public class Platform extends GameObject {
      * @param layerViewport  Game layer viewport
      * @param screenViewport Screen viewport
      */
-    @Override
-
-
 
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D,
                      LayerViewport layerViewport, ScreenViewport screenViewport) {
 
         // Call the getBound method to make sure we're using an up-to-date bound
         BoundingBox bound = getBound();
+        Player p1 =  new Player(100f,0, mGameScreen);
 
         // Only draw if it is visible
         if (GraphicsHelper.isVisible(bound, layerViewport)) {
+
+            int Colour = Color.BLUE;
 
             // Define the tile size
             tileBound.halfWidth = bound.halfWidth / mTileXCount;
@@ -131,8 +137,14 @@ public class Platform extends GameObject {
                     // If the layer tile is visible then draw tne tile
                     if (GraphicsHelper.getClippedSourceAndScreenRect(
                             tileBound, mBitmap, layerViewport, screenViewport, drawSourceRect, drawScreenRect)) {
-                        graphics2D
-                                .drawBitmap(mBitmap, drawSourceRect, drawScreenRect, null);
+                        graphics2D.drawBitmap(mBitmap, drawSourceRect, drawScreenRect, null);
+                    }
+
+                    if(p1.position.x - this.position.x >= -5 ){
+                        Paint bitmapPaint = new Paint();
+                        ColorFilter filter = new PorterDuffColorFilter(Colour, PorterDuff.Mode.MULTIPLY);
+                        bitmapPaint.setColorFilter(filter);
+                        graphics2D.drawBitmap(mBitmap, drawScreenRect, drawScreenRect, bitmapPaint);
                     }
 
                 }

@@ -129,13 +129,13 @@ public class PlatformDemoScreen extends GameScreen {
         }
         //Added a new block of code which adds the 2 new rectangular platforms, user story 15 - Edgars
         int numRectangularPlatforms = 2, rectangularPlatformOffset = 200;
-        float rectangularPlatformWidth = 90, rectangularPlatformHeight = 60, rectangularPlatformX, rectangularPlatformY = platformHeight;
+        float rectangularPlatformWidth = 120, rectangularPlatformHeight = 50, rectangularPlatformX, rectangularPlatformY = platformHeight;
         for (int idx = 0; idx < numRectangularPlatforms; idx++) {
             rectangularPlatformX = rectangularPlatformOffset;
             if(random.nextFloat() > 0.33f)
                 rectangularPlatformY = (random.nextFloat() * (LEVEL_HEIGHT - rectangularPlatformHeight));
             mPlatforms.add(new Platform( rectangularPlatformX, rectangularPlatformY, rectangularPlatformWidth, rectangularPlatformHeight,
-                    "Platform", this));
+                    "rectangularPlatform", this));
             rectangularPlatformOffset += (random.nextFloat() > 0.5f ?
                     rectangularPlatformWidth : rectangularPlatformWidth + random.nextFloat()*rectangularPlatformWidth);
         }

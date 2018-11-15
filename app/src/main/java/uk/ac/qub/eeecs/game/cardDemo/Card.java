@@ -29,6 +29,8 @@ public class Card extends Sprite {
     protected boolean[] mTouchIdExists = new boolean[4];  //boolean array of size 4 as i don't think we will need anymore touches
     protected float[][] mTouchLocation = new float[mTouchIdExists.length][2]; //basically just gets how many touches there are and then uses it as x value then y value to 2
     protected Game mGame;
+    private boolean showingBackOfCard = false;
+    private AssetManager assetManager;
 
     //Defining the card background bitmap
     private Bitmap cardBackground;
@@ -37,7 +39,7 @@ public class Card extends Sprite {
     public Card(float x, float y, GameScreen gameScreen) {
         super(x, y, CARD_WIDTH, CARD_HEIGHT, null, gameScreen);
         //Setting up the asset manager
-        AssetManager assetManager = gameScreen.getGame().getAssetManager();
+        assetManager = gameScreen.getGame().getAssetManager();
         //Loading the blankCard image onto a bitmap named "cardBackground"
         assetManager.loadAndAddBitmap("cardBackground", "img/blankCard.png");
         //Setting the bitmap of mBitmap, which the constructor uses, to the "cardBackground" bitmap loaction.
@@ -100,6 +102,20 @@ public class Card extends Sprite {
 
 
 
+    }
+
+    public void showBackOfCard()
+    {
+
+        if(showingBackOfCard == false) {
+            mBitmap = assetManager.getBitmap("backOfCard");
+
+        }
+        else if(showingBackOfCard == true)
+        {
+            mBitmap = assetManager.getBitmap("cardBackground");
+        }
+        showingBackOfCard = !showingBackOfCard;
     }
 
 }

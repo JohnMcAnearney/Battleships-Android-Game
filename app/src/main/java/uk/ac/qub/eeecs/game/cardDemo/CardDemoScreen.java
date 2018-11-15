@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.MotionEvent;
 
 import java.io.IOException;
 
@@ -63,6 +64,21 @@ public class CardDemoScreen extends GameScreen {
                 mCard.mTouchLocation[pointerId][1] = input.getTouchY(0);
             }
         }
+        //MotionEvent.ACTION_MOVE;    //probably implement something like this
+
+        //Matrix m = new Matrix();
+        for(int pointerId = 0; pointerId < mCard.mTouchIdExists.length; pointerId++) {
+            mCard.mTouchIdExists[pointerId] = input.existsTouch(pointerId);
+            if (input.getTouchX(pointerId) < mCard.CARD_WIDTH / 2 && input.getTouchY(pointerId) < mCard.CARD_HEIGHT / 2) {
+                mCard.mTouchLocation[pointerId][0] = input.getTouchX(0);
+                mCard.mTouchLocation[pointerId][1] = input.getTouchY(0);
+
+                mCard.setPosition(mCard.mTouchLocation[pointerId][0] = input.getTouchX(0), mCard.mTouchLocation[pointerId][1] = input.getTouchY(0));
+            }
+        }
+
+        //mCard.setPosition(mCard.mTouchLocation[0][0] = input.getTouchX(0), mCard.mTouchLocation[1][1] = input.getTouchY(0));
+
 
         // Get any touch events that have occurred since the last update
    /* List<TouchEvent> touchEvents = input.getTouchEvents();
@@ -74,7 +90,6 @@ public class CardDemoScreen extends GameScreen {
             String touchEventInfo = touchEventTypeToString(touchEvent.type) +
                     String.format(" [%.0f,%.0f,ID=%d]",
                             touchEvent.x, touchEvent.y, touchEvent.pointer);*/
-
 
 
 
@@ -113,4 +128,7 @@ public class CardDemoScreen extends GameScreen {
     }
 
 
+
+
 }
+

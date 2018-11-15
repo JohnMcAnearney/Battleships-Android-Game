@@ -29,7 +29,8 @@ import uk.ac.qub.eeecs.gage.world.LayerViewport;
  *
  * @version 1.0
  */
-public class SpaceshipDemoScreen extends GameScreen {
+public class
+SpaceshipDemoScreen extends GameScreen {
 
     // /////////////////////////////////////////////////////////////////////////
     // Properties: Space Related

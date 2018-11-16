@@ -1,5 +1,6 @@
 package uk.ac.qub.eeecs.game.platformDemo;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -8,6 +9,7 @@ import android.graphics.PorterDuffColorFilter;
 
 import java.util.Vector;
 
+import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
@@ -68,7 +70,6 @@ public class Platform extends GameObject {
         super(x, y, width, height, gameScreen.getGame().getAssetManager()
                 .getBitmap(bitmapName), gameScreen);
         //Adding a ratio variable to allow appropriate scaling of bitmaps - Edgars
-        ratio = mBitmap.getWidth() / mBitmap.getHeight();
     }
 
     /**
@@ -93,10 +94,7 @@ public class Platform extends GameObject {
     // /////////////////////////////////////////////////////////////////////////
     // Methods
     // /////////////////////////////////////////////////////////////////////////
-    public float getRatio()
-    {
-        return ratio;
-    }
+
     /**
      * Private helper variable used to provide a layer bound for the tile
      * being drawn.

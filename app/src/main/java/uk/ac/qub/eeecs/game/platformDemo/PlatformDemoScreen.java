@@ -1,5 +1,6 @@
 package uk.ac.qub.eeecs.game.platformDemo;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import java.util.ArrayList;
@@ -58,6 +59,15 @@ public class PlatformDemoScreen extends GameScreen {
      */
     private Player mPlayer;
 
+    //Added a method which detects the ratio of a given bitmap, User Story 17 - Edgars
+    public float getRatio(String assetName)
+    {
+        Bitmap Platform = mGame.getAssetManager().getBitmap(assetName);
+        float ratio = (Platform.getWidth()/Platform.getHeight());
+
+        return ratio;
+    }
+
     // /////////////////////////////////////////////////////////////////////////
     // Constructors
     // /////////////////////////////////////////////////////////////////////////
@@ -115,21 +125,26 @@ public class PlatformDemoScreen extends GameScreen {
         // the first 200 units of the level to avoid overlap with the player.
         // A simple (but not that useful) approach is used to position the platforms
         // to avoid overlapping.
-            Random random = new Random();
-            int numPlatforms = 30, platformOffset = 200;
-            float platformWidth = 70, platformHeight = 70, platformX, platformY = platformHeight; //platformWidth * mPlatforms.get(0).getRatio() - possible code for User Story 17, Edgars
-            for (int idx = 0; idx < numPlatforms; idx++) {
-                platformX = platformOffset;
-                if(random.nextFloat() > 0.33f)
-                    platformY = (random.nextFloat() * (LEVEL_HEIGHT - platformHeight));
-                mPlatforms.add(new Platform( platformX, platformY, platformWidth, platformHeight,
-                        "Platform", this));
-                platformOffset += (random.nextFloat() > 0.5f ?
-                        platformWidth : platformWidth + random.nextFloat()*platformWidth);
+        //Bitmap squarePlatform = mGame.getAssetManager().getBitmap("Platform");
+        //float sqaurePlatformRatio = (squarePlatform.getWidth()/squarePlatform.getHeight());
+        Random random = new Random();
+        int numPlatforms = 30, platformOffset = 200;
+        float platformWidth = 70, platformHeight = (platformWidth/getRatio("Platform")),
+                platformX, platformY = platformHeight;
+        for (int idx = 0; idx < numPlatforms; idx++) {
+            platformX = platformOffset;
+            if(random.nextFloat() > 0.33f)
+                platformY = (random.nextFloat() * (LEVEL_HEIGHT - platformHeight));
+            mPlatforms.add(new Platform( platformX, platformY, platformWidth, platformHeight,
+                    "Platform", this));
+            platformOffset += (random.nextFloat() > 0.5f ?
+                    platformWidth : platformWidth + random.nextFloat()*platformWidth);
         }
         //Added a new block of code which adds the 2 new rectangular platforms, user story 15 - Edgars
         int numRectangularPlatforms = 2, rectangularPlatformOffset = 200;
-        float rectangularPlatformWidth = 120, rectangularPlatformHeight = 60, rectangularPlatformX, rectangularPlatformY = platformHeight;
+        float rectangularPlatformWidth = 140,
+                rectangularPlatformHeight = (rectangularPlatformWidth/getRatio("rectangularPlatform")),
+                rectangularPlatformX, rectangularPlatformY = platformHeight;
         for (int idx = 0; idx < numRectangularPlatforms; idx++) {
             rectangularPlatformX = rectangularPlatformOffset;
             if(random.nextFloat() > 0.33f)

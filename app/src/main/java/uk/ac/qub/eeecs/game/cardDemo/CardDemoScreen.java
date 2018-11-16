@@ -80,7 +80,7 @@ public class CardDemoScreen extends GameScreen {
             }
         }
 
-        //mCard.setPosition(mCard.mTouchLocation[0][0] = input.getTouchX(0), mCard.mTouchLocation[1][1] = input.getTouchY(0));
+        mCard.setPosition(mCard.mTouchLocation[0][0] = input.getTouchX(0), mCard.mTouchLocation[1][1] = input.getTouchY(0));
 
 
         // Get any touch events that have occurred since the last update

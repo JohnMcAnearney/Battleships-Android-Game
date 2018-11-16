@@ -45,14 +45,14 @@ public class Asteroid extends SpaceEntity {
                 .getBitmap(random.nextBoolean() ? "Asteroid1" : "Asteroid2");
 
 
-        if (DEFAULT_RADIUS > (20f+(Math.random()*50f)))  //if between 20 adn 70 draw it else don't (Hannah - 40201925)
+       /* if (DEFAULT_RADIUS > (20f+(Math.random()*50f)))  //if between 20 adn 50 draw it else don't (Hannah - 40201925)
         {
             mBitmap = gameScreen.getGame().getAssetManager()
                     .getBitmap("Asteroid3");
         }
 
         mRadius = DEFAULT_RADIUS;
-        mMass = 1000.0f;
+        mMass = 1000.0f;*/
 
         angularVelocity = random.nextFloat() * 240.0f - 20.0f;
 

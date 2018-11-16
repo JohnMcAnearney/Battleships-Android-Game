@@ -274,7 +274,7 @@ SpaceshipDemoScreen extends GameScreen {
     /**
      * Play background music,
      */
-    private void playBackgroundMusic() {
+    public void playBackgroundMusic() {
         AudioManager audioManager = getGame().getAudioManager();
         if(!audioManager.isMusicPlaying())
             audioManager.playMusic(

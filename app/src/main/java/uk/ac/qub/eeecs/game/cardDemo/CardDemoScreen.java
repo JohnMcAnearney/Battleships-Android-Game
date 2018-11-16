@@ -29,7 +29,7 @@ public class CardDemoScreen extends GameScreen {
     private Paint textPaint = new Paint();
     private final float LEVEL_WIDTH = (1000.0F)*2;
     private final float LEVEL_HEIGHT = (1000.0F)*2;
-    public boolean hasLeft=false;
+
     /**
      * Create the Card game screen
      *
@@ -99,23 +99,19 @@ public class CardDemoScreen extends GameScreen {
 
     }
     //Code that makes sure the card cant leave the world .
-    public void ensuresCardCantLeaveWorld(){
+    public void ensuresCardCantLeaveWorld(Card mCard){
         BoundingBox cardBound = mCard.getBound();
         if(cardBound.getLeft()<0){
             mCard.position.x-= cardBound.getLeft();
-            hasLeft=true;
         }
         else if(cardBound.getRight()> LEVEL_WIDTH) {
-            mCard.setPosition(mCard.position.x, mCard.position.y);
-            hasLeft = true;
+            mCard.position.x -= (cardBound.getRight() - LEVEL_WIDTH);
         }
         if(cardBound.getBottom()<0) {
             mCard.position.y -= cardBound.getBottom();
-            hasLeft=true;
         }
         else if(cardBound.getTop()> LEVEL_HEIGHT) {
             mCard.position.y -= (cardBound.getTop() - LEVEL_HEIGHT);
-            hasLeft=true;
         }
     }
 
@@ -123,8 +119,7 @@ public class CardDemoScreen extends GameScreen {
      * @param elapsedTime Elapsed time info
      */
     private void updateCardGameObjects(ElapsedTime elapsedTime){
-
-        ensuresCardCantLeaveWorld();
+        ensuresCardCantLeaveWorld(mCard);
 
     }
     /**

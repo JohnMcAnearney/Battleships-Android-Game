@@ -14,7 +14,7 @@ import uk.ac.qub.eeecs.gage.world.LayerViewport;
 
 public class OptionsScreen extends GameScreen {
 
-    private GameObject backGround;
+    private GameObject optionsBackGround;
     private LayerViewport optionsLayerViewport;
     private PushButton mBackButton;
 
@@ -23,34 +23,37 @@ public class OptionsScreen extends GameScreen {
 
         // Load in the bitmaps used on the options screen
         AssetManager assetManager = mGame.getAssetManager();
-        assetManager.loadAndAddBitmap("background", "img/optionsBackground");
+        assetManager.loadAndAddBitmap("background", "img/optionsBackground.png");
 
-       //backGround = new GameObject(1000f,300f, getGame().getAssetManager().getBitmap("optionsBackground.png"), this);
+        optionsBackGround = new GameObject(1000 / 2.0f,
+                1000 / 2.0f, 1000, 1000, getGame()
+                .getAssetManager().getBitmap("background"), this);
 
-                mBackButton = new PushButton(
-                mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
-                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
-                "BackArrow", "BackArrowSelected", this);
-        mBackButton.setPlaySounds(true, true);
+//                mBackButton = new PushButton(
+//                mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
+//                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
+//                "img/BackArrow.png", "img/BackArrowSelected.png", this);
+//        mBackButton.setPlaySounds(true, true);
 
     }
 
     @Override
     public void update(ElapsedTime elapsedTime) {
 
-        mBackButton.update(elapsedTime);
-        if (mBackButton.isPushTriggered())
-            mGame.getScreenManager().removeScreen(this);
+//        mBackButton.update(elapsedTime);
+//        if (mBackButton.isPushTriggered())
+//            mGame.getScreenManager().removeScreen(this);
 
 
     }
 
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
-        graphics2D.clear(Color.WHITE);
-        backGround.draw(elapsedTime,graphics2D, optionsLayerViewport, mDefaultScreenViewport);
+        graphics2D.clear(Color.RED);
+        optionsBackGround.draw(elapsedTime,graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
+        //null pointer on layerviewport
 
-        mBackButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
+      //  mBackButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
 
     }
 }

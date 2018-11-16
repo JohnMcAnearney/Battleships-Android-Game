@@ -36,6 +36,7 @@ public class MenuScreen extends GameScreen {
     private PushButton mCardDemoButton;
     private PushButton mDemosButton;
     private PushButton mPerformanceButton;  //User story P2 Sprint 2 M.S.
+    private PushButton mOptionsButton;  //user story 40203900
 
     // /////////////////////////////////////////////////////////////////////////
     // Constructors
@@ -60,6 +61,7 @@ public class MenuScreen extends GameScreen {
         assetManager.loadAndAddBitmap("DemosIcon", "img/DemosIcon.png");
         assetManager.loadAndAddBitmap("DemosIconSelected", "img/DemosIconSelected.png");
         assetManager.loadAndAddBitmap("PerformanceIcon","img/performance.png");
+        assetManager.loadAndAddBitmap("OptionsButton", "img/optionsButton.png");
 
         // Define the spacing that will be used to position the buttons
         int spacingX = (int)mDefaultLayerViewport.getWidth() / 5;
@@ -84,9 +86,13 @@ public class MenuScreen extends GameScreen {
         mDemosButton.setPlaySounds(true, true);
 
         mPerformanceButton = new PushButton(
-                spacingX * 2.5f, spacingY * 0.6f, spacingX, spacingY,
+                spacingX * 1.83f, spacingY * 0.6f, spacingX, spacingY,
                 "PerformanceIcon",this);
         mPerformanceButton.setPlaySounds(true, true);
+        mOptionsButton = new PushButton(
+                spacingX * 3.17f, spacingY * 0.6f, spacingX, spacingY,
+                "OptionsButton",this);
+        mOptionsButton.setPlaySounds(true, true);
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -112,7 +118,7 @@ public class MenuScreen extends GameScreen {
             mCardDemoButton.update(elapsedTime);
             mPlatformDemoButton.update(elapsedTime);
             mDemosButton.update(elapsedTime);
-            mPerformanceButton.update(elapsedTime);
+            mOptionsButton.update(elapsedTime);
 
             if (mSpaceshipDemoButton.isPushTriggered())
                 mGame.getScreenManager().addScreen(new SpaceshipDemoScreen(mGame));
@@ -122,8 +128,10 @@ public class MenuScreen extends GameScreen {
                 mGame.getScreenManager().addScreen(new PlatformDemoScreen(mGame));
             else if (mDemosButton.isPushTriggered())
                 mGame.getScreenManager().addScreen(new DemoMenuScreen(mGame));
+            else if(mOptionsButton.isPushTriggered())
+                mGame.getScreenManager().addScreen(new OptionsScreen(mGame));
             else if(mPerformanceButton.isPushTriggered())
-            mGame.getScreenManager().addScreen(new PerformanceScreen(mGame));    ///!!!!!!!!!! Who ever is doing P1 delete comment brackets
+                mGame.getScreenManager().addScreen(new PerformanceScreen(mGame));    ///!!!!!!!!!! Who ever is doing P1 delete comment brackets
         }
     }
 
@@ -144,5 +152,6 @@ public class MenuScreen extends GameScreen {
         mDemosButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mCardDemoButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mPerformanceButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
+        mOptionsButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 }

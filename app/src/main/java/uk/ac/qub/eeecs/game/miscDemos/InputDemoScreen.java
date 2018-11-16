@@ -45,7 +45,7 @@ public class InputDemoScreen extends GameScreen {
      */
     private static final int mTouchIdToDisplay = 5;
     private boolean[] mTouchIdExists = new boolean[mTouchIdToDisplay];
-    private float[][] mTouchLocation = new float[mTouchIdExists.length][2];
+    private float[][] mTouchLocation = new float[mTouchIdExists.length][2]; //
 
     /**
      * A history of touch events will be maintained - this is held

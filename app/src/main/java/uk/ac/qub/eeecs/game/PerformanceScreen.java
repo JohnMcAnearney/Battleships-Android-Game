@@ -85,8 +85,10 @@ public class PerformanceScreen extends GameScreen {
             rectangleBottom = random.nextInt(12)+11;
             rectangleRight = random.nextInt(12)+11;
             Rect destRect = new Rect(
-                    (int) (width * rectangleLeft/100), (int) (height * rectangleTop/100), (int) (width * (rectangleLeft/100+rectangleRight/100)), (int) (height * (rectangleTop/100+rectangleBottom/100)));
-
+                    (int) (width * rectangleLeft/100),
+                    (int) (height * rectangleTop/100),
+                    (int) (width * (rectangleLeft/100+rectangleRight/100)),
+                    (int) (height * (rectangleTop/100+rectangleBottom/100)));
             // Storing the destRect object to an array for drawing to screen
             rectArray[numberOfObjectsCreated] = destRect;
             //incrementing the variable numberOfObjectsCreated as a rectangle has been created

@@ -41,8 +41,8 @@ public class Card extends Sprite {
         //Setting up the asset manager
         assetManager = gameScreen.getGame().getAssetManager();
         //Loading the blankCard image onto a bitmap named "cardBackground"
-        assetManager.loadAndAddBitmap("cardBackground", "img/CardBackground1.png");
-        assetManager.loadAndAddBitmap("backOfCard", "img/blankCard.png");
+        assetManager.loadAndAddBitmap("cardBackground", "img/blankCard.png");
+        assetManager.loadAndAddBitmap("backOfCard", "img/CardBackground1.png");
         //Setting the bitmap of mBitmap, which the constructor uses, to the "cardBackground" bitmap loaction.
         mBitmap = assetManager.getBitmap("cardBackground");
     }

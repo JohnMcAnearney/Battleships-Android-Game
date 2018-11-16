@@ -23,6 +23,7 @@ public class Asteroid extends SpaceEntity {
      * Default size for the asteroid
      */
     private static final float DEFAULT_RADIUS = (float) (20f+(Math.random()*50f));
+    //basically a number between 20 and 70
 
     // /////////////////////////////////////////////////////////////////////////
     // Constructors
@@ -43,8 +44,15 @@ public class Asteroid extends SpaceEntity {
         mBitmap = gameScreen.getGame().getAssetManager()
                 .getBitmap(random.nextBoolean() ? "Asteroid1" : "Asteroid2");
 
+
+       /* if (DEFAULT_RADIUS > (20f+(Math.random()*50f)))  //if between 20 adn 50 draw it else don't (Hannah - 40201925)
+        {
+            mBitmap = gameScreen.getGame().getAssetManager()
+                    .getBitmap("Asteroid3");
+        }
+
         mRadius = DEFAULT_RADIUS;
-        mMass = 1000.0f;
+        mMass = 1000.0f;*/
 
         angularVelocity = random.nextFloat() * 240.0f - 20.0f;
 

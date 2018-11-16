@@ -17,6 +17,12 @@
     },
     {
       "type": "Bitmap",
+      "name": "Asteroid3",
+      "file": "img/Asteroid3.png" //added an additional Asteroid 3
+                                  //- Hannah (40201925)
+    },
+    {
+      "type": "Bitmap",
       "name": "Spaceship1",
       "file": "img/Spaceship1.png"
     },

@@ -15,6 +15,7 @@ import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
+import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 /**
@@ -26,7 +27,9 @@ public class CardDemoScreen extends GameScreen {
     //blankCard bitmap variable
     private Card mCard;
     private Paint textPaint = new Paint();
-
+    private final float LEVEL_WIDTH = (1000.0F)*2;
+    private final float LEVEL_HEIGHT = (1000.0F)*2;
+    public boolean hasLeft=false;
     /**
      * Create the Card game screen
      *
@@ -39,7 +42,7 @@ public class CardDemoScreen extends GameScreen {
     }
 
     // /////////////////////////////////////////////////////////////////////////
-    // Methods
+    // Update Methods
     // /////////////////////////////////////////////////////////////////////////
     /**
      * Update the card demo screen
@@ -91,10 +94,39 @@ public class CardDemoScreen extends GameScreen {
                     String.format(" [%.0f,%.0f,ID=%d]",
                             touchEvent.x, touchEvent.y, touchEvent.pointer);*/
 
-
+        // Update the card game object
+        updateCardGameObjects(elapsedTime);
 
     }
+    //Code that makes sure the card cant leave the world .
+    public void ensuresCardCantLeaveWorld(){
+        BoundingBox cardBound = mCard.getBound();
+        if(cardBound.getLeft()<0){
+            mCard.position.x-= cardBound.getLeft();
+            hasLeft=true;
+        }
+        else if(cardBound.getRight()> LEVEL_WIDTH) {
+            mCard.setPosition(mCard.position.x, mCard.position.y);
+            hasLeft = true;
+        }
+        if(cardBound.getBottom()<0) {
+            mCard.position.y -= cardBound.getBottom();
+            hasLeft=true;
+        }
+        else if(cardBound.getTop()> LEVEL_HEIGHT) {
+            mCard.position.y -= (cardBound.getTop() - LEVEL_HEIGHT);
+            hasLeft=true;
+        }
+    }
 
+    /**Update card game objetcts
+     * @param elapsedTime Elapsed time info
+     */
+    private void updateCardGameObjects(ElapsedTime elapsedTime){
+
+        ensuresCardCantLeaveWorld();
+
+    }
     /**
      * Draw the card demo screen
      *
@@ -111,7 +143,6 @@ public class CardDemoScreen extends GameScreen {
 
         //Method to draw card onto the CardDemoScreen
         mCard.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
-
 
         for (int pointerIdx = 0; pointerIdx < mCard.mTouchIdExists.length; pointerIdx++) {
             if (mCard.mTouchIdExists[pointerIdx]) {

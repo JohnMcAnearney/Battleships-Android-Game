@@ -18,7 +18,8 @@
     {
       "type": "Bitmap",
       "name": "Asteroid2",
-      "file": "img/Asteroid3.png" //added Asteroid 3 - Hannah (40201925)
+      "file": "img/Asteroid3.png" //added an additional Asteroid 3
+                                  //- Hannah (40201925)
     },
     {
       "type": "Bitmap",

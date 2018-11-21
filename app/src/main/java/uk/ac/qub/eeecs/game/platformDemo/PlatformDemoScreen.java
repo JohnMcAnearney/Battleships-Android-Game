@@ -128,20 +128,30 @@ public class PlatformDemoScreen extends GameScreen {
         //Bitmap squarePlatform = mGame.getAssetManager().getBitmap("Platform");
         //float sqaurePlatformRatio = (squarePlatform.getWidth()/squarePlatform.getHeight());
         Random random = new Random();
+
+        String AssetName = "Platform";
         int numPlatforms = 30, platformOffset = 200;
-        float platformWidth = 70, platformHeight = (platformWidth/getRatio("Platform")),
-                platformX, platformY = platformHeight;
+        float platformWidth, platformHeight, platformX, platformY;
         for (int idx = 0; idx < numPlatforms; idx++) {
+
+            if (random.nextBoolean()){      //User Story 16 MJ - Picks a random platform and assigns variables accordingly
+                AssetName = "Platform";
+                platformWidth = 70;
+            } else {
+                AssetName = "rectangularPlatform";
+                platformWidth = 140;
+            }
+            platformHeight = (platformWidth/getRatio(AssetName)); platformY = platformHeight;
             platformX = platformOffset;
             if(random.nextFloat() > 0.33f)
                 platformY = (random.nextFloat() * (LEVEL_HEIGHT - platformHeight));
             mPlatforms.add(new Platform( platformX, platformY, platformWidth, platformHeight,
-                    "Platform", this));
+                    AssetName, this));
             platformOffset += (random.nextFloat() > 0.5f ?
                     platformWidth : platformWidth + random.nextFloat()*platformWidth);
         }
         //Added a new block of code which adds the 2 new rectangular platforms, user story 15 - Edgars
-        int numRectangularPlatforms = 2, rectangularPlatformOffset = 200;
+/*        int numRectangularPlatforms = 2, rectangularPlatformOffset = 200;
         float rectangularPlatformWidth = 140,
                 rectangularPlatformHeight = (rectangularPlatformWidth/getRatio("rectangularPlatform")),
                 rectangularPlatformX, rectangularPlatformY = platformHeight;
@@ -153,7 +163,7 @@ public class PlatformDemoScreen extends GameScreen {
                     "rectangularPlatform", this));
             rectangularPlatformOffset += (random.nextFloat() > 0.5f ?
                     rectangularPlatformWidth : rectangularPlatformWidth + random.nextFloat()*rectangularPlatformWidth);
-        }
+        }*/
     }
 
     // /////////////////////////////////////////////////////////////////////////

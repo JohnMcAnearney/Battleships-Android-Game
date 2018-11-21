@@ -11,6 +11,7 @@ import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
+import uk.ac.qub.eeecs.gage.ui.ToggleButton;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.gage.world.LayerViewport;
@@ -48,6 +49,11 @@ public class PlatformDemoScreen extends GameScreen {
      */
     private PushButton moveLeft, moveRight, jumpUp;
     private List<PushButton> mControls;
+
+    /**
+     * Create a toggle button to toggle the powered-up controls
+     */
+    private ToggleButton powerUp;
 
     /**
      * Define an array of sprites to populate the game world
@@ -105,6 +111,9 @@ public class PlatformDemoScreen extends GameScreen {
         jumpUp = new PushButton((layerWidth - 35.0f), 30.0f, 50.0f, 50.0f,
                 "UpArrow", "UpArrowSelected", this);
         mControls.add(jumpUp);
+/*        powerUp = new ToggleButton((layerWidth - 35.0f), 90.0f, 50.0f, 50.0f,          //these lines are causing the crash as soon as the demo is started
+                "UpArrow", "DownArrow", this);                                           // user story 20 MJ
+        powerUp.setToggled(false);*/
 
         // Create and position the game objects (relative to the platform viewport)
 
@@ -181,6 +190,10 @@ public class PlatformDemoScreen extends GameScreen {
         // Update the touch buttons checking for player input
         for (PushButton control : mControls)
             control.update(elapsedTime, mDefaultLayerViewport, mDefaultScreenViewport);
+/*
+        powerUp.update(elapsedTime, mDefaultLayerViewport, mDefaultScreenViewport); //user story 20 MJ (crashing atm)
+
+        mPlayer.togglePowerUp(powerUp.isToggledOn()); */
 
         // Update the player
         mPlayer.update(elapsedTime, moveLeft.isPushed(),

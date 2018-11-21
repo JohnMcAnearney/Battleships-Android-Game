@@ -39,10 +39,19 @@ public class Player extends Sprite {
     private final float RUN_ACCELERATION = 150.0f;
 
     /**
+     * Acceleration with which the player can move along the x-axis while the power-up is enabled
+     */
+    private final float RUN_ACCELERATION_POWERUP = 300.0f;
+
+    /**
      * Maximum velocity of the player along the x-axis
      */
     private final float MAX_X_VELOCITY = 200.0f;
 
+    /**
+     *
+     */
+    private final float MAX_X_VELOCITY_POWERUP = 500.0f;
     /**
      * Scale factor that is applied to the x-velocity when the player is not
      * moving left or right
@@ -55,6 +64,12 @@ public class Player extends Sprite {
      */
     private final float JUMP_Y_VELOCITY = 450.0f;
     private final float JUMP_X_MULTIPLIER = 10.0f;
+
+    /**
+     * Parameters for jumping while the power-up is enabled
+     */
+    private final float JUMP_Y_VELOCITY_POWERUP = 700.0f;
+    private final float JUMP_X_MULTIPLIER_POWERUP = 20.0f;
 
     /**
      * Trigger downwards velocity under which a jump will be permitted.
@@ -80,6 +95,13 @@ public class Player extends Sprite {
      */
     private AnimationManager mAnimationManager;
 
+    /**
+     * Boolean variable used to check if the player is powered-up or not
+     * and variables used to store the values of each set of properties
+     * to make the update() function more readable and prevent numerous nested if() statements
+     */
+    private boolean poweredUp = false;
+    private float runAcceleration, jumpYVelocity, jumpXMultiplier, maxXVelocity;
 
     // /////////////////////////////////////////////////////////////////////////
     // Constructors
@@ -118,6 +140,17 @@ public class Player extends Sprite {
      */
     public void update(ElapsedTime elapsedTime, boolean moveLeft,
                        boolean moveRight, boolean jumpUp, List<Platform> platforms) {
+        if (poweredUp){
+            runAcceleration = RUN_ACCELERATION_POWERUP;
+            jumpYVelocity = JUMP_Y_VELOCITY_POWERUP;
+            jumpXMultiplier = JUMP_X_MULTIPLIER_POWERUP;
+            maxXVelocity = MAX_X_VELOCITY_POWERUP;
+        } else {
+            runAcceleration = RUN_ACCELERATION;
+            jumpYVelocity = JUMP_Y_VELOCITY;
+            jumpXMultiplier = JUMP_X_MULTIPLIER;
+            maxXVelocity = MAX_X_VELOCITY;
+        }
 
         // Apply gravity to the y-axis acceleration
         acceleration.y = GRAVITY;
@@ -126,9 +159,9 @@ public class Player extends Sprite {
         // appropriate x-acceleration. If the user does not want to move left or
         // right, then the x-acceleration is zero and the velocity decays towards zero.
         if (moveLeft && !moveRight) {
-            acceleration.x = -RUN_ACCELERATION;
+            acceleration.x = -runAcceleration;
         } else if (moveRight && !moveLeft) {
-            acceleration.x = RUN_ACCELERATION;
+            acceleration.x = runAcceleration;
         } else {
             acceleration.x = 0.0f;
             velocity.x *= RUN_DECAY;
@@ -138,8 +171,8 @@ public class Player extends Sprite {
         if (jumpUp && (velocity.y > -JUMP_VELOCITY_THRESHOLD
                 && velocity.y < JUMP_VELOCITY_THRESHOLD)) {
             // Provide a suitable velocity boost
-            velocity.y = JUMP_Y_VELOCITY;
-            velocity.x *= JUMP_X_MULTIPLIER;
+            velocity.y = jumpYVelocity;
+            velocity.x *= jumpXMultiplier;
 
             // Play the jump animation
             mAnimationManager.play("AdventurerJumping", elapsedTime);
@@ -150,8 +183,8 @@ public class Player extends Sprite {
         super.update(elapsedTime);
 
         // The player is constrained by a max x-velocity, test this is not exceeded.
-        if (Math.abs(velocity.x) > MAX_X_VELOCITY)
-            velocity.x = Math.signum(velocity.x) * MAX_X_VELOCITY;
+        if (Math.abs(velocity.x) > maxXVelocity)
+            velocity.x = Math.signum(velocity.x) * maxXVelocity;
 
         // Check that our new position has not collided with any of
         // the defined platforms. If so, then remove any overlap and
@@ -231,4 +264,9 @@ public class Player extends Sprite {
         // Get the animation manager to draw the current animation
         mAnimationManager.draw(elapsedTime, graphics2D, layerViewport, screenViewport);
     }
+
+    public void togglePowerUp(boolean isOn){
+        poweredUp = isOn;
+    }
+
 }

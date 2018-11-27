@@ -12,6 +12,7 @@ import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
+import uk.ac.qub.eeecs.game.BattleShips.MainMenu;
 import uk.ac.qub.eeecs.game.cardDemo.CardDemoScreen;
 import uk.ac.qub.eeecs.game.miscDemos.DemoMenuScreen;
 import uk.ac.qub.eeecs.game.platformDemo.PlatformDemoScreen;
@@ -37,6 +38,7 @@ public class MenuScreen extends GameScreen {
     private PushButton mDemosButton;
     private PushButton mPerformanceButton;  //User story P2 Sprint 2 M.S.
     private PushButton mOptionsButton;  //user story 40203900
+    private PushButton mBattleShipButton;
 
     // /////////////////////////////////////////////////////////////////////////
     // Constructors
@@ -62,6 +64,7 @@ public class MenuScreen extends GameScreen {
         assetManager.loadAndAddBitmap("DemosIconSelected", "img/DemosIconSelected.png");
         assetManager.loadAndAddBitmap("PerformanceIcon","img/performance.png");
         assetManager.loadAndAddBitmap("OptionsButton", "img/optionsButton.png");
+        assetManager.loadAndAddBitmap("battleshipBackground", "img/background.jpg");
 
         // Define the spacing that will be used to position the buttons
         int spacingX = (int)mDefaultLayerViewport.getWidth() / 5;
@@ -93,6 +96,7 @@ public class MenuScreen extends GameScreen {
                 spacingX * 3.17f, spacingY * 0.6f, spacingX, spacingY,
                 "OptionsButton",this);
         mOptionsButton.setPlaySounds(true, true);
+        mBattleShipButton = new PushButton(spacingX*0.65f,spacingY*0.6f,spacingX,spacingY,"battleshipBackground",this);
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -120,6 +124,7 @@ public class MenuScreen extends GameScreen {
             mDemosButton.update(elapsedTime);
             mOptionsButton.update(elapsedTime);
             mPerformanceButton.update(elapsedTime);
+            mBattleShipButton.update(elapsedTime);
 
             if (mSpaceshipDemoButton.isPushTriggered())
                 mGame.getScreenManager().addScreen(new SpaceshipDemoScreen(mGame));
@@ -133,6 +138,8 @@ public class MenuScreen extends GameScreen {
                 mGame.getScreenManager().addScreen(new OptionsScreen(mGame));
             else if(mPerformanceButton.isPushTriggered())
                 mGame.getScreenManager().addScreen(new PerformanceScreen(mGame));    ///!!!!!!!!!! Who ever is doing P1 delete comment brackets
+            else if(mBattleShipButton.isPushTriggered())
+                mGame.getScreenManager().addScreen(new MainMenu(mGame));
         }
     }
 
@@ -154,5 +161,6 @@ public class MenuScreen extends GameScreen {
         mCardDemoButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mPerformanceButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
         mOptionsButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
+        mBattleShipButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 }

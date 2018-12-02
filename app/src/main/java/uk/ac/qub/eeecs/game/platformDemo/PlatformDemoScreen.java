@@ -111,9 +111,9 @@ public class PlatformDemoScreen extends GameScreen {
         jumpUp = new PushButton((layerWidth - 35.0f), 30.0f, 50.0f, 50.0f,
                 "UpArrow", "UpArrowSelected", this);
         mControls.add(jumpUp);
-/*        powerUp = new ToggleButton((layerWidth - 35.0f), 90.0f, 50.0f, 50.0f,          //these lines are causing the crash as soon as the demo is started
-                "UpArrow", "DownArrow", this);                                           // user story 20 MJ
-        powerUp.setToggled(false);*/
+ /*       powerUp = new ToggleButton((layerWidth - 35.0f), 90.0f, 50.0f, 50.0f,          //these lines are causing the crash as soon as the demo is started
+                 "PowerUpOff", "PowerUpOn", this);                                           // user story 20 MJ
+        powerUp.setToggled(false); */
 
         // Create and position the game objects (relative to the platform viewport)
 
@@ -138,9 +138,9 @@ public class PlatformDemoScreen extends GameScreen {
         //float sqaurePlatformRatio = (squarePlatform.getWidth()/squarePlatform.getHeight());
         Random random = new Random();
 
-        String AssetName = "Platform";
+        String AssetName;
         int numPlatforms = 30, platformOffset = 200;
-        float platformWidth, platformHeight, platformX, platformY;
+        float platformWidth, platformHeight = 0, platformX, platformY;
         for (int idx = 0; idx < numPlatforms; idx++) {
 
             if (random.nextBoolean()){      //User Story 16 MJ - Picks a random platform and assigns variables accordingly
@@ -160,7 +160,7 @@ public class PlatformDemoScreen extends GameScreen {
                     platformWidth : platformWidth + random.nextFloat()*platformWidth);
         }
         //Added a new block of code which adds the 2 new rectangular platforms, user story 15 - Edgars
-/*        int numRectangularPlatforms = 2, rectangularPlatformOffset = 200;
+        int numRectangularPlatforms = 2, rectangularPlatformOffset = 200;
         float rectangularPlatformWidth = 140,
                 rectangularPlatformHeight = (rectangularPlatformWidth/getRatio("rectangularPlatform")),
                 rectangularPlatformX, rectangularPlatformY = platformHeight;
@@ -172,7 +172,7 @@ public class PlatformDemoScreen extends GameScreen {
                     "rectangularPlatform", this));
             rectangularPlatformOffset += (random.nextFloat() > 0.5f ?
                     rectangularPlatformWidth : rectangularPlatformWidth + random.nextFloat()*rectangularPlatformWidth);
-        }*/
+        }
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -190,10 +190,10 @@ public class PlatformDemoScreen extends GameScreen {
         // Update the touch buttons checking for player input
         for (PushButton control : mControls)
             control.update(elapsedTime, mDefaultLayerViewport, mDefaultScreenViewport);
-/*
+
         powerUp.update(elapsedTime, mDefaultLayerViewport, mDefaultScreenViewport); //user story 20 MJ (crashing atm)
 
-        mPlayer.togglePowerUp(powerUp.isToggledOn()); */
+        mPlayer.togglePowerUp(powerUp.isToggledOn());
 
         // Update the player
         mPlayer.update(elapsedTime, moveLeft.isPushed(),
@@ -247,5 +247,7 @@ public class PlatformDemoScreen extends GameScreen {
         // Draw the controls last of all
         for (PushButton control : mControls)
             control.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
+
+//        powerUp.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
     }
 }

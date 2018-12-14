@@ -22,17 +22,18 @@ public class MainMenu extends GameScreen {
 
     private LayerViewport mSpaceLayerViewport;
     private Bitmap mBattleShipBackground;
-    private int screenWidth=0, screenHeight=0;
+    private int screenWidth = 0, screenHeight = 0;
     private Rect rect;
-    private PushButton mStartButton, mInstructionsButton;
+    private PushButton mStartButton, mInstructionsButton, mSettingsButton;
 
-    public MainMenu(Game game)
-    {
+    public MainMenu(Game game) {
         super("MenuScreen", game);
         AssetManager assetManager = mGame.getAssetManager();
         assetManager.loadAndAddBitmap("BattleIcon", "img/battlebutton.png");
         assetManager.loadAndAddBitmap("battleshipbackground", "img/background.jpg");
         assetManager.loadAndAddBitmap("InstructionsButton", "img/InstructionsButton.png");
+        assetManager.loadAndAddBitmap("SettingsButton", "img/optionsButton.png");
+
         mBattleShipBackground = assetManager.getBitmap("battleshipbackground");
 
     }
@@ -50,10 +51,15 @@ public class MainMenu extends GameScreen {
             // Update each button and transition if needed
             mStartButton.update(elapsedTime);
             mInstructionsButton.update(elapsedTime);
-            if(mStartButton.isPushTriggered()) {
+            mSettingsButton.update(elapsedTime);
 
-            }else if(mInstructionsButton.isPushTriggered()){
+
+            if (mStartButton.isPushTriggered()) {
+
+            } else if (mInstructionsButton.isPushTriggered()) {
                 mGame.getScreenManager().addScreen(new InstructionsScreen(mGame));
+            }else if (mSettingsButton.isPushTriggered()){
+                mGame.getScreenManager().addScreen(new SettingsScreen(mGame));
             }
 
 
@@ -65,9 +71,10 @@ public class MainMenu extends GameScreen {
 
         getWidthAndHeightOfScreen(graphics2D);
         graphics2D.clear(Color.WHITE);
-        graphics2D.drawBitmap(mBattleShipBackground,null,rect,null);
-        mStartButton.draw(elapsedTime,graphics2D);
+        graphics2D.drawBitmap(mBattleShipBackground, null, rect, null);
+        mStartButton.draw(elapsedTime, graphics2D);
         mInstructionsButton.draw(elapsedTime, graphics2D);
+        mSettingsButton.draw(elapsedTime, graphics2D);
 
     }
 
@@ -82,14 +89,14 @@ public class MainMenu extends GameScreen {
 
     }
 
-    public void updateRect()
-    {
-        rect = new Rect(0,0,screenWidth,screenHeight);
+    public void updateRect() {
+        rect = new Rect(0, 0, screenWidth, screenHeight);
     }
 
-    public void createButton()
-    {
-        mStartButton = new PushButton(screenWidth/2,screenHeight/2,screenWidth/4,screenHeight/2,"BattleIcon",this);
-        mInstructionsButton = new PushButton(screenWidth/2, 7*screenHeight/8, screenWidth/4, screenHeight/4, "InstructionsButton", "BattleIcon", this );
+    public void createButton() {
+        mStartButton = new PushButton(screenWidth / 2, screenHeight / 2, screenWidth / 4, screenHeight / 2, "BattleIcon", this);
+        mInstructionsButton = new PushButton(screenWidth / 2, 7 * screenHeight / 8, screenWidth / 4, screenHeight / 4, "InstructionsButton", "BattleIcon", this);
+        mSettingsButton = new PushButton(screenWidth / 8, screenHeight / 4, screenWidth / 4, screenHeight / 4, "SettingsButton",  this);
+
     }
 }

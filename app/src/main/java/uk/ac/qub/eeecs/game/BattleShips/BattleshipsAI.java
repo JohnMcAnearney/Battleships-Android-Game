@@ -12,6 +12,7 @@ public class BattleshipsAI {
     private final int boardLength = 9;
     //this 2 dimensional array is used to store the players board from the AI's point of view
         // ie - its used to store every hit and miss the ai has made
+                //Key: 0 - empty ; 1 - shot and miss ; 2 - shot and hit
     private static int[][] board = new int[10][10];
 
     //Every ship is atleast 2 squares long, meaning that to hit every ship at least once
@@ -41,6 +42,18 @@ public class BattleshipsAI {
             }
         }
     }
+    //this method will be called by the easiest class, just randomly picks a point with no strategy
+    public String randomShot(){
+        int x,y;
+        String shot;
+        do{
+        x = (int)Math.round(Math.random()*boardLength);
+        y = (int)Math.round(Math.random()*boardLength);}while(board[y][x]!=0);
+
+        board[y][x] = 1;
+        return String.valueOf((char)(44+x) + y);
+    }
+
 
 
 

@@ -4,37 +4,65 @@ package uk.ac.qub.eeecs.game.BattleShips;
 
 //I will first create the main Ship class
 //I will further implement each ship size at a later stage
+
+//Sprint 4 - (40201925) User Story 3 - Placement of entity object
+// Further implementation to the Ship class
+
+import android.graphics.Bitmap;
+
 public class Ship
 {
-    private String name; //data filed (int) for the name of ship e.g. Ship1
+    //Instance variables for the Ship class
     private String shipType; //data field for the type of ship e.g. Cargo Ship
+    //Sprint 4 - added two additional instance variables to define the position of the ship entity object (40201925)
+    private float startPositionX;
+    private float startPositionY;
 
-    public Ship(String name, String shipType) //Constructor
+    //Constructor
+    //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
+    public Ship(String shipType, float startPositionX, float startPositionY, Bitmap bitmap)
     {
-        this.name = name;
         this.shipType = shipType;
+        this.startPositionX = startPositionX;
+        this.startPositionY = startPositionY;
     }
 
-    //accessors and mutators
-    public String returnName()
+    //Getters
+    //Sprint 4 - Implemented and improved on the Ship class' Getters (40201925)
+    public String shipType()
     {
-        return this.name;
+        return shipType;
     }
 
-    public String returnType()
+    public float getStartPositionX()
     {
-        return this.shipType;
+        return startPositionX;
     }
 
-    public boolean equals(Ship other)
+    public float getStartPositionY()
     {
-        return false;
+        return startPositionY;
     }
 
-    public String toString() //This toString displays the ship name alongside they type of ship it is
+    //Setters
+    //Sprint 4 - Implemented and improved on the Ship class' Setters (40201925)
+    public void setShipType(String shipType)
     {
-        return "[Name: " + this.name + ". Ship Type: " + this.shipType + "]";
+      this.shipType = shipType;
     }
+
+    public void setStartPositionX(float startPositionX)
+    {
+        this.startPositionX = startPositionX;
+    }
+
+    public void setStartPositionY(float startPositionY)
+    {
+        this.startPositionY = startPositionY;
+    }
+
+
+
 
 }
 

@@ -24,17 +24,18 @@ public class MainMenu extends GameScreen {
     private Bitmap mBattleShipBackground;
     private int screenWidth = 0, screenHeight = 0;
     private Rect rect;
-    private PushButton mStartButton, mInstructionsButton, mSettingsButton;
+    private PushButton mStartButton, mInstructionsButton, mSettingsButton, mPauseButton;
 
     public MainMenu(Game game) {
         super("MenuScreen", game);
         AssetManager assetManager = mGame.getAssetManager();
         assetManager.loadAndAddBitmap("BattleIcon", "img/battlebutton.png");
-        assetManager.loadAndAddBitmap("battleshipbackground", "img/background.jpg");
+        assetManager.loadAndAddBitmap("BattleshipBackground", "img/background.jpg");
         assetManager.loadAndAddBitmap("InstructionsButton", "img/InstructionsButton.png");
         assetManager.loadAndAddBitmap("SettingsButton", "img/optionsButton.png");
+        assetManager.loadAndAddBitmap("PauseButton", "img/Pause.png");
 
-        mBattleShipBackground = assetManager.getBitmap("battleshipbackground");
+        mBattleShipBackground = assetManager.getBitmap("BattleshipBackground");
 
     }
 
@@ -52,6 +53,7 @@ public class MainMenu extends GameScreen {
             mStartButton.update(elapsedTime);
             mInstructionsButton.update(elapsedTime);
             mSettingsButton.update(elapsedTime);
+            mPauseButton.update(elapsedTime);
 
 
             if (mStartButton.isPushTriggered()) {
@@ -60,6 +62,9 @@ public class MainMenu extends GameScreen {
                 mGame.getScreenManager().addScreen(new InstructionsScreen(mGame));
             }else if (mSettingsButton.isPushTriggered()){
                 mGame.getScreenManager().addScreen(new SettingsScreen(mGame));
+            //Push trigger to check if the Pause button has been pressed, if it is, create new Pause Screen
+            }else if (mPauseButton.isPushTriggered()) {
+                mGame.getScreenManager().addScreen(new PauseScreen(mGame));
             }
 
 
@@ -75,6 +80,7 @@ public class MainMenu extends GameScreen {
         mStartButton.draw(elapsedTime, graphics2D);
         mInstructionsButton.draw(elapsedTime, graphics2D);
         mSettingsButton.draw(elapsedTime, graphics2D);
+        mPauseButton.draw(elapsedTime, graphics2D);
 
     }
 
@@ -97,6 +103,6 @@ public class MainMenu extends GameScreen {
         mStartButton = new PushButton(screenWidth / 2, screenHeight / 2, screenWidth / 4, screenHeight / 2, "BattleIcon", this);
         mInstructionsButton = new PushButton(screenWidth / 2, 7 * screenHeight / 8, screenWidth / 4, screenHeight / 4, "InstructionsButton", "BattleIcon", this);
         mSettingsButton = new PushButton(screenWidth / 8, screenHeight / 4, screenWidth / 4, screenHeight / 4, "SettingsButton",  this);
-
+        mPauseButton = new PushButton((screenWidth / 100) * 90,(screenHeight / 100) * 10, (screenWidth / 100) * 15, (screenHeight / 100) * 18, "PauseButton", this);
     }
 }

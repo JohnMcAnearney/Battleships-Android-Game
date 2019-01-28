@@ -1,3 +1,4 @@
+/*
 package uk.ac.qub.eeecs.game.BattleShips;
 
 //Destoryer class that extends from the Ship class
@@ -15,3 +16,4 @@ public class Destroyer extends Ship {
     }
 }
 
+*/

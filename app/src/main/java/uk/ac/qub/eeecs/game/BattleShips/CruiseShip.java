@@ -1,3 +1,4 @@
+/*
 package uk.ac.qub.eeecs.game.BattleShips;
 
     public class CruiseShip extends Ship
@@ -17,3 +18,4 @@ package uk.ac.qub.eeecs.game.BattleShips;
         }
     }
 
+*/

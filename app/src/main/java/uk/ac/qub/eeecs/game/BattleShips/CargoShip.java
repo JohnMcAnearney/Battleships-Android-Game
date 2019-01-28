@@ -1,3 +1,4 @@
+/*
 package uk.ac.qub.eeecs.game.BattleShips;
 
 //Cargo Ship class that extends from the Ship class
@@ -18,3 +19,4 @@ public class CargoShip extends Ship
         return "Cargo Ship" + super.toString();
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package uk.ac.qub.eeecs.game.BattleShips;
 
 //Submarine class that extends from the Ship class
@@ -18,3 +19,4 @@ public class Submarine extends Ship
         return "Submarine" + super.toString();
     }
 }
+*/

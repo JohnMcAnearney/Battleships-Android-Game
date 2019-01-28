@@ -17,10 +17,11 @@ public class Ship
     //Sprint 4 - added two additional instance variables to define the position of the ship entity object (40201925)
     private float startPositionX = 0;
     private float startPositionY;
+    private Bitmap bitmap;
 
     //Constructor
     //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
-    public Ship(String shipType, float startPositionX, float startPositionY, Bitmap bitmap)
+    public Ship(String shipType, float startPositionX, float startPositionY, String bitmap)
     {
         this.shipType = shipType;
         this.startPositionX = startPositionX;
@@ -43,6 +44,7 @@ public class Ship
     {
         return startPositionY;
     }
+
 
     //Setters
     //Sprint 4 - Implemented and improved on the Ship class' Setters (40201925)

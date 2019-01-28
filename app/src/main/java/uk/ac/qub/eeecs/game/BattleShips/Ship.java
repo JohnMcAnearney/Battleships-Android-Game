@@ -15,7 +15,7 @@ public class Ship
     //Instance variables for the Ship class
     private String shipType; //data field for the type of ship e.g. Cargo Ship
     //Sprint 4 - added two additional instance variables to define the position of the ship entity object (40201925)
-    private float startPositionX = 0;
+    private float startPositionX ;
     private float startPositionY;
     private Bitmap bitmap;
 

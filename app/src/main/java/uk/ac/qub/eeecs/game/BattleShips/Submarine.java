@@ -1,16 +1,17 @@
 package uk.ac.qub.eeecs.game.BattleShips;
-import android.graphics.Bitmap;
+import uk.ac.qub.eeecs.gage.world.GameScreen;
+import java.lang.String;
 
 //Submarine class that extends from the Ship class - Hannah (40201925)
 public class Submarine extends Ship
 {
-    public Submarine(String shipType, float startPositionX, float startPositionY, Bitmap bitmap)
+    public Submarine(String shipType, float startPositionX, float startPositionY, GameScreen gameScreen)
     {
-        //super("Ship4", "Submarine"); //This is the old construcotr from the previous sprint (Sprint 3) - Hannah (40201925)
+        //super("Ship4", "Submarine"); //This is the old constructor from the previous sprint (Sprint 3) - Hannah (40201925)
 
         //This is the new constructor - Sprint 4 - Hannah (40201925)
-        super("Submarine", 0,0, "img/Submarine.png" );
-    }
+        super("Submarine", startPositionX, startPositionY, gameScreen.getGame().getAssetManager().getBitmap("Submarine"), gameScreen);
+}
 
     public String toString()
     {

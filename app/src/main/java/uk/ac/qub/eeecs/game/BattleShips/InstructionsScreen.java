@@ -25,7 +25,8 @@ public class InstructionsScreen extends GameScreen {
     public InstructionsScreen(Game game){
         super("InstructionsScreen", game);
         AssetManager assetManager = mGame.getAssetManager();
-        assetManager.loadAndAddBitmap("BackArrow", "img/BackArrow.png");
+        assetManager.loadAndAddBitmap("BackArrow", "img/BackB.png");
+        assetManager.loadAndAddBitmap("BackArrowP", "img/BackBPressed.png");
         assetManager.loadAndAddBitmap("BattleshipBackground", "img/background.jpg");
         mInstructionBackground = assetManager.getBitmap("BattleshipBackground");
 
@@ -55,7 +56,7 @@ public class InstructionsScreen extends GameScreen {
         getWidthAndHeightOfScreen(graphics2D);
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mInstructionBackground,null,rect,null);
-        mBackButton.draw(elapsedTime,graphics2D);
+        mBackButton.draw(elapsedTime,graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
 
 
     }
@@ -78,6 +79,8 @@ public class InstructionsScreen extends GameScreen {
 
     public void createButton()
     {
-        mBackButton = new PushButton(screenWidth/2,screenHeight/2,screenWidth/4,screenHeight/2,"BackArrow",this);
+        mBackButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,"BackArrow","BackArrowP", this);
+        mBackButton.setPlaySounds(true, true);
     }
 }

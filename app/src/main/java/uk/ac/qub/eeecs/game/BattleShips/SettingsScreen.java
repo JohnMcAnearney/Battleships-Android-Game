@@ -27,11 +27,12 @@ public class SettingsScreen extends GameScreen {
 
     //Load the bitmap for the settings screen
     AssetManager assetManager = mGame.getAssetManager();
-    assetManager.loadAndAddBitmap("SettingBackground","img/SettingsBackground.png" );
-    assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackArrow.png");
+    assetManager.loadAndAddBitmap("SettingBackground","img/background.jpg" );
+    assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
+    assetManager.loadAndAddBitmap("SettingsBackButtonP", "img/BackBPressed.png");
     assetManager.loadAndAddBitmap("SettingsTitle", "img/SettingsTitle.png");
 
-        mSettingsBackground = assetManager.getBitmap("SettingBackground");
+    mSettingsBackground = assetManager.getBitmap("SettingBackground");
     }
 
 
@@ -80,11 +81,12 @@ public class SettingsScreen extends GameScreen {
 
 
     public void createButton() {
-        //Trigger Buttons
+        //Trigger Button at the bottom left of the screen
         mBackButton = new PushButton(
                 mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
                 mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
-                "SettingsBackButton", this);
+                "SettingsBackButton","SettingsBackButtonP",  this);
+        mBackButton.setPlaySounds(true, true);
 
     }
 

@@ -67,7 +67,7 @@ public class MainMenu extends GameScreen {
 
             //Trigger a screen
             if (mStartButton.isPushTriggered()) {
-                //add gamescreen
+                mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
             } else if (mInstructionsButton.isPushTriggered()) {
                 mGame.getScreenManager().addScreen(new InstructionsScreen(mGame));
             } else if (mSettingsButton.isPushTriggered()) {

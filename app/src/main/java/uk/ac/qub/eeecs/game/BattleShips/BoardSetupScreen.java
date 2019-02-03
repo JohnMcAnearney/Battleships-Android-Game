@@ -27,6 +27,13 @@ public class BoardSetupScreen extends GameScreen {
     private PushButton mBackButton;
     private Paint paint = new Paint();
     private Canvas canvas = new Canvas();
+    private String message = "Not Detected", message2  ="";
+    private float x,y;
+    private float bigBoxLeftCoor=0;       //i could do a test method for these, testing if i change these variables that they all still fit in the
+    private float bigBoxTopCoor=0;         //screen and if not set it back so it fits in screen
+    private float bigBoxRightCoor=0;     //simple if right>screenwidth then return false and fix
+    private float bigBoxBottomCoor=0;
+
 
 
     public BoardSetupScreen(Game game){
@@ -36,6 +43,7 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
         BoardSetupBackground = assetManager.getBitmap("WaterBackground");
 
+
     }
 
 
@@ -44,24 +52,42 @@ public class BoardSetupScreen extends GameScreen {
 
         // Process any touch events occurring since the update
         Input input = mGame.getInput();
+       List<TouchEvent> touchEvents = input.getTouchEvents();
+        if (touchEvents.size() > 0) {
 
-//        List<TouchEvent> touchEvents = input.getTouchEvents();
-//        if (touchEvents.size() > 0) {
-//
+            for(TouchEvent touchEvent: touchEvents) {
+                y = touchEvent.y;
+                x = touchEvent.x;
+
+            }
+            if( y < bigBoxBottomCoor )
+            {
+                message = "detected big box";
+            }
+            else
+                message = "Not detected";
+
 //            // Update each button and transition if needed
 //            mBackButton.update(elapsedTime);
 //            if (mBackButton.isPushTriggered()){
 //                mGame.getScreenManager().removeScreen(this);
 //            }
-//
-//        }
+
+       }
+       message2 = "X CoOr: "+String.valueOf(x) + "\n" +"YcoOr:" + String.valueOf(y);
     }
 
+    Paint textPaint = new Paint();
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         graphics2D.clear(Color.WHITE);
         drawBoard(graphics2D);
         drawShips();
+
+        textPaint.setTextSize(50.0f);
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        graphics2D.drawText(message, 100.0f, 100.0f, textPaint);
+        graphics2D.drawText(message2, 100.0f, 200.0f, textPaint);
 
     }
 
@@ -73,10 +99,10 @@ public class BoardSetupScreen extends GameScreen {
         int screenWidth = graphics2D.getSurfaceWidth();
         int screenHeight = graphics2D.getSurfaceHeight();
 
-        float bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
-        float bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
-        float bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
-        float bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
+         bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
+         bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
+         bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
+         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
 
         float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
         float smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;

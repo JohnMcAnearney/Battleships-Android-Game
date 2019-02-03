@@ -50,28 +50,30 @@ public class Board //extends GameObject             might have to extend as game
         }
     }
 
-    public void shipPosition(Ship selectedShip){
-        //this will take the selected ship and place its coordinates to where ever the player drops the ship
-
-        // 1 touch event on ship in the bay area at top
-        // 2 player drags ship icon over board
-        // 3 board highlights current drop location
-        // 4 player let go
-        // 5 ship in place
-        // 6 if player moves the repeat 1-5
-
-    }
-
-    public void rotateShip(Ship currentShip){
-        //this will take the current ships coordinates and turn the 90 degrees anti-clockwise relative to the top coordinate
-
-        // 1 get selected ship first coor, i.e. the the square bound it is in
-        // 2 find length of ship i.e. if it is 3 long etc.
-        /* 3 (by default the ship will be horizontal) therefore to rotate we go to first coor
-              and do nothing, go through each one to the right/left and swap x and y values
-              */
-        // 4 update
-    }
+    //These methods should be in BoardSetupScreen!!!!!
+    //
+//    public void shipPosition(Ship selectedShip){
+//        //this will take the selected ship and place its coordinates to where ever the player drops the ship
+//
+//        // 1 touch event on ship in the bay area at top
+//        // 2 player drags ship icon over board
+//        // 3 board highlights current drop location
+//        // 4 player let go
+//        // 5 ship in place
+//        // 6 if player moves the repeat 1-5
+//
+//    }
+//
+//    public void rotateShip(Ship currentShip){
+//        //this will take the current ships coordinates and turn the 90 degrees anti-clockwise relative to the top coordinate
+//
+//        // 1 get selected ship first coor, i.e. the the square bound it is in
+//        // 2 find length of ship i.e. if it is 3 long etc.
+//        /* 3 (by default the ship will be horizontal) therefore to rotate we go to first coor
+//              and do nothing, go through each one to the right/left and swap x and y values
+//              */
+//        // 4 update
+//    }
 
 
 

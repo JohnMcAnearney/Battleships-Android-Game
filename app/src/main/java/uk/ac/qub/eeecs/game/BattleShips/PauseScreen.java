@@ -15,34 +15,33 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
-public class InstructionsScreen extends GameScreen {
-    //User story <insert # here> MJ
-    private Bitmap mInstructionBackground;
+public class PauseScreen extends GameScreen {
+
+    private Bitmap mPauseBackground;
     private int screenWidth=0, screenHeight=0;
     private PushButton mBackButton;
     private Rect rect;
 
-    public InstructionsScreen(Game game){
-        super("InstructionsScreen", game);
+    public PauseScreen(Game game){
+        super("PauseScreen", game);
         AssetManager assetManager = mGame.getAssetManager();
         assetManager.loadAndAddBitmap("BackArrow", "img/BackB.png");
         assetManager.loadAndAddBitmap("BackArrowP", "img/BackBPressed.png");
         assetManager.loadAndAddBitmap("BattleshipBackground", "img/background.jpg");
-        mInstructionBackground = assetManager.getBitmap("BattleshipBackground");
+        mPauseBackground = assetManager.getBitmap("BattleshipBackground");
 
     }
-
     @Override
     public void update(ElapsedTime elapsedTime) {
-
-        // Process any touch events occurring since the update
+        //Used to process any touch input within the screen
         Input input = mGame.getInput();
 
+        //A list which stores the history of touch inputs to allow for appropriate processing
         List<TouchEvent> touchEvents = input.getTouchEvents();
+        //If statement to process the possible inputs
         if (touchEvents.size() > 0) {
-
-            // Update each button and transition if needed
             mBackButton.update(elapsedTime);
+            //If back button is pressed, remove the current screen to return to the main menu
             if (mBackButton.isPushTriggered()){
                 mGame.getScreenManager().removeScreen(this);
             }
@@ -55,10 +54,8 @@ public class InstructionsScreen extends GameScreen {
 
         getWidthAndHeightOfScreen(graphics2D);
         graphics2D.clear(Color.WHITE);
-        graphics2D.drawBitmap(mInstructionBackground,null,rect,null);
-        mBackButton.draw(elapsedTime,graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
-
-
+        graphics2D.drawBitmap(mPauseBackground,null,rect,null);
+        mBackButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 
     public void getWidthAndHeightOfScreen(IGraphics2D graphics2D) {
@@ -69,7 +66,6 @@ public class InstructionsScreen extends GameScreen {
             updateRect();
             createButton();
         }
-
     }
 
     public void updateRect()
@@ -81,6 +77,5 @@ public class InstructionsScreen extends GameScreen {
     {
         mBackButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
                 mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,"BackArrow","BackArrowP", this);
-        mBackButton.setPlaySounds(true, true);
-    }
+        mBackButton.setPlaySounds(true, true);    }
 }

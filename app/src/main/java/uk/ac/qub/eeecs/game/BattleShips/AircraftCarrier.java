@@ -1,16 +1,16 @@
 package uk.ac.qub.eeecs.game.BattleShips;
+import uk.ac.qub.eeecs.gage.world.GameScreen;
+import java.lang.String;
 
-//Aircraft Carrier class that extends from the Ship class
+//Aircraft Carrier class that extends from the Ship class - Hannah (40201925)
 public class AircraftCarrier extends Ship
 {
-    public AircraftCarrier()
+    public AircraftCarrier(String shipType, float startPositionX, float startPositionY, GameScreen gameScreen)
     {
-        super("Ship3", "Aircraft Carrier"); //Ship number 3 and ship type
-    }
+//        super("Ship3", "Aircraft Carrier");  - This is an old constructor from the previous sprint
 
-    public AircraftCarrier(String name, String shipType)
-    {
-        super(name, shipType);
+        //New Sprint 4 constructor below - Hannah (40201925)
+        super("Aircraft Carrier", startPositionX, startPositionY, gameScreen.getGame().getAssetManager().getBitmap("Aircraft Carrier"), gameScreen);
     }
 
     public String toString()

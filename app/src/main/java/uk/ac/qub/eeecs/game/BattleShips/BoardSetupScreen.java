@@ -3,13 +3,10 @@ package uk.ac.qub.eeecs.game.BattleShips;
 //this class will be responsible for displaying the board. On this screen the user will be able to setup their
 //fleet with their ships in whatever way they wish
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 
+import android.graphics.*;
 import java.util.List;
+import java.util.Vector;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
@@ -18,6 +15,7 @@ import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
+import uk.ac.qub.eeecs.gage.util.Vector2;
 import uk.ac.qub.eeecs.gage.world.GameObject;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
@@ -33,6 +31,11 @@ public class BoardSetupScreen extends GameScreen {
     private float bigBoxTopCoor=0;         //screen and if not set it back so it fits in screen
     private float bigBoxRightCoor=0;     //simple if right>screenwidth then return false and fix
     private float bigBoxBottomCoor=0;
+    private boolean smallBoxDetected = false;
+    private float[][] smallBoxCoordinates = new float[100][4];
+    private int numberOfSmallBoxesDrawn = -1;
+    private int numberofSmallBoxDetected ;
+    private boolean smallboxCoordinatesCaptured = false;
 
 
 
@@ -42,8 +45,6 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("BackArrow", "img/BackArrow.png");
         assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
         BoardSetupBackground = assetManager.getBitmap("WaterBackground");
-
-
     }
 
 
@@ -52,21 +53,17 @@ public class BoardSetupScreen extends GameScreen {
 
         // Process any touch events occurring since the update
         Input input = mGame.getInput();
+
+
        List<TouchEvent> touchEvents = input.getTouchEvents();
         if (touchEvents.size() > 0) {
 
             for(TouchEvent touchEvent: touchEvents) {
                 y = touchEvent.y;
                 x = touchEvent.x;
-
             }
-            if( y < bigBoxBottomCoor )
-            {
-                message = "detected big box";
-            }
-            else
-                message = "Not detected";
 
+            detectionIfUserSelectedSmallBox();
 //            // Update each button and transition if needed
 //            mBackButton.update(elapsedTime);
 //            if (mBackButton.isPushTriggered()){
@@ -78,11 +75,23 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     Paint textPaint = new Paint();
+    Paint highlight = new Paint();
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         graphics2D.clear(Color.WHITE);
         drawBoard(graphics2D);
         drawShips();
+
+        if(smallBoxDetected == true)
+        {
+            highlight.setARGB(75,232,0,0);
+            highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);
+            message = "detected";
+        }
+        else
+        {
+            message = "Not detected";
+        }
 
         textPaint.setTextSize(50.0f);
         textPaint.setTextAlign(Paint.Align.LEFT);
@@ -111,20 +120,28 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.drawRect(bigBoxLeftCoor, bigBoxTopCoor,
                 bigBoxRightCoor, bigBoxBottomCoor, paint);
 
+
         //Step 2 - draw lots of smaller squares
         paint.setStrokeWidth(2);
         paint.setColor(Color.BLUE);
-
+        numberOfSmallBoxesDrawn =-1;
         for(int rows =0; rows<10; rows++) {
             float moveConstLeft = 0;
             for (int column = 0; column < 10; column++) {
-
-
+                numberOfSmallBoxesDrawn++;
                 //draw each of the small boxes
                 graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
                         (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
-                moveConstLeft += smallBoxWidth;
 
+                //store all of the small box coordinates in a 2d array
+                if(smallboxCoordinatesCaptured == false) {
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;
+
+                }
+                moveConstLeft += smallBoxWidth;
                 //step 2 - draw horizontal lines
 //        for (int horLines = 0; horLines<9;horLines++){
 //            //make an array of points, each consecutive 4 points constitutes to a single line therefore, for loop with four variables, increment by whatever each time
@@ -142,12 +159,45 @@ public class BoardSetupScreen extends GameScreen {
 //            canvas.drawLines(linePoints, paint);
 //        }
             }
+
             bigBoxTopCoor+=smallBoxHeight;
             bigBoxBottomCoor+=smallBoxHeight;
+
         }
+        smallboxCoordinatesCaptured = true;
+        bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
+        bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
+        bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
+        bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
     }
 
     public void drawShips(){
         //draw them to the screen for now using bitmaps
+    }
+
+    public void highlightBoxGiven(int numberofSmallBox,Paint p, IGraphics2D iGraphics2D)
+    {
+
+        iGraphics2D.drawRect(smallBoxCoordinates[numberofSmallBox][0], smallBoxCoordinates[numberofSmallBox][1],
+                smallBoxCoordinates[numberofSmallBox][2],smallBoxCoordinates[numberofSmallBox][3], p);
+
+    }
+
+    public void detectionIfUserSelectedSmallBox()
+    {
+        for(int i = 0; i < 100; i++)
+        {
+                if( x > smallBoxCoordinates[i][0] && x < smallBoxCoordinates[i][2]
+                        && y > smallBoxCoordinates[i][1] && y < smallBoxCoordinates[i][3])
+                {
+                    numberofSmallBoxDetected =i;
+                    smallBoxDetected =true;
+                    break;
+                }
+                else
+                    smallBoxDetected = false;
+            }
+
+
     }
 }

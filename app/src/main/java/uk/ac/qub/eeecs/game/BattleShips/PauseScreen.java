@@ -17,9 +17,9 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 public class PauseScreen extends GameScreen {
 
-    private Bitmap mPauseBackground;
+    private Bitmap mPauseBackground, mPause;
     private int screenWidth=0, screenHeight=0;
-    private PushButton mBackButton;
+    private PushButton mBackButton, mVolumeButton, mInstructionsButton, mSettingsButton;
     private Rect rect;
 
     public PauseScreen(Game game){
@@ -28,7 +28,15 @@ public class PauseScreen extends GameScreen {
         assetManager.loadAndAddBitmap("BackArrow", "img/BackB.png");
         assetManager.loadAndAddBitmap("BackArrowP", "img/BackBPressed.png");
         assetManager.loadAndAddBitmap("BattleshipBackground", "img/background.jpg");
+        assetManager.loadAndAddBitmap("VolumeOn", "img/VolumeOn.png");
+        assetManager.loadAndAddBitmap("VolumeOff", "img/VolumeOff.png");
+        assetManager.loadAndAddBitmap("InstructionsButton", "img/InstructionsB.png");
+        assetManager.loadAndAddBitmap("InstructionsButtonP", "img/InstructionsBPressed.png");
+        assetManager.loadAndAddBitmap("SettingsButton", "img/SettingsB.png");
+        assetManager.loadAndAddBitmap("SettingsButtonP", "img/SettingsBPressed.png");
+        assetManager.loadAndAddBitmap("Paused", "img/Paused.png");
         mPauseBackground = assetManager.getBitmap("BattleshipBackground");
+        mPause = assetManager.getBitmap("Paused");
 
     }
     @Override
@@ -41,21 +49,26 @@ public class PauseScreen extends GameScreen {
         //If statement to process the possible inputs
         if (touchEvents.size() > 0) {
             mBackButton.update(elapsedTime);
+            mVolumeButton.update(elapsedTime);
             //If back button is pressed, remove the current screen to return to the main menu
-            if (mBackButton.isPushTriggered()){
+            if (mBackButton.isPushTriggered())
+            {
                 mGame.getScreenManager().removeScreen(this);
             }
-
         }
     }
 
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
-
         getWidthAndHeightOfScreen(graphics2D);
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mPauseBackground,null,rect,null);
+        Rect drawRectangle =drawRectangle(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() /1.3f, mDefaultLayerViewport.getWidth() / 2f, mDefaultLayerViewport.getHeight()/ 3f);
+        graphics2D.drawBitmap(mPause, null, drawRectangle, null);
         mBackButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
+        mVolumeButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
+        mInstructionsButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
+        mSettingsButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 
     public void getWidthAndHeightOfScreen(IGraphics2D graphics2D) {
@@ -72,10 +85,17 @@ public class PauseScreen extends GameScreen {
     {
         rect = new Rect(0,0,screenWidth,screenHeight);
     }
+    public Rect drawRectangle(float x, float y, float width, float height)
+    {
+        Rect rectangle = new Rect((int)x,(int)y,(int)width,(int)height);
+        return rectangle;
+    }
 
     public void createButton()
     {
-        mBackButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
-                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,"BackArrow","BackArrowP", this);
-        mBackButton.setPlaySounds(true, true);    }
+        mInstructionsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 5.5f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "InstructionsButton", "InstructionsButtonP", this);
+        mSettingsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 3f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "SettingsButton", "SettingsButtonP", this);
+        mBackButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.1f, mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.1f, "BackArrow", "BackArrowP", this);
+        mVolumeButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.05f, mDefaultLayerViewport.getHeight() * 0.1f, mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.1f, "VolumeOn", "VolumeOff", this);
+    }
 }

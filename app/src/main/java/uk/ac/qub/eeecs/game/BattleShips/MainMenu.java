@@ -33,7 +33,7 @@ public class MainMenu extends GameScreen {
         assetManager.loadAndAddBitmap("InstructionsButton", "img/InstructionsB.png");
         assetManager.loadAndAddBitmap("SettingsButton", "img/SettingsB.png");
         assetManager.loadAndAddBitmap("NewGameButtonP", "img/NewGameBPressed.png");
-        assetManager.loadAndAddBitmap("InstructionsButtonP", "img/InstrustionsBPressed.png");
+        assetManager.loadAndAddBitmap("InstructionsButtonP", "img/InstructionsBPressed.png");
         assetManager.loadAndAddBitmap("SettingsButtonP", "img/SettingsBPressed.png");
         assetManager.loadAndAddBitmap("PauseButton", "img/Pause.png");
         assetManager.loadAndAddBitmap("Title", "img/Title.png");
@@ -111,7 +111,7 @@ public class MainMenu extends GameScreen {
         mSettingsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 3f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "SettingsButton", "SettingsButtonP", this);
         mSettingsButton.setPlaySounds(true, true);
 
-        mPauseButton = new PushButton((mDefaultLayerViewport.getWidth() / 100) * 90, (mDefaultLayerViewport.getHeight() / 100) * 10, (mDefaultLayerViewport.getWidth() / 100) * 15, (mDefaultLayerViewport.getWidth() / 100) * 18, "PauseButton", this);
+        mPauseButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.9f, mDefaultLayerViewport.getHeight() * 0.9f, mDefaultLayerViewport.getWidth() * 0.05f, mDefaultLayerViewport.getHeight() * 0.05f, "PauseButton", this);
         mPauseButton.setPlaySounds(true, true);
 
         mTitle = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() /1.3f , mDefaultLayerViewport.getWidth() / 2f, mDefaultLayerViewport.getHeight()/ 3f, "Title", this);

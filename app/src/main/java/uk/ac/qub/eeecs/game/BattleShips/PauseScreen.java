@@ -2,6 +2,7 @@ package uk.ac.qub.eeecs.game.BattleShips;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 import java.util.List;
@@ -63,8 +64,7 @@ public class PauseScreen extends GameScreen {
         getWidthAndHeightOfScreen(graphics2D);
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mPauseBackground,null,rect,null);
-        Rect drawRectangle =drawRectangle(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() /1.3f, mDefaultLayerViewport.getWidth() / 2f, mDefaultLayerViewport.getHeight()/ 3f);
-        graphics2D.drawBitmap(mPause, null, drawRectangle, null);
+        graphics2D.drawBitmap(mPause, null, drawRectangle(mDefaultLayerViewport.getWidth() * 0.1f, mDefaultLayerViewport.getHeight() * 0.5f, mDefaultLayerViewport.getWidth() * 0.5f, mDefaultLayerViewport.getHeight() /1.3f + mDefaultLayerViewport.getHeight()/ 1.5f), null);
         mBackButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
         mVolumeButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
         mInstructionsButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
@@ -85,9 +85,11 @@ public class PauseScreen extends GameScreen {
     {
         rect = new Rect(0,0,screenWidth,screenHeight);
     }
-    public Rect drawRectangle(float x, float y, float width, float height)
+    //Method which allows you to put in the float values of the destination rectangle
+    public Rect drawRectangle(float left, float top, float right, float bottom)
     {
-        Rect rectangle = new Rect((int)x,(int)y,(int)width,(int)height);
+
+        Rect rectangle = new Rect((int)left, (int)top, (int)right, (int)bottom);
         return rectangle;
     }
 

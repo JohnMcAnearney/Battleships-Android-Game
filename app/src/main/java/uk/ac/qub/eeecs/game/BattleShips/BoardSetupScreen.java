@@ -189,12 +189,14 @@ public class BoardSetupScreen extends GameScreen {
         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
     }
 
+    //Method to draw the ship bitmaps onto the screen
     public void drawShips(IGraphics2D graphics2D){
+        //Setting the ship rectangle, including the left,top,right, bottom co-ordinates
         Rect shipRect = new Rect((int)Math.round(graphics2D.getSurfaceWidth()*0.05),
                 (int)Math.round(graphics2D.getSurfaceHeight()/4.8),
                 (int)Math.round(graphics2D.getSurfaceWidth()*0.2),
                 (int)Math.round(graphics2D.getSurfaceHeight()*0.28));
-      // Rect shipRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
+      //Drawing the aircraft carrier bitmap
        graphics2D.drawBitmap(shipArray[0].bitmap,null,shipRect,paint);
     }
 
@@ -206,22 +208,19 @@ public class BoardSetupScreen extends GameScreen {
 
     }
 
+    //This method checks small box co-ordinates against the x and y input co-ordinates, sets parameter smallBoxDetected to true if yes, false otherwise
     public void detectionIfUserSelectedSmallBox()
     {
+        smallBoxDetected = false;
         for(int i = 0; i < 100; i++)
         {
                 if( x > smallBoxCoordinates[i][0] && x < smallBoxCoordinates[i][2]
-                        && y > smallBoxCoordinates[i][1] && y < smallBoxCoordinates[i][3])
-                {
-                    numberofSmallBoxDetected =i;
-                    smallBoxDetected =true;
+                        && y > smallBoxCoordinates[i][1] && y < smallBoxCoordinates[i][3]) {
+                    numberofSmallBoxDetected = i;
+                    smallBoxDetected = true;
                     break;
                 }
-                else
-                    smallBoxDetected = false;
             }
-
-
     }
 
     public void createButtons() {

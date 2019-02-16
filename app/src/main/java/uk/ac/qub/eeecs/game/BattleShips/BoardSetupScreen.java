@@ -30,12 +30,12 @@ public class BoardSetupScreen extends GameScreen {
     private float bigBoxTopCoor=0;         //screen and if not set it back so it fits in screen
     private float bigBoxRightCoor=0;     //simple if right>screenwidth then return false and fix
     private float bigBoxBottomCoor=0;
-    private boolean smallBoxDetected = false;
-    private float[][] smallBoxCoordinates = new float[100][4];
-    private int numberOfSmallBoxesDrawn = -1;
-    private int numberofSmallBoxDetected ;
-    private boolean smallboxCoordinatesCaptured = false;
-    private Ship[] shipArray;
+    private boolean smallBoxDetected = false;      //if user clicked inside a small box this will be true
+    private float[][] smallBoxCoordinates = new float[100][4];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom
+    private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
+    private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
+    private boolean smallboxCoordinatesCaptured = false;   //if the smallBoxCoordinates array has been populated this will be true
+    private Ship[] shipArray;  // hold all of the ship objects
 
 
 

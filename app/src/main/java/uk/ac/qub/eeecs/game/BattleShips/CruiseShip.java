@@ -1,3 +1,4 @@
+/*
 package uk.ac.qub.eeecs.game.BattleShips;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import java.lang.String;
@@ -19,3 +20,4 @@ import java.lang.String;
     }
 
 
+*/

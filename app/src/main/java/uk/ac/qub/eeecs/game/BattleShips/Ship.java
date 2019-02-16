@@ -17,7 +17,7 @@ import uk.ac.qub.eeecs.gage.world.LayerViewport;
 import uk.ac.qub.eeecs.gage.world.Sprite;
 import java.lang.String;
 
-public class Ship extends Sprite
+public class Ship //extends Sprite
 {
     //Instance variables for the Ship class
     private String shipType; //data field for the type of ship e.g. Cargo Ship
@@ -32,14 +32,15 @@ public class Ship extends Sprite
 
     //Constructor
     //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
-    public Ship(String shipType, float startPositionX, float startPositionY, Bitmap bitmap, GameScreen gameScreen)
-    {
-        super(startPositionX, startPositionY, bitmap, gameScreen);
-    }
+    public Ship(String shipType, float startPositionX, float startPositionY, Bitmap bitmap)//, GameScreen gameScreen)
+    //{
+       // super(startPositionX, startPositionY, bitmap, gameScreen);
+    //}
     {
         this.shipType = shipType;
         this.startPositionX = startPositionX;
         this.startPositionY = startPositionY;
+        this.bitmap = bitmap;
     }
 
     private void setTargetPosition(float startPositionX, float startPositionY)
@@ -48,7 +49,7 @@ public class Ship extends Sprite
         mBound.y = targetPosition.y = startPositionY;
     }
 
-    public void boundingBoat(LayerViewport mLayerViewport)
+    /*public void boundingBoat(LayerViewport mLayerViewport)
     {
         BoundingBox bound = getBound();
 
@@ -56,7 +57,7 @@ public class Ship extends Sprite
             setTargetPosition(startPositionX -= bound.getLeft(), startPositionY);
         else if (bound.getTop() > mLayerViewport.getHeight())
             setTargetPosition(startPositionX, startPositionY -= (bound.getTop() - mLayerViewport.getHeight()));
-    }
+    }*/
     //Getters
     //Sprint 4 - Implemented and improved on the Ship class' Getters (40201925)
     public String shipType()

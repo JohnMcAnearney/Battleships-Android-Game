@@ -35,7 +35,7 @@ public class BoardSetupScreen extends GameScreen {
     private int numberOfSmallBoxesDrawn = -1;
     private int numberofSmallBoxDetected ;
     private boolean smallboxCoordinatesCaptured = false;
-
+    private Ship[] shipArray;
 
 
 
@@ -49,6 +49,9 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("Title", "img/Title.png");
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
+        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
+        Ship aircraftCarrier = new Ship("Aircraft Carrier", 0,0,assetManager.getBitmap("AircraftCarrier"));
+        shipArray = new Ship[]{aircraftCarrier};
 
     }
 
@@ -92,7 +95,7 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.clear(Color.WHITE);
         drawStaticImages(graphics2D);
         drawBoard(graphics2D);
-        drawShips();
+        drawShips(graphics2D);
 
 
         if(smallBoxDetected == true)
@@ -186,8 +189,13 @@ public class BoardSetupScreen extends GameScreen {
         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
     }
 
-    public void drawShips(){
-        //draw them to the screen for now using bitmaps
+    public void drawShips(IGraphics2D graphics2D){
+        Rect shipRect = new Rect((int)Math.round(graphics2D.getSurfaceWidth()*0.05),
+                (int)Math.round(graphics2D.getSurfaceHeight()/4.8),
+                (int)Math.round(graphics2D.getSurfaceWidth()*0.2),
+                (int)Math.round(graphics2D.getSurfaceHeight()*0.28));
+      // Rect shipRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
+       graphics2D.drawBitmap(shipArray[0].bitmap,null,shipRect,paint);
     }
 
     public void highlightBoxGiven(int numberofSmallBox,Paint p, IGraphics2D iGraphics2D)

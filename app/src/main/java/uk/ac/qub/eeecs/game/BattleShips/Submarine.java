@@ -3,7 +3,7 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 import java.lang.String;
 
 //Submarine class that extends from the Ship class - Hannah (40201925)
-public class Submarine extends Ship
+public class Submarine extends Ship         //length 3
 {
     public Submarine(String shipType, float startPositionX, float startPositionY, GameScreen gameScreen)
     {

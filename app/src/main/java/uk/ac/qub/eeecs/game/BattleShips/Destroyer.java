@@ -3,7 +3,7 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 import java.lang.String;
 
 //Destoryer class that extends from the Ship class
-public class Destroyer extends Ship
+public class Destroyer extends Ship         //length 3
 {
     public Destroyer(String shipType, float startPositionX, float startPositionY, GameScreen gameScreen)
     {

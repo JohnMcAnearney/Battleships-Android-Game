@@ -3,7 +3,7 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 import java.lang.String;
 
 //Aircraft Carrier class that extends from the Ship class - Hannah (40201925)
-public class AircraftCarrier extends Ship
+public class AircraftCarrier extends Ship   //length 5
 {
     public AircraftCarrier(String shipType, float startPositionX, float startPositionY, GameScreen gameScreen)
     {

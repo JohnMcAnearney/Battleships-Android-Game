@@ -6,15 +6,20 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.view.DragEvent;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.List;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
+import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
@@ -29,6 +34,8 @@ public class CardDemoScreen extends GameScreen {
     private Paint textPaint = new Paint();
     private final float LEVEL_WIDTH = (1000.0F)*2;
     private final float LEVEL_HEIGHT = (1000.0F)*2;
+    private Input input = mGame.getInput();
+    private TouchEvent screenTouchEvent;
 
     /**
      * Create the Card game screen
@@ -38,7 +45,7 @@ public class CardDemoScreen extends GameScreen {
     public CardDemoScreen(Game game) {
         super("CardScreen", game);
         //Initialising a card object within the cardDemoScreen so that it can be drawn by the draw method.
-        mCard = new Card(400,200,this);
+        mCard = new Card(200,200,this);
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -49,39 +56,48 @@ public class CardDemoScreen extends GameScreen {
      *
      * @param elapsedTime Elapsed time information
      */
+
     @Override
     public void update(ElapsedTime elapsedTime) {
         // Process any touch events occurring since the last update
-        Input input = mGame.getInput();
+//        Input input = mGame.getInput();
 
-        // Store acceleration information for the device
-        mCard.mAcceleration[0] = input.getAccelX();
-        mCard.mAcceleration[1] = input.getAccelY();
-        mCard.mAcceleration[2] = input.getAccelZ();
+//        if(mCard.cardBound.contains(input.getTouchX(0),input.getTouchY(0))){
+//
+//            mCard.setPosition(input.getTouchX(0),input.getTouchY(0));
+//        }
+
+
 
         // Store touch point information.
-        for (int pointerId = 0; pointerId < mCard.mTouchIdExists.length; pointerId++) {
-            mCard.mTouchIdExists[pointerId] = input.existsTouch(pointerId);
-            if (mCard.mTouchIdExists[pointerId]) {
-                mCard.mTouchLocation[pointerId][0] = input.getTouchX(0);
-                mCard.mTouchLocation[pointerId][1] = input.getTouchY(0);
-            }
-        }
-        //MotionEvent.ACTION_MOVE;    //probably implement something like this
+                for (int pointerId = 0; pointerId < mCard.mTouchIdExists.length; pointerId++) {
+                    mCard.mTouchIdExists[pointerId] = input.existsTouch(pointerId);
+                    if (mCard.mTouchIdExists[pointerId]) {
+                        mCard.mTouchLocation[pointerId][0] = input.getTouchX(0);
+                        mCard.mTouchLocation[pointerId][1] = input.getTouchY(0);
+                        //mCard.handleTouchEvents(mCard.listOfEvents);
+                    }
+                }
 
-        //Matrix m = new Matrix();
-        for(int pointerId = 0; pointerId < mCard.mTouchIdExists.length; pointerId++) {
-            mCard.mTouchIdExists[pointerId] = input.existsTouch(pointerId);
-            if (input.getTouchX(pointerId) < mCard.CARD_WIDTH / 2 && input.getTouchY(pointerId) < mCard.CARD_HEIGHT / 2) {
-                mCard.mTouchLocation[pointerId][0] = input.getTouchX(0);
-                mCard.mTouchLocation[pointerId][1] = input.getTouchY(0);
+//        // Store acceleration information for the device
+//        mCard.mAcceleration[0] = input.getAccelX();
+//        mCard.mAcceleration[1] = input.getAccelY();
+//        mCard.mAcceleration[2] = input.getAccelZ();
+//
 
-                mCard.setPosition(mCard.mTouchLocation[pointerId][0] = input.getTouchX(0), mCard.mTouchLocation[pointerId][1] = input.getTouchY(0));
-            }
-        }
+//        for(int pointerId = 0; pointerId < mCard.mTouchIdExists.length; pointerId++) {
+//            mCard.mTouchIdExists[pointerId] = input.existsTouch(pointerId);
+//            if (input.getTouchX(pointerId) < mCard.CARD_WIDTH / 2 && input.getTouchY(pointerId) < mCard.CARD_HEIGHT / 2) {
+//                mCard.mTouchLocation[pointerId][0] = input.getTouchX(0);
+//                mCard.mTouchLocation[pointerId][1] = input.getTouchY(0);
+//
+//                mCard.setPosition(mCard.mTouchLocation[pointerId][0] = input.getTouchX(0), mCard.mTouchLocation[pointerId][1] = input.getTouchY(0));
+//            }
+//        }
 
-        mCard.setPosition(mCard.mTouchLocation[0][0] = input.getTouchX(0), mCard.mTouchLocation[1][1] = input.getTouchY(0));
 
+      //  mCard.setPosition(mCard.mTouchLocation[0][0] = input.getTouchX(0), mCard.mTouchLocation[1][1] = input.getTouchY(0));
+       // mCard.onTouch()
 
         // Get any touch events that have occurred since the last update
    /* List<TouchEvent> touchEvents = input.getTouchEvents();
@@ -95,9 +111,11 @@ public class CardDemoScreen extends GameScreen {
                             touchEvent.x, touchEvent.y, touchEvent.pointer);*/
 
         // Update the card game object
+
         updateCardGameObjects(elapsedTime);
 
     }
+
     //Code that makes sure the card cant leave the world .
     public void ensuresCardCantLeaveWorld(Card mCard){
         BoundingBox cardBound = mCard.getBound();
@@ -130,8 +148,6 @@ public class CardDemoScreen extends GameScreen {
      */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
-        //Canvas canvas = new Canvas();
-        // Matrix cardMoved = new Matrix();
 
         graphics2D.clear(Color.WHITE);
         textPaint.setTextSize(30);
@@ -140,6 +156,11 @@ public class CardDemoScreen extends GameScreen {
         mCard.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
 
         for (int pointerIdx = 0; pointerIdx < mCard.mTouchIdExists.length; pointerIdx++) {
+           // mCard.dragAndDropCard();
+            if(mCard.cardBound.contains(input.getTouchX(0),input.getTouchY(0))){
+                graphics2D.drawText("The touch event on the card has been detected",
+                        0.0f, 400, textPaint);
+            }
             if (mCard.mTouchIdExists[pointerIdx]) {
                 graphics2D.drawText("Pointer Id " + pointerIdx + ": Detected [" +
                                 String.format("%.3f, %.3f]", mCard.mTouchLocation[pointerIdx][0], mCard.mTouchLocation[pointerIdx][1]),
@@ -149,12 +170,7 @@ public class CardDemoScreen extends GameScreen {
                         0.0f, 150, textPaint);
             }
         }
-         //This is just a tester method to see if the card detects touch events and it does
 
     }
-
-
-
-
 }
 

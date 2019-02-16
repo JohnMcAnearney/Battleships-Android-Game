@@ -3,7 +3,7 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 import java.lang.String;
 
 //Cargo Ship class that extends from the Ship class - Hannah (40201925)
-public class CargoShip extends Ship
+public class CargoShip extends Ship     //length 4
 {
     public CargoShip(String shipType, float startPositionX, float startPositionY, GameScreen gameScreen)
     {

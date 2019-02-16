@@ -21,10 +21,9 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 public class BoardSetupScreen extends GameScreen {
 
-    private Bitmap BoardSetupBackground;
+    private Bitmap boardSetupBackground, battleshipTitle;
     private PushButton mBackButton;
     private Paint paint = new Paint();
-    private Canvas canvas = new Canvas();
     private String message = "Not Detected", message2  ="";
     private float x,y;
     private float bigBoxLeftCoor=0;       //i could do a test method for these, testing if i change these variables that they all still fit in the
@@ -39,12 +38,18 @@ public class BoardSetupScreen extends GameScreen {
 
 
 
+
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
         AssetManager assetManager = mGame.getAssetManager();
         assetManager.loadAndAddBitmap("BackArrow", "img/BackArrow.png");
         assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
-        BoardSetupBackground = assetManager.getBitmap("WaterBackground");
+        assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
+        assetManager.loadAndAddBitmap("SettingsBackButtonP", "img/BackBPressed.png");
+        assetManager.loadAndAddBitmap("Title", "img/Title.png");
+        battleshipTitle = assetManager.getBitmap("Title");
+        boardSetupBackground = assetManager.getBitmap("WaterBackground");
+
     }
 
 
@@ -57,6 +62,12 @@ public class BoardSetupScreen extends GameScreen {
 
        List<TouchEvent> touchEvents = input.getTouchEvents();
         if (touchEvents.size() > 0) {
+
+            mBackButton.update(elapsedTime);
+            if(mBackButton.isPushTriggered()){
+                //back to mainmenu
+                mGame.getScreenManager().addScreen(new MainMenu(mGame));
+            }
 
             for(TouchEvent touchEvent: touchEvents) {
                 y = touchEvent.y;
@@ -79,8 +90,10 @@ public class BoardSetupScreen extends GameScreen {
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         graphics2D.clear(Color.WHITE);
+        drawStaticImages(graphics2D);
         drawBoard(graphics2D);
         drawShips();
+
 
         if(smallBoxDetected == true)
         {
@@ -97,6 +110,8 @@ public class BoardSetupScreen extends GameScreen {
         textPaint.setTextAlign(Paint.Align.LEFT);
         graphics2D.drawText(message, 100.0f, 100.0f, textPaint);
         graphics2D.drawText(message2, 100.0f, 200.0f, textPaint);
+        createButtons();
+        mBackButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
 
     }
 
@@ -108,9 +123,9 @@ public class BoardSetupScreen extends GameScreen {
         int screenWidth = graphics2D.getSurfaceWidth();
         int screenHeight = graphics2D.getSurfaceHeight();
 
-         bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
+         bigBoxLeftCoor = (screenWidth/14f)*3.5f;       //i could do a test method for these, testing if i change these variables that they all still fit in the
          bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
-         bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
+         bigBoxRightCoor = (bigBoxLeftCoor*3f);      //simple if right>screenwidth then return false and fix
          bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
 
         float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
@@ -200,4 +215,24 @@ public class BoardSetupScreen extends GameScreen {
 
 
     }
+
+    public void createButtons() {
+        //Trigger Button at the bottom left of the screen
+        mBackButton = new PushButton(
+                mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
+                "SettingsBackButton","SettingsBackButtonP",  this);
+        mBackButton.setPlaySounds(true, true);
+
+    }
+
+    public void drawStaticImages(IGraphics2D graphics2D){
+        Rect screenRect = new Rect(0, 0, graphics2D.getSurfaceWidth(), graphics2D.getSurfaceHeight());
+        graphics2D.drawBitmap(boardSetupBackground, null, screenRect, paint);
+        //                      could do some maths to figure out exact ,middle using bitmaps ac size but looks ok for now
+        Rect titleRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
+        graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
+    }
 }
+
+

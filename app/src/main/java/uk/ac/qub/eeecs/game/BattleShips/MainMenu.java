@@ -115,6 +115,7 @@ public class MainMenu extends GameScreen {
         mPauseButton.setPlaySounds(true, true);
 
         mTitle = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() /1.3f , mDefaultLayerViewport.getWidth() / 2f, mDefaultLayerViewport.getHeight()/ 3f, "Title", this);
+        //why is this a button? i think this is a mistake but it could be used for an easter egg
     }
 
     /**

@@ -34,7 +34,7 @@ public class Ship //extends Sprite
     //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
     public Ship(String shipType, float startPositionX, float startPositionY, Bitmap bitmap)//, GameScreen gameScreen)
     //{
-       // super(startPositionX, startPositionY, bitmap, gameScreen);
+    // super(startPositionX, startPositionY, bitmap, gameScreen);
     //}
     {
         this.shipType = shipType;
@@ -90,7 +90,7 @@ public class Ship //extends Sprite
     //Sprint 4 - Implemented and improved on the Ship class' Setters (40201925)
     public void setShipType(String shipType)
     {
-      this.shipType = shipType;
+        this.shipType = shipType;
     }
 
     public void setStartPositionX(float startPositionX)
@@ -107,7 +107,13 @@ public class Ship //extends Sprite
 
     public void setScreenCentre(Vector2 screenCentre) { this.screenCentre = screenCentre;}
 
-    public void setmBound(BoundingBox mBound) { this.mBound = mBound;}
+    public void setmBound(float x, float y, float halfWidth, float halfHeight) {
+        mBound.x = x;
+        mBound.y = y;
+        mBound.halfWidth = halfWidth;
+        mBound.halfHeight = halfHeight;
+    }
+
 
     public void setSelected(boolean selected) { this.selected = selected;}
 
@@ -121,4 +127,3 @@ public class Ship //extends Sprite
 
 
 }
-

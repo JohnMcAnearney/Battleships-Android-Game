@@ -5,6 +5,8 @@ package uk.ac.qub.eeecs.game.BattleShips;
 
 
 import android.graphics.*;
+import android.text.method.Touch;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -34,8 +36,14 @@ public class BoardSetupScreen extends GameScreen {
     private float[][] smallBoxCoordinates = new float[100][4];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom
     private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
     private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
-    private boolean smallboxCoordinatesCaptured = false;   //if the smallBoxCoordinates array has been populated this will be true
+    private boolean smallboxCoordinatesCaptured = false;  //if the smallBoxCoordinates array has been populated this will be true
+    private boolean setShipBound = false;
     private Ship[] shipArray;  // hold all of the ship objects
+
+    private Ship shipToDrag;                                                                 //Ship object holder which will be used when user clicks on the ship and drags it across the screen
+    private int shipToDragPointerIndexOfInput;                                                         //pointer index holder, when user presses the screen the input index will be stored for dragging
+    private enum GameShipPlacementState {SHIP_SELECT,SHIP_DRAG}                              //Game states, will swap between the states when the user will place ships onto the grid before the start of the game
+    private GameShipPlacementState gameShipPlacementState = BoardSetupScreen.GameShipPlacementState.SHIP_SELECT;  //Initialized enum object set to ship select, for when the game starts
 
 
 
@@ -53,6 +61,8 @@ public class BoardSetupScreen extends GameScreen {
         Ship aircraftCarrier = new Ship("Aircraft Carrier", 0,0,assetManager.getBitmap("AircraftCarrier"));
         shipArray = new Ship[]{aircraftCarrier};
 
+
+
     }
 
 
@@ -61,31 +71,41 @@ public class BoardSetupScreen extends GameScreen {
 
         // Process any touch events occurring since the update
         Input input = mGame.getInput();
+        List<TouchEvent> touchEvents = input.getTouchEvents();
+        //Store the x and y co-ordinates from touch events
+        for(TouchEvent touchEvent: touchEvents) {
+            y = touchEvent.y;
+            x = touchEvent.x;
+        }
 
 
-       List<TouchEvent> touchEvents = input.getTouchEvents();
+        switch(gameShipPlacementState)
+        {
+            case SHIP_SELECT: shipSelect(input); break;
+            case SHIP_DRAG: shipDrag(input);break;
+        }
+
         if (touchEvents.size() > 0) {
-
             mBackButton.update(elapsedTime);
             if(mBackButton.isPushTriggered()){
-                //back to mainmenu
+                //back to main menu
                 mGame.getScreenManager().addScreen(new MainMenu(mGame));
             }
 
-            for(TouchEvent touchEvent: touchEvents) {
-                y = touchEvent.y;
-                x = touchEvent.x;
-            }
 
+            //Calling method to check if user input of x,y are inside a small box
             detectionIfUserSelectedSmallBox();
+
+
 //            // Update each button and transition if needed
 //            mBackButton.update(elapsedTime);
 //            if (mBackButton.isPushTriggered()){
 //                mGame.getScreenManager().removeScreen(this);
 //            }
+        }
 
-       }
-       message2 = "X CoOr: "+String.valueOf(x) + "\n" +"YcoOr:" + String.valueOf(y);
+
+        message2 = "X CoOr: "+String.valueOf(x) + "\n" +"YcoOr:" + String.valueOf(y);
     }
 
     Paint textPaint = new Paint();
@@ -95,10 +115,14 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.clear(Color.WHITE);
         drawStaticImages(graphics2D);
         drawBoard(graphics2D);
+        if (!setShipBound ) {
+            setUpShipmBound(graphics2D);
+        }
         drawShips(graphics2D);
 
-
-        if(smallBoxDetected == true)
+        //if an user clicked on a small box highlight by painting a square using paint
+        //otherwise do nothing
+        if(smallBoxDetected)
         {
             highlight.setARGB(75,232,0,0);
             highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);
@@ -118,7 +142,7 @@ public class BoardSetupScreen extends GameScreen {
 
     }
 
-    public void drawBoard(IGraphics2D graphics2D){
+    private void drawBoard(IGraphics2D graphics2D){
         paint.setColor(Color.BLACK);
         paint.setStrokeWidth(5);
         paint.setStyle(Paint.Style.STROKE);
@@ -126,10 +150,10 @@ public class BoardSetupScreen extends GameScreen {
         int screenWidth = graphics2D.getSurfaceWidth();
         int screenHeight = graphics2D.getSurfaceHeight();
 
-         bigBoxLeftCoor = (screenWidth/14f)*3.5f;       //i could do a test method for these, testing if i change these variables that they all still fit in the
-         bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
-         bigBoxRightCoor = (bigBoxLeftCoor*3f);      //simple if right>screenwidth then return false and fix
-         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
+        bigBoxLeftCoor = (screenWidth/14f)*3.5f;       //i could do a test method for these, testing if i change these variables that they all still fit in the
+        bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
+        bigBoxRightCoor = (bigBoxLeftCoor*3f);      //simple if right>screenwidth then return false and fix
+        bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
 
         float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
         float smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
@@ -152,7 +176,7 @@ public class BoardSetupScreen extends GameScreen {
                         (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
 
                 //store all of the small box coordinates in a 2d array
-                if(smallboxCoordinatesCaptured == false) {
+                if(!smallboxCoordinatesCaptured ) {
                     smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;
                     smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;
                     smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;
@@ -189,18 +213,30 @@ public class BoardSetupScreen extends GameScreen {
         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
     }
 
-    //Method to draw the ship bitmaps onto the screen
-    public void drawShips(IGraphics2D graphics2D){
-        //Setting the ship rectangle, including the left,top,right, bottom co-ordinates
-        Rect shipRect = new Rect((int)Math.round(graphics2D.getSurfaceWidth()*0.05),
-                (int)Math.round(graphics2D.getSurfaceHeight()/4.8),
-                (int)Math.round(graphics2D.getSurfaceWidth()*0.2),
-                (int)Math.round(graphics2D.getSurfaceHeight()*0.28));
-      //Drawing the aircraft carrier bitmap
-       graphics2D.drawBitmap(shipArray[0].bitmap,null,shipRect,paint);
+    private void setUpShipmBound(IGraphics2D graphics2D)
+    {
+        //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
+        shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.05),
+                Math.round(graphics2D.getSurfaceWidth()*0.1),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5),
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2);
+        setShipBound = true;
     }
 
-    public void highlightBoxGiven(int numberofSmallBox,Paint p, IGraphics2D iGraphics2D)
+    //Method to draw the ship bitmaps onto the screen
+    private void drawShips(IGraphics2D graphics2D){
+
+        //Setting up the rectangle for drawing by calling bounding box x,y co-ordinates, width and height getters
+        Rect shipRect = new Rect((int)shipArray[0].mBound.x ,
+                (int)shipArray[0].mBound.y,
+                (int)(shipArray[0].mBound.getWidth()+shipArray[0].mBound.x),
+                (int)(shipArray[0].mBound.getHeight() + shipArray[0].mBound.y));
+        //Drawing the aircraft carrier bitmap
+        graphics2D.drawBitmap(shipArray[0].bitmap,null,shipRect,paint);
+    }
+
+    //Highlight the small box passed in as a parameter
+    private void highlightBoxGiven(int numberofSmallBox,Paint p, IGraphics2D iGraphics2D)
     {
 
         iGraphics2D.drawRect(smallBoxCoordinates[numberofSmallBox][0], smallBoxCoordinates[numberofSmallBox][1],
@@ -209,21 +245,21 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     //This method checks small box co-ordinates against the x and y input co-ordinates, sets parameter smallBoxDetected to true if yes, false otherwise
-    public void detectionIfUserSelectedSmallBox()
+    private void detectionIfUserSelectedSmallBox()
     {
         smallBoxDetected = false;
         for(int i = 0; i < 100; i++)
         {
-                if( x > smallBoxCoordinates[i][0] && x < smallBoxCoordinates[i][2]
-                        && y > smallBoxCoordinates[i][1] && y < smallBoxCoordinates[i][3]) {
-                    numberofSmallBoxDetected = i;
-                    smallBoxDetected = true;
-                    break;
-                }
+            if( x > smallBoxCoordinates[i][0] && x < smallBoxCoordinates[i][2]
+                    && y > smallBoxCoordinates[i][1] && y < smallBoxCoordinates[i][3]) {
+                numberofSmallBoxDetected = i;
+                smallBoxDetected = true;
+                break;
             }
+        }
     }
 
-    public void createButtons() {
+    private void createButtons() {
         //Trigger Button at the bottom left of the screen
         mBackButton = new PushButton(
                 mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
@@ -233,13 +269,46 @@ public class BoardSetupScreen extends GameScreen {
 
     }
 
-    public void drawStaticImages(IGraphics2D graphics2D){
+    private void drawStaticImages(IGraphics2D graphics2D){
         Rect screenRect = new Rect(0, 0, graphics2D.getSurfaceWidth(), graphics2D.getSurfaceHeight());
         graphics2D.drawBitmap(boardSetupBackground, null, screenRect, paint);
         //                      could do some maths to figure out exact ,middle using bitmaps ac size but looks ok for now
         Rect titleRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
         graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
     }
+
+    private void shipSelect(Input input)
+    {
+        List<TouchEvent> touchEvents = input.getTouchEvents();
+        for(TouchEvent touchEvent: touchEvents)
+        {
+            if(touchEvent.type == touchEvent.TOUCH_DOWN)
+            {
+                for(Ship ship: shipArray)
+                {
+                    if(touchEvent.x > ship.mBound.x &&
+                            touchEvent.x < (ship.mBound.x + ship.mBound.getWidth()) &&
+                            touchEvent.y > ship.mBound.y &&
+                            touchEvent.y < (ship.mBound.y + ship.mBound.getHeight() ))
+                    {
+                        shipToDrag = ship;
+                        shipToDragPointerIndexOfInput = touchEvent.pointer;
+                        gameShipPlacementState = GameShipPlacementState.SHIP_DRAG;
+                    }
+                }
+            }
+        }
+    }
+
+    private void shipDrag(Input input)
+    {
+        if(input.existsTouch(shipToDragPointerIndexOfInput))
+        {
+            shipToDrag.mBound.x = input.getTouchX(shipToDragPointerIndexOfInput);
+            shipToDrag.mBound.y = input.getTouchY(shipToDragPointerIndexOfInput);
+        }
+    }
+
+
+
 }
-
-

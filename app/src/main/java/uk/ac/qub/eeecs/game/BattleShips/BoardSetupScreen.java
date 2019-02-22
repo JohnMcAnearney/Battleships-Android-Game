@@ -44,7 +44,7 @@ public class BoardSetupScreen extends GameScreen {
     private int shipToDragPointerIndexOfInput;                                                         //pointer index holder, when user presses the screen the input index will be stored for dragging
     private enum GameShipPlacementState {SHIP_SELECT,SHIP_DRAG}                              //Game states, will swap between the states when the user will place ships onto the grid before the start of the game
     private GameShipPlacementState gameShipPlacementState = BoardSetupScreen.GameShipPlacementState.SHIP_SELECT;  //Initialized enum object set to ship select, for when the game starts
-
+    private Vector2 dragShipOffset = new Vector2();                  //Vector to store the x and y coordinates of the ship's coordinates minus the touch location
 
 
     public BoardSetupScreen(Game game){
@@ -277,13 +277,16 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
     }
 
+    //When user touches on a ship object store the ship object that was touched
     private void shipSelect(Input input)
     {
+        //Check if the user has pressed on the screen
         List<TouchEvent> touchEvents = input.getTouchEvents();
         for(TouchEvent touchEvent: touchEvents)
         {
             if(touchEvent.type == touchEvent.TOUCH_DOWN)
             {
+                //check if the touch was on any of the ships bounding box if yes change game state, store the pointer index and the ship
                 for(Ship ship: shipArray)
                 {
                     if(touchEvent.x > ship.mBound.x &&
@@ -291,6 +294,8 @@ public class BoardSetupScreen extends GameScreen {
                             touchEvent.y > ship.mBound.y &&
                             touchEvent.y < (ship.mBound.y + ship.mBound.getHeight() ))
                     {
+                        //Set x and y coordinates dragShipOffset vector, so when user drags the ship, the ship will be dragged from the point of touch
+                        dragShipOffset.set(ship.mBound.x - touchEvent.x, ship.mBound.y - touchEvent.y);
                         shipToDrag = ship;
                         shipToDragPointerIndexOfInput = touchEvent.pointer;
                         gameShipPlacementState = GameShipPlacementState.SHIP_DRAG;
@@ -300,15 +305,22 @@ public class BoardSetupScreen extends GameScreen {
         }
     }
 
-    private void shipDrag(Input input)
-    {
-        if(input.existsTouch(shipToDragPointerIndexOfInput))
-        {
-            shipToDrag.mBound.x = input.getTouchX(shipToDragPointerIndexOfInput);
-            shipToDrag.mBound.y = input.getTouchY(shipToDragPointerIndexOfInput);
+    //Drag the stored ship following the user's input
+    private void shipDrag(Input input) {
+        if (input.existsTouch(shipToDragPointerIndexOfInput)) {
+            shipToDrag.mBound.x = input.getTouchX(shipToDragPointerIndexOfInput) + dragShipOffset.x;
+            shipToDrag.mBound.y = input.getTouchY(shipToDragPointerIndexOfInput) + dragShipOffset.y;
         }
-    }
 
+        //When user lifts their finger off the screen drop the bitmap, and change the game state
+        List<TouchEvent> touchEvents = input.getTouchEvents();
+        for (TouchEvent touchEvent : touchEvents)
+            if (touchEvent.type == TouchEvent.TOUCH_UP
+                    && touchEvent.pointer == shipToDragPointerIndexOfInput) {
+                gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
+            }
+
+    }
 
 
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
+import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
@@ -37,6 +38,7 @@ public class MainMenu extends GameScreen {
         assetManager.loadAndAddBitmap("SettingsButtonP", "img/SettingsBPressed.png");
         assetManager.loadAndAddBitmap("PauseButton", "img/Pause.png");
         assetManager.loadAndAddBitmap("Title", "img/Title.png");
+        assetManager.loadAndAddSound("BackgroundMusic", "sound/RickRoll.mp3");
         mBattleShipBackground = assetManager.getBitmap("BattleshipBackground");
 
 
@@ -139,4 +141,5 @@ public class MainMenu extends GameScreen {
         mPauseButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mTitle.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
     }
+
 }

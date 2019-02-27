@@ -33,10 +33,10 @@ public class BoardSetupScreen extends GameScreen {
     private float bigBoxRightCoor=0;     //simple if right>screenwidth then return false and fix
     private float bigBoxBottomCoor=0;
     private boolean smallBoxDetected = false;      //if user clicked inside a small box this will be true
-    private float[][] smallBoxCoordinates = new float[100][5];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom
+    private float[][] smallBoxCoordinates = new float[200][5];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom
     private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
     private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
-    private boolean smallboxCoordinatesCaptured = false;  //if the smallBoxCoordinates array has been populated this will be true
+    private boolean smallboxCoordinatesCaptured = false, smallboxCoordinatesCaptured2 = false;  //if the smallBoxCoordinates array has been populated by capturing the co ordinates for both boards this will be set to true
     private boolean setShipBound = false;
     private Ship[] shipArray;  // hold all of the ship objects
     private int moveBackground =0;
@@ -231,7 +231,7 @@ public class BoardSetupScreen extends GameScreen {
         //Step 2 - draw lots of smaller squares
         paint.setStrokeWidth(5);
         paint.setColor(Color.WHITE);
-        numberOfSmallBoxesDrawn =-1;
+        numberOfSmallBoxesDrawn =99;
         for(int rows =0; rows<10; rows++) {
             float moveConstLeft = 0;
             for (int column = 0; column < 10; column++) {
@@ -241,7 +241,7 @@ public class BoardSetupScreen extends GameScreen {
                         (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
 
                 //store all of the small box coordinates in a 2d array
-                if(!smallboxCoordinatesCaptured ) {
+                if(!smallboxCoordinatesCaptured2 ) {
                     smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;
                     smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;
                     smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;
@@ -269,7 +269,7 @@ public class BoardSetupScreen extends GameScreen {
             bigBoxBottomCoor+=smallBoxHeight;
 
         }
-        smallboxCoordinatesCaptured = true;
+        smallboxCoordinatesCaptured2 = true;
         bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
         bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
         bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
@@ -311,7 +311,7 @@ public class BoardSetupScreen extends GameScreen {
     private void detectionIfUserSelectedSmallBox()
     {
         smallBoxDetected = false;
-        for(int i = 0; i < 100; i++)
+        for(int i = 0; i < 200; i++)
         {
             if( x > smallBoxCoordinates[i][0] && x < smallBoxCoordinates[i][2]
                     && y > smallBoxCoordinates[i][1] && y < smallBoxCoordinates[i][3]) {

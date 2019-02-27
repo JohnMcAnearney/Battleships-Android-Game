@@ -33,12 +33,13 @@ public class BoardSetupScreen extends GameScreen {
     private float bigBoxRightCoor=0;     //simple if right>screenwidth then return false and fix
     private float bigBoxBottomCoor=0;
     private boolean smallBoxDetected = false;      //if user clicked inside a small box this will be true
-    private float[][] smallBoxCoordinates = new float[100][4];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom
+    private float[][] smallBoxCoordinates = new float[100][5];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom
     private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
     private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
     private boolean smallboxCoordinatesCaptured = false;  //if the smallBoxCoordinates array has been populated this will be true
     private boolean setShipBound = false;
     private Ship[] shipArray;  // hold all of the ship objects
+    private int moveBackground =0;
 
     private Ship shipToDrag;                                                                 //Ship object holder which will be used when user clicks on the ship and drags it across the screen
     private int shipToDragPointerIndexOfInput;                                                         //pointer index holder, when user presses the screen the input index will be stored for dragging
@@ -104,6 +105,10 @@ public class BoardSetupScreen extends GameScreen {
 //            }
         }
 
+        moveBackground += elapsedTime.stepTime * 50.0f;
+        if(moveBackground> 300){
+            moveBackground = 0;
+        }
 
         message2 = "X CoOr: "+String.valueOf(x) + "\n" +"YcoOr:" + String.valueOf(y);
     }
@@ -114,7 +119,8 @@ public class BoardSetupScreen extends GameScreen {
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         graphics2D.clear(Color.WHITE);
         drawStaticImages(graphics2D);
-        drawBoard(graphics2D);
+        drawBoardOne(graphics2D);
+        drawBoardTwo(graphics2D);
         if (!setShipBound ) {
             setUpShipmBound(graphics2D);
         }
@@ -142,30 +148,25 @@ public class BoardSetupScreen extends GameScreen {
 
     }
 
-    private void drawBoard(IGraphics2D graphics2D){
-        paint.setColor(Color.BLACK);
+    private void drawBoardOne(IGraphics2D graphics2D){
+        paint.setColor(Color.WHITE);
         paint.setStrokeWidth(5);
         paint.setStyle(Paint.Style.STROKE);
 
         int screenWidth = graphics2D.getSurfaceWidth();
         int screenHeight = graphics2D.getSurfaceHeight();
 
-        bigBoxLeftCoor = (screenWidth/14f)*3.5f;       //i could do a test method for these, testing if i change these variables that they all still fit in the
+        bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
         bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
-        bigBoxRightCoor = (bigBoxLeftCoor*3f);      //simple if right>screenwidth then return false and fix
+        bigBoxRightCoor = (bigBoxLeftCoor*3f)*2f;      //simple if right>screenwidth then return false and fix
         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
 
         float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
         float smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
 
-        //step 1 - draw rectangle           for these values i could do another method
-        graphics2D.drawRect(bigBoxLeftCoor, bigBoxTopCoor,
-                bigBoxRightCoor, bigBoxBottomCoor, paint);
-
-
         //Step 2 - draw lots of smaller squares
-        paint.setStrokeWidth(2);
-        paint.setColor(Color.BLUE);
+        paint.setStrokeWidth(5);
+        paint.setColor(Color.WHITE);
         numberOfSmallBoxesDrawn =-1;
         for(int rows =0; rows<10; rows++) {
             float moveConstLeft = 0;
@@ -183,23 +184,85 @@ public class BoardSetupScreen extends GameScreen {
                     smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;
 
                 }
+
+//                if(smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 1){
+//                    paint.setStyle(Paint.Style.FILL);
+//                    paint.setColor(Color.YELLOW);
+//                } else{
+//                    paint.setStyle(Paint.Style.STROKE);       THIS METHOD COULD BE USED FOR IF HIT PAINT RED ETC.
+//                    paint.setColor(Color.WHITE);
+//                }
+//
+//                //draw each of the small boxes
+//                graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
+//                        (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
+
                 moveConstLeft += smallBoxWidth;
-                //step 2 - draw horizontal lines
-//        for (int horLines = 0; horLines<9;horLines++){
-//            //make an array of points, each consecutive 4 points constitutes to a single line therefore, for loop with four variables, increment by whatever each time
-//            float x1, y1, x2, y2;
-//            float y1y2ChangeConstant  = 30; //each block is 30 in height therefore change both y's by block height
+
+            }
+
+            bigBoxTopCoor+=smallBoxHeight;
+            bigBoxBottomCoor+=smallBoxHeight;
+
+        }
+        smallboxCoordinatesCaptured = true;
+        bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
+        bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
+        bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
+        bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
+    }
+
+    private void drawBoardTwo(IGraphics2D graphics2D){
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(5);
+        paint.setStyle(Paint.Style.STROKE);
+
+        int screenWidth = graphics2D.getSurfaceWidth();
+        int screenHeight = graphics2D.getSurfaceHeight();
+
+        bigBoxLeftCoor = (screenWidth/14f)*7.5f;       //i could do a test method for these, testing if i change these variables that they all still fit in the
+        bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
+        bigBoxRightCoor = (bigBoxLeftCoor*1.684f);      //simple if right>screenwidth then return false and fix
+        bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
+
+        float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
+        float smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
+
+        //Step 2 - draw lots of smaller squares
+        paint.setStrokeWidth(5);
+        paint.setColor(Color.WHITE);
+        numberOfSmallBoxesDrawn =-1;
+        for(int rows =0; rows<10; rows++) {
+            float moveConstLeft = 0;
+            for (int column = 0; column < 10; column++) {
+                numberOfSmallBoxesDrawn++;
+                //draw each of the small boxes
+                graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
+                        (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
+
+                //store all of the small box coordinates in a 2d array
+                if(!smallboxCoordinatesCaptured ) {
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;
+
+                }
+
+//                if(smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 1){
+//                    paint.setStyle(Paint.Style.FILL);
+//                    paint.setColor(Color.YELLOW);
+//                } else{
+//                    paint.setStyle(Paint.Style.STROKE);       THIS METHOD COULD BE USED FOR IF HIT PAINT RED ETC.
+//                    paint.setColor(Color.WHITE);
+//                }
 //
-//            x1 = graphics2D.getSurfaceWidth()/14;
-//            y1 = (graphics2D.getSurfaceHeight()/5) + y1y2ChangeConstant;
-//            x2 = (graphics2D.getSurfaceWidth()/14)*5;
-//            y2 = (graphics2D.getSurfaceHeight()/5)*3;
-//
-//                                                                        THIS IS A BETTER METHOD TO DRAW BUT I JUST NEED SOMETHING FOR SPRINT 4
-//                                                                        NEED TO FIGURE OUT HOE TO DRAW LINES THAT AC DISPLAY BECAUSE CURRENTLY ONLY DISPLAY WHEN USING GRAPHICS2D
-//            final float[] linePoints = {x1,y1,x2,y2};
-//            canvas.drawLines(linePoints, paint);
-//        }
+//                //draw each of the small boxes
+//                graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
+//                        (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
+
+                moveConstLeft += smallBoxWidth;
+
             }
 
             bigBoxTopCoor+=smallBoxHeight;
@@ -269,9 +332,13 @@ public class BoardSetupScreen extends GameScreen {
 
     }
 
-    private void drawStaticImages(IGraphics2D graphics2D){
-        Rect screenRect = new Rect(0, 0, graphics2D.getSurfaceWidth(), graphics2D.getSurfaceHeight());
-        graphics2D.drawBitmap(boardSetupBackground, null, screenRect, paint);
+    public void drawStaticImages(IGraphics2D graphics2D){
+        Matrix bcgMatrix = new Matrix();
+
+        bcgMatrix.setScale(2.5f, 2.5f);
+        bcgMatrix.postTranslate(-moveBackground,0);
+        graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
+
         //                      could do some maths to figure out exact ,middle using bitmaps ac size but looks ok for now
         Rect titleRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
         graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);

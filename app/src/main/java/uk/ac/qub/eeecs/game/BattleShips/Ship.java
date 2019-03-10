@@ -9,7 +9,11 @@ package uk.ac.qub.eeecs.game.BattleShips;
 // Further implementation to the Ship class
 
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
+import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.util.Vector2;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
@@ -29,6 +33,10 @@ public class Ship //extends Sprite
     protected BoundingBox mBound = new BoundingBox();
     private boolean selected, afterDrag;
     public Bitmap bitmap;
+    private Paint paint;
+    public boolean rotate, isRotated;
+    private Matrix matrix = new Matrix();
+
 
     //Constructor
     //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
@@ -47,6 +55,37 @@ public class Ship //extends Sprite
     {
         mBound.x = targetPosition.x = startPositionX;
         mBound.y = targetPosition.y = startPositionY;
+    }
+
+    private void rotate()
+    {
+            matrix.reset();
+            matrix.setRotate(90.0f, mBound.getWidth()/2, mBound.getHeight()/2);
+            matrix.postTranslate(mBound.x,mBound.y);
+    }
+
+    public void drawShip(IGraphics2D graphics2D)
+    {
+        if(rotate)
+        {
+            rotate();
+            rotate = false;
+            isRotated = !isRotated;
+        }
+
+        if(isRotated)
+        {
+            rotate();
+            graphics2D.drawBitmap(bitmap, matrix, null);
+        }
+        else {
+            Rect shipRect = new Rect((int) mBound.x,
+                    (int) mBound.y,
+                    (int) (mBound.getWidth() + mBound.x),
+                    (int) (mBound.getHeight() + mBound.y));
+            //Drawing the aircraft carrier bitmap
+            graphics2D.drawBitmap(bitmap, null, shipRect, paint);
+        }
     }
 
     /*public void boundingBoat(LayerViewport mLayerViewport)

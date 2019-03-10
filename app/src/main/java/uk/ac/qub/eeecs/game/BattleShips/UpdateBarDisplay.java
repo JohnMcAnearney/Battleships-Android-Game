@@ -19,16 +19,21 @@ public class UpdateBarDisplay extends GameObject {
 
     public UpdateBarDisplay(int numberOfBits, float initialValue, float minValue, float maxValue, float startX, float startY, float scale, GameScreen gameScreen) {
         super(startX, startY, scale * WIDTH_FACTOR * numberOfBits, scale * HEIGHT_FACTOR, null, gameScreen);
-        //add the assets
+        loadAssets();
+        init(numberOfBits, initialValue, minValue, maxValue);
+
+
+    }
+    private void loadAssets(){
         mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageDefault", "img/BlankBit.png");
         mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageHigh", "img/BlankBitHigh.png");
         mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageLow", "img/BlankBitLow.png");
         mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageMedium", "img/BlankBitMedium.png");
 
-        init(numberOfBits, initialValue, minValue, maxValue);
-
-
     }
+
+
+
     private void init(int numberOfBits, float initialValue, float minValue, float maxValue) {
 
         this.barBits = new GameObject[numberOfBits];

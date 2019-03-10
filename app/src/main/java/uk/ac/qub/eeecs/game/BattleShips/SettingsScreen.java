@@ -18,7 +18,7 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
-public class SettingsScreen extends GameScreen {
+public class   SettingsScreen extends GameScreen {
     //Background
     private Bitmap mSettingsBackground;
     private int screenWidth = 0, screenHeight = 0;
@@ -100,11 +100,11 @@ public class SettingsScreen extends GameScreen {
 
         //Button for the music up and down
         mIncreaseMusicButton = new PushButton(
-                musicBarDisplay.getBound().getRight()-30.0f,musicBarDisplay.getBound().y, 10.0f,
-                10.0f, "IncreaseMusic",  this);
+                musicBarDisplay.getBound().getLeft() -360,musicBarDisplay.getBound().y-30, 20.0f,
+                20.0f, "IncreaseMusic",  this);
         mDecreaseMusicButton=new PushButton(
-                musicBarDisplay.getBound().getLeft() -550, musicBarDisplay.getBound().y,
-                10.0f, 10.0f, "DecreaseMusic",  this);
+                musicBarDisplay.getBound().getLeft() -550, musicBarDisplay.getBound().y-30,
+                20.0f, 20.0f, "DecreaseMusic",  this);
 
 
 
@@ -148,6 +148,7 @@ public class SettingsScreen extends GameScreen {
         mIncreaseMusicButton.update(elapsedTime);
         mDecreaseMusicButton.update(elapsedTime);
         mMuteMusicButton.update(elapsedTime);
+
 //        mDecreaseEffectButton.update(elapsedTime);
         //      mDecreaseEffectButton.update(elapsedTime);
 
@@ -155,7 +156,7 @@ public class SettingsScreen extends GameScreen {
     public void pressedButtonsActions(){
         if(mIncreaseMusicButton.isPushTriggered()){
             audioManager.setMusicVolume(audioManager.getMusicVolume()+0.1f);
-            musicOnScreen.setVolume(audioManager.getMusicVolume());
+            musicBarDisplay.setValue(audioManager.getMusicVolume());
             audioManager.stopMusic();
             audioManager.playMusic(musicOnScreen);
             musicBarDisplay.update();
@@ -164,7 +165,7 @@ public class SettingsScreen extends GameScreen {
 
         if(mDecreaseMusicButton.isPushTriggered()){
             audioManager.setMusicVolume(audioManager.getMusicVolume()-0.1f);
-            musicOnScreen.setVolume(audioManager.getMusicVolume());
+            musicBarDisplay.setValue(audioManager.getMusicVolume());
             audioManager.stopMusic();
             audioManager.playMusic(musicOnScreen);
             musicBarDisplay.update();

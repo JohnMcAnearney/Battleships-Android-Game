@@ -144,6 +144,7 @@ public class BoardSetupScreen extends GameScreen {
             setUpShipmBound(graphics2D);
         }
         drawShips(graphics2D);
+        shipPlacement(graphics2D);
 
         if(toRotateShip)
         {
@@ -156,7 +157,7 @@ public class BoardSetupScreen extends GameScreen {
         {
             highlight.setARGB(75,232,0,0);
             highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);
-            message = "detected";
+            message = "detected" + numberofSmallBoxDetected;
         }
         else
         {
@@ -212,17 +213,17 @@ public class BoardSetupScreen extends GameScreen {
 
                 }
 
-//                if(smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 1){
-//                    paint.setStyle(Paint.Style.FILL);
-//                    paint.setColor(Color.YELLOW);
-//                } else{
-//                    paint.setStyle(Paint.Style.STROKE);       THIS METHOD COULD BE USED FOR IF HIT PAINT RED ETC.
-//                    paint.setColor(Color.WHITE);
-//                }
-//
-//                //draw each of the small boxes
-//                graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
-//                        (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
+                if(smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 1){
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setColor(Color.YELLOW);
+                } else if (smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 0){
+                    paint.setStyle(Paint.Style.STROKE);       //THIS METHOD COULD BE USED FOR IF HIT PAINT RED ETC.
+                    paint.setColor(Color.WHITE);
+                }
+
+                //draw each of the small boxes
+                graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
+                        (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
 
                 moveConstLeft += smallBoxWidth;
 
@@ -433,5 +434,27 @@ public class BoardSetupScreen extends GameScreen {
         }
     }
 
+
+    private void shipPlacement(IGraphics2D graphics2D){
+
+        for(int i = 0;i<200;i++){
+            if(shipArray[0].getmBound().x > smallBoxCoordinates[i][0] && shipArray[0].getmBound().x < smallBoxCoordinates[i][2]
+                    && shipArray[0].getmBound().y > smallBoxCoordinates[i][1] && shipArray[0].getmBound().y < smallBoxCoordinates[i][3] ){
+
+                smallBoxCoordinates[i][4] = 1;      //this sets that occupancy flag to 1, meaning there is a ship here
+
+            }
+
+            else{
+                smallBoxCoordinates[i][4] = 0;
+            }
+        }
+        //get the ship bound
+
+        //get the first and last coordinates
+
+        //if ship bound is in this box, mark it as occupied
+
+    }
 
 }

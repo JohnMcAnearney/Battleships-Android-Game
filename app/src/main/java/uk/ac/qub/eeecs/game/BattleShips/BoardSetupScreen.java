@@ -24,7 +24,7 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 public class BoardSetupScreen extends GameScreen {
 
     private Bitmap boardSetupBackground, battleshipTitle;
-    private PushButton mBackButton;
+    private PushButton mBackButton, mRotateButton;
     private Paint paint = new Paint();
     private String message = "Not Detected", message2  ="";
     private float x,y;
@@ -41,12 +41,14 @@ public class BoardSetupScreen extends GameScreen {
     private Ship[] shipArray;  // hold all of the ship objects
     private int moveBackground =0;
 
-    private Ship shipToDrag;                                                                 //Ship object holder which will be used when user clicks on the ship and drags it across the screen
+    private Ship selectedShip;                                                                   //Ship object holder which will be used when user clicks on the ship and drags it across the screen
     private int shipToDragPointerIndexOfInput;                                                         //pointer index holder, when user presses the screen the input index will be stored for dragging
     private enum GameShipPlacementState {SHIP_SELECT,SHIP_DRAG}                              //Game states, will swap between the states when the user will place ships onto the grid before the start of the game
     private GameShipPlacementState gameShipPlacementState = BoardSetupScreen.GameShipPlacementState.SHIP_SELECT;  //Initialized enum object set to ship select, for when the game starts
     private Vector2 dragShipOffset = new Vector2();                  //Vector to store the x and y coordinates of the ship's coordinates minus the touch location
 
+    private boolean toRotateShip = false;                            //boolean value used as a identifier to rotate the ship
+    Matrix matrix = new Matrix();                                    //matrix variable used for translation,resize, and rotation
 
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
@@ -55,6 +57,7 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
         assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
         assetManager.loadAndAddBitmap("SettingsBackButtonP", "img/BackBPressed.png");
+        assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
         assetManager.loadAndAddBitmap("Title", "img/Title.png");
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
@@ -88,10 +91,14 @@ public class BoardSetupScreen extends GameScreen {
 
         if (touchEvents.size() > 0) {
             mBackButton.update(elapsedTime);
+            mRotateButton.update(elapsedTime);
             if(mBackButton.isPushTriggered()){
                 //back to main menu
                 mGame.getScreenManager().addScreen(new MainMenu(mGame));
+                mGame.getScreenManager().removeScreen(this);
             }
+            if(mRotateButton.isPushTriggered())
+            {toRotateShip = true;}
 
 
             //Calling method to check if user input of x,y are inside a small box
@@ -126,13 +133,23 @@ public class BoardSetupScreen extends GameScreen {
         }
         drawShips(graphics2D);
 
+        if(toRotateShip)
+        {
+            rotateShipBy90Degrees();
+            toRotateShip= false;
+        }
+
+
+        shipPlacement(graphics2D);
+
+
         //if an user clicked on a small box highlight by painting a square using paint
         //otherwise do nothing
         if(smallBoxDetected)
         {
             highlight.setARGB(75,232,0,0);
             highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);
-            message = "detected";
+            message = "detected" + numberofSmallBoxDetected;
         }
         else
         {
@@ -145,7 +162,7 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.drawText(message2, 100.0f, 200.0f, textPaint);
         createButtons();
         mBackButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
-
+        mRotateButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 
     private void drawBoardOne(IGraphics2D graphics2D){
@@ -158,7 +175,7 @@ public class BoardSetupScreen extends GameScreen {
 
         bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
         bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
-        bigBoxRightCoor = (bigBoxLeftCoor*3f)*2f;      //simple if right>screenwidth then return false and fix
+        bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
 
         float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
@@ -185,17 +202,17 @@ public class BoardSetupScreen extends GameScreen {
 
                 }
 
-//                if(smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 1){
-//                    paint.setStyle(Paint.Style.FILL);
-//                    paint.setColor(Color.YELLOW);
-//                } else{
-//                    paint.setStyle(Paint.Style.STROKE);       THIS METHOD COULD BE USED FOR IF HIT PAINT RED ETC.
-//                    paint.setColor(Color.WHITE);
-//                }
-//
-//                //draw each of the small boxes
-//                graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
-//                        (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
+                if(smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 1){
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setColor(Color.YELLOW);
+                } else if (smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 0){
+                    paint.setStyle(Paint.Style.STROKE);       //THIS METHOD COULD BE USED FOR IF HIT PAINT RED ETC.
+                    paint.setColor(Color.WHITE);
+                }
+
+                //draw each of the small boxes
+                graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
+                        (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
 
                 moveConstLeft += smallBoxWidth;
 
@@ -282,20 +299,16 @@ public class BoardSetupScreen extends GameScreen {
         shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.05),
                 Math.round(graphics2D.getSurfaceWidth()*0.1),
                 Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2);
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.25f);
         setShipBound = true;
     }
 
-    //Method to draw the ship bitmaps onto the screen
+    //Method to draw the ships stored in the shipArray onto the screen
     private void drawShips(IGraphics2D graphics2D){
 
-        //Setting up the rectangle for drawing by calling bounding box x,y co-ordinates, width and height getters
-        Rect shipRect = new Rect((int)shipArray[0].mBound.x ,
-                (int)shipArray[0].mBound.y,
-                (int)(shipArray[0].mBound.getWidth()+shipArray[0].mBound.x),
-                (int)(shipArray[0].mBound.getHeight() + shipArray[0].mBound.y));
-        //Drawing the aircraft carrier bitmap
-        graphics2D.drawBitmap(shipArray[0].bitmap,null,shipRect,paint);
+        for(Ship ship: shipArray) {
+            ship.drawShip(graphics2D);
+        }
     }
 
     //Highlight the small box passed in as a parameter
@@ -330,6 +343,10 @@ public class BoardSetupScreen extends GameScreen {
                 "SettingsBackButton","SettingsBackButtonP",  this);
         mBackButton.setPlaySounds(true, true);
 
+        mRotateButton = new PushButton(
+                mDefaultLayerViewport.getWidth() * 0.88f,   mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
+                "rotateButton", "rotateButton", this);
     }
 
     public void drawStaticImages(IGraphics2D graphics2D){
@@ -363,7 +380,7 @@ public class BoardSetupScreen extends GameScreen {
                     {
                         //Set x and y coordinates dragShipOffset vector, so when user drags the ship, the ship will be dragged from the point of touch
                         dragShipOffset.set(ship.mBound.x - touchEvent.x, ship.mBound.y - touchEvent.y);
-                        shipToDrag = ship;
+                        selectedShip = ship;
                         shipToDragPointerIndexOfInput = touchEvent.pointer;
                         gameShipPlacementState = GameShipPlacementState.SHIP_DRAG;
                     }
@@ -375,8 +392,8 @@ public class BoardSetupScreen extends GameScreen {
     //Drag the stored ship following the user's input
     private void shipDrag(Input input) {
         if (input.existsTouch(shipToDragPointerIndexOfInput)) {
-            shipToDrag.mBound.x = input.getTouchX(shipToDragPointerIndexOfInput) + dragShipOffset.x;
-            shipToDrag.mBound.y = input.getTouchY(shipToDragPointerIndexOfInput) + dragShipOffset.y;
+            selectedShip.mBound.x = input.getTouchX(shipToDragPointerIndexOfInput) + dragShipOffset.x;
+            selectedShip.mBound.y = input.getTouchY(shipToDragPointerIndexOfInput) + dragShipOffset.y;
         }
 
         //When user lifts their finger off the screen drop the bitmap, and change the game state
@@ -389,5 +406,32 @@ public class BoardSetupScreen extends GameScreen {
 
     }
 
+
+    private void shipPlacement(IGraphics2D graphics2D){
+
+        for(int i = 0;i<200;i++){
+            if(shipArray[0].getmBound().x > smallBoxCoordinates[i][0] && shipArray[0].getmBound().x < smallBoxCoordinates[i][2]
+                    && shipArray[0].getmBound().y > smallBoxCoordinates[i][1] && shipArray[0].getmBound().y < smallBoxCoordinates[i][3] ){
+
+                smallBoxCoordinates[i][4] = 1;      //this sets that occupancy flag to 1, meaning there is a ship here
+
+            }
+
+            else{
+                smallBoxCoordinates[i][4] = 0;
+            }
+        }
+        //get the ship bound
+
+        //get the first and last coordinates
+
+        //if ship bound is in this box, mark it as occupied
+
+    }
+
+    private void rotateShipBy90Degrees()
+    {
+        selectedShip.rotate = true;
+    }
 
 }

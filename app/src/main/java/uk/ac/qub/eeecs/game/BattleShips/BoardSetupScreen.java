@@ -61,8 +61,16 @@ public class BoardSetupScreen extends GameScreen {
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
         assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
-        Ship aircraftCarrier = new Ship("Aircraft Carrier", 0,0,assetManager.getBitmap("AircraftCarrier"));
-        shipArray = new Ship[]{aircraftCarrier};
+        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
+        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
+        Ship aircraftCarrier = new Ship("AircraftCarrier", 0,0,assetManager.getBitmap("AircraftCarrier"));
+        Ship cargoShip = new Ship("CargoShip", 0,0,assetManager.getBitmap("CargoShip"));
+        Ship cruiseShip = new Ship("CruiseShip", 0,0,assetManager.getBitmap("CruiseShip"));
+        Ship destroyer = new Ship("Destroyer", 0,0,assetManager.getBitmap("Destroyer"));
+        Ship submarine = new Ship("Submarine", 0,0,assetManager.getBitmap("Submarine"));
+        shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
 
 
 
@@ -298,10 +306,31 @@ public class BoardSetupScreen extends GameScreen {
     private void setUpShipmBound(IGraphics2D graphics2D)
     {
         //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
-        shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.05),
+        shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
                 Math.round(graphics2D.getSurfaceWidth()*0.1),
                 Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+
+        shipArray[1].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
+                Math.round(graphics2D.getSurfaceWidth()*0.14),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.0f),
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+
+        shipArray[2].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
+                Math.round(graphics2D.getSurfaceWidth()*0.18),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.5f),
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+
+        shipArray[3].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
+                Math.round(graphics2D.getSurfaceWidth()*0.22),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.0f),
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+
+        shipArray[4].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
+                Math.round(graphics2D.getSurfaceWidth()*0.26),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.5f),
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+
         setShipBound = true;
     }
 

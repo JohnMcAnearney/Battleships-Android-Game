@@ -54,7 +54,7 @@ public class Ship //extends Sprite
     private void rotate()
     {
         matrix.reset();
-        matrix.setRotate(90.0f, mBound.getWidth()/2, mBound.getHeight()/2);
+        matrix.setRotate(90.0f, mBound.halfWidth, mBound.halfHeight);
         matrix.postTranslate(mBound.x,mBound.y);
     }
 

@@ -47,7 +47,6 @@ public class BoardSetupScreen extends GameScreen {
     private GameShipPlacementState gameShipPlacementState = BoardSetupScreen.GameShipPlacementState.SHIP_SELECT;  //Initialized enum object set to ship select, for when the game starts
     private Vector2 dragShipOffset = new Vector2();                  //Vector to store the x and y coordinates of the ship's coordinates minus the touch location
 
-    private boolean toRotateShip = false;                            //boolean value used as a identifier to rotate the ship
     Matrix matrix = new Matrix();                                    //matrix variable used for translation,resize, and rotation
 
     public BoardSetupScreen(Game game){
@@ -98,7 +97,14 @@ public class BoardSetupScreen extends GameScreen {
                 mGame.getScreenManager().removeScreen(this);
             }
             if(mRotateButton.isPushTriggered())
-            {toRotateShip = true;}
+            {if(selectedShip == null)
+            {
+            }
+            else
+            {
+                rotateShipBy90Degrees();
+            }
+            }
 
 
             //Calling method to check if user input of x,y are inside a small box
@@ -133,11 +139,6 @@ public class BoardSetupScreen extends GameScreen {
         }
         drawShips(graphics2D);
 
-        if(toRotateShip)
-        {
-            rotateShipBy90Degrees();
-            toRotateShip= false;
-        }
 
 
         shipPlacement(graphics2D);
@@ -298,8 +299,8 @@ public class BoardSetupScreen extends GameScreen {
         //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
         shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.05),
                 Math.round(graphics2D.getSurfaceWidth()*0.1),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.25f);
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.45f),
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.4f);
         setShipBound = true;
     }
 

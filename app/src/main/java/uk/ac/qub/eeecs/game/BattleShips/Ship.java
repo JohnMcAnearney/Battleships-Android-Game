@@ -68,7 +68,6 @@ public class Ship //extends Sprite
 
         if(isRotated)
         {
-            rotate();
             graphics2D.drawBitmap(bitmap, matrix, null);
         }
         else {

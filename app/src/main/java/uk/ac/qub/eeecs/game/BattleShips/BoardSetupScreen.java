@@ -140,6 +140,7 @@ public class BoardSetupScreen extends GameScreen {
         drawShips(graphics2D);
 
 
+        graphics2D.drawRect(shipArray[0].mBound.x,shipArray[0].mBound.y,shipArray[0].mBound.x + shipArray[0].mBound.getWidth(), shipArray[0].mBound.y + shipArray[0].mBound.getHeight(),highlight);
 
         shipPlacement(graphics2D);
 
@@ -299,8 +300,8 @@ public class BoardSetupScreen extends GameScreen {
         //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
         shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.05),
                 Math.round(graphics2D.getSurfaceWidth()*0.1),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.45f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.4f);
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5f),
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
         setShipBound = true;
     }
 

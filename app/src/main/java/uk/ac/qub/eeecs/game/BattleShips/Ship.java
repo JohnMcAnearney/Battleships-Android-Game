@@ -34,8 +34,9 @@ public class Ship //extends Sprite
     private boolean selected, afterDrag;
     public Bitmap bitmap;
     private Paint paint;
-    public boolean rotate, isRotated;
+    public boolean rotate, isRotated, boundingBoxSetAfterRotation, undoBoundingBoxSetAfterRotation =true;
     private Matrix matrix = new Matrix();
+
 
     //Constructor
     //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
@@ -66,19 +67,44 @@ public class Ship //extends Sprite
             isRotated = !isRotated;
         }
 
-        if(isRotated)
-        {
+        if(isRotated) {
+
             rotate();
+            if (!boundingBoxSetAfterRotation){
+                updateBoundingBoxAfterRotation(); }
+
             graphics2D.drawBitmap(bitmap, matrix, null);
         }
         else {
+
             Rect shipRect = new Rect((int) mBound.x,
                     (int) mBound.y,
                     (int) (mBound.getWidth() + mBound.x),
                     (int) (mBound.getHeight() + mBound.y));
             //Drawing the aircraft carrier bitmap
-            graphics2D.drawBitmap(bitmap, null, shipRect, paint);
+            graphics2D.drawBitmap(bitmap, null,shipRect, paint);
+
+            if(!undoBoundingBoxSetAfterRotation){
+                reverseUpdateBoundingBoxAfterRotation();}
         }
+    }
+
+    private void updateBoundingBoxAfterRotation()
+    {
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+        boundingBoxSetAfterRotation = true;
+        undoBoundingBoxSetAfterRotation = false;
+    }
+
+    private void reverseUpdateBoundingBoxAfterRotation()
+    {
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+        undoBoundingBoxSetAfterRotation = true;
+        boundingBoxSetAfterRotation = false;
     }
 
     private void setTargetPosition(float startPositionX, float startPositionY)

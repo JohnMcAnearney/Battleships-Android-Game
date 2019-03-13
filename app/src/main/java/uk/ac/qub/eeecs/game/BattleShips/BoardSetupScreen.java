@@ -77,11 +77,11 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
         assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
         assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
-        Ship aircraftCarrier = new Ship("AircraftCarrier", 0,0,assetManager.getBitmap("AircraftCarrier"), 5);
-        Ship cargoShip = new Ship("CargoShip", 0,0,assetManager.getBitmap("CargoShip"), 4);
-        Ship cruiseShip = new Ship("CruiseShip", 0,0,assetManager.getBitmap("CruiseShip"), 4);
-        Ship submarine = new Ship("Submarine", 0,0,assetManager.getBitmap("Submarine"), 3);
-        Ship destroyer = new Ship("Destroyer", 0,0,assetManager.getBitmap("Destroyer"), 2);
+        Ship aircraftCarrier = new Ship("AircraftCarrier", 0.641f,0.537f,assetManager.getBitmap("AircraftCarrier"), 5);
+        Ship cargoShip = new Ship("CargoShip", 0.594f,0.397f,assetManager.getBitmap("CargoShip"), 4);
+        Ship cruiseShip = new Ship("CruiseShip", 0.532f,0.487f,assetManager.getBitmap("CruiseShip"), 4);
+        Ship submarine = new Ship("Submarine", 0.387f,0.573f,assetManager.getBitmap("Submarine"), 3);
+        Ship destroyer = new Ship("Destroyer", 0.258f,0.363f,assetManager.getBitmap("Destroyer"), 2);
         shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
 
 
@@ -160,9 +160,9 @@ public class BoardSetupScreen extends GameScreen {
         drawShips(graphics2D);
 
 
-        graphics2D.drawRect(shipArray[0].mBound.x,shipArray[0].mBound.y,shipArray[0].mBound.x + shipArray[0].mBound.getWidth(), shipArray[0].mBound.y + shipArray[0].mBound.getHeight(),highlight);
-
-
+        for(Ship shipArray: shipArray) {
+            graphics2D.drawRect(shipArray.mBound.x, shipArray.mBound.y, shipArray.mBound.x + shipArray.mBound.getWidth(), shipArray.mBound.y + shipArray.mBound.getHeight(), highlight);
+        }
 
         //if an user clicked on a small box highlight by painting a square using paint
         //otherwise do nothing

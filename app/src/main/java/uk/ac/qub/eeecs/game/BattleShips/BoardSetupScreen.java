@@ -386,7 +386,6 @@ public class BoardSetupScreen extends GameScreen {
         bcgMatrix.setScale(2.5f, 2.5f);
         bcgMatrix.postTranslate(-moveBackground,0);
         graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
-
         //                      could do some maths to figure out exact ,middle using bitmaps ac size but looks ok for now
         Rect titleRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
         graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);

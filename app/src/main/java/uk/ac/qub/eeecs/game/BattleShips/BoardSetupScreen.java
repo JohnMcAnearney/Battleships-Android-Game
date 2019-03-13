@@ -321,27 +321,27 @@ public class BoardSetupScreen extends GameScreen {
         //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
         shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
                 Math.round(graphics2D.getSurfaceWidth()*0.1),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5f),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[0].getShipLength()/2.0f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
         shipArray[1].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
                 Math.round(graphics2D.getSurfaceWidth()*0.14),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.0f),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[1].getShipLength()/2.0f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
         shipArray[2].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
                 Math.round(graphics2D.getSurfaceWidth()*0.18),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.5f),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[2].getShipLength()/2.0f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
         shipArray[3].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
                 Math.round(graphics2D.getSurfaceWidth()*0.22),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.0f),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[3].getShipLength()/2.0f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
         shipArray[4].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
                 Math.round(graphics2D.getSurfaceWidth()*0.26),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.5f),
+                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[4].getShipLength()/2.0f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
         setShipBound = true;

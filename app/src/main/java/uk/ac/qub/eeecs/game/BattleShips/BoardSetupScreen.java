@@ -23,32 +23,44 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 public class BoardSetupScreen extends GameScreen {
 
+    /////////////////////////////////////////// - GENERAL STUFF - /////////////////////////////////////////////////////////////////
+
     private Bitmap boardSetupBackground, battleshipTitle;
     private PushButton mBackButton, mRotateButton;
     private Paint paint = new Paint();
     private String message = "Not Detected", message2  ="";
-    private float x,y;
+    private float x,y;      //coordinate values
+    private int moveBackground =0;
+    private final float MAX_SNAP_TO_DISTANCE = 10.0f;
+    private boolean occupied; //will hold the status of the box, true if there is a
+
+    ////////////////////////////////////////// - BOX VARIABLES - //////////////////////////////////////////////////////////////////
+
     private float bigBoxLeftCoor=0;       //i could do a test method for these, testing if i change these variables that they all still fit in the
     private float bigBoxTopCoor=0;         //screen and if not set it back so it fits in screen
     private float bigBoxRightCoor=0;     //simple if right>screenwidth then return false and fix
     private float bigBoxBottomCoor=0;
+    private float smallBoxWidth = 0;
+    private float smallBoxHeight = 0;
     private boolean smallBoxDetected = false;      //if user clicked inside a small box this will be true
     private float[][] smallBoxCoordinates = new float[200][5];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom
     private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
     private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
     private boolean smallboxCoordinatesCaptured = false, smallboxCoordinatesCaptured2 = false;  //if the smallBoxCoordinates array has been populated by capturing the co ordinates for both boards this will be set to true
+
+    ////////////////////////////////////////// - SHIP VARIABLES - //////////////////////////////////////////////////////////////////
+
     private boolean setShipBound = false;
     private Ship[] shipArray;  // hold all of the ship objects
-    private int moveBackground =0;
-
-    private Ship selectedShip;                                                                   //Ship object holder which will be used when user clicks on the ship and drags it across the screen
-    private int shipToDragPointerIndexOfInput;                                                         //pointer index holder, when user presses the screen the input index will be stored for dragging
-    private enum GameShipPlacementState {SHIP_SELECT,SHIP_DRAG}                              //Game states, will swap between the states when the user will place ships onto the grid before the start of the game
+    private Ship selectedShip; //Ship object holder which will be used when user clicks on the ship and drags it across the screen
+    private int shipToDragPointerIndexOfInput; //pointer index holder, when user presses the screen the input index will be stored for dragging
+    private enum GameShipPlacementState {SHIP_SELECT,SHIP_DRAG} //Game states, will swap between the states when the user will place ships onto the grid before the start of the game
     private GameShipPlacementState gameShipPlacementState = BoardSetupScreen.GameShipPlacementState.SHIP_SELECT;  //Initialized enum object set to ship select, for when the game starts
-    private Vector2 dragShipOffset = new Vector2();                  //Vector to store the x and y coordinates of the ship's coordinates minus the touch location
+    private Vector2 dragShipOffset = new Vector2(); //Vector to store the x and y coordinates of the ship's coordinates minus the touch location
+    private boolean toRotateShip = false;  //boolean value used as a identifier to rotate the ship
+    private boolean shipOutOfBound = false;
 
-    Matrix matrix = new Matrix();                                    //matrix variable used for translation,resize, and rotation
-
+    ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
         AssetManager assetManager = mGame.getAssetManager();
@@ -65,11 +77,11 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
         assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
         assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
-        Ship aircraftCarrier = new Ship("AircraftCarrier", 0,0,assetManager.getBitmap("AircraftCarrier"));
-        Ship cargoShip = new Ship("CargoShip", 0,0,assetManager.getBitmap("CargoShip"));
-        Ship cruiseShip = new Ship("CruiseShip", 0,0,assetManager.getBitmap("CruiseShip"));
-        Ship destroyer = new Ship("Destroyer", 0,0,assetManager.getBitmap("Destroyer"));
-        Ship submarine = new Ship("Submarine", 0,0,assetManager.getBitmap("Submarine"));
+        Ship aircraftCarrier = new Ship("AircraftCarrier", 0,0,assetManager.getBitmap("AircraftCarrier"), 5);
+        Ship cargoShip = new Ship("CargoShip", 0,0,assetManager.getBitmap("CargoShip"), 4);
+        Ship cruiseShip = new Ship("CruiseShip", 0,0,assetManager.getBitmap("CruiseShip"), 4);
+        Ship submarine = new Ship("Submarine", 0,0,assetManager.getBitmap("Submarine"), 3);
+        Ship destroyer = new Ship("Destroyer", 0,0,assetManager.getBitmap("Destroyer"), 2);
         shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
 
 
@@ -107,6 +119,7 @@ public class BoardSetupScreen extends GameScreen {
             if(mRotateButton.isPushTriggered())
             {if(selectedShip == null)
             {
+                selectedShip = shipArray[0];
             }
             else
             {
@@ -117,7 +130,6 @@ public class BoardSetupScreen extends GameScreen {
 
             //Calling method to check if user input of x,y are inside a small box
             detectionIfUserSelectedSmallBox();
-
 
 //            // Update each button and transition if needed
 //            mBackButton.update(elapsedTime);
@@ -150,7 +162,6 @@ public class BoardSetupScreen extends GameScreen {
 
         graphics2D.drawRect(shipArray[0].mBound.x,shipArray[0].mBound.y,shipArray[0].mBound.x + shipArray[0].mBound.getWidth(), shipArray[0].mBound.y + shipArray[0].mBound.getHeight(),highlight);
 
-        shipPlacement(graphics2D);
 
 
         //if an user clicked on a small box highlight by painting a square using paint
@@ -175,6 +186,8 @@ public class BoardSetupScreen extends GameScreen {
         mRotateButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 
+    ////////////////////////////////////////// - OUR OWN METHODS - //////////////////////////////////////////////////////////////////
+
     private void drawBoardOne(IGraphics2D graphics2D){
         paint.setColor(Color.WHITE);
         paint.setStrokeWidth(5);
@@ -188,8 +201,8 @@ public class BoardSetupScreen extends GameScreen {
         bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
 
-        float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
-        float smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
+        smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
+        smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
 
         //Step 2 - draw lots of smaller squares
         paint.setStrokeWidth(5);
@@ -252,8 +265,8 @@ public class BoardSetupScreen extends GameScreen {
         bigBoxRightCoor = (bigBoxLeftCoor*1.684f);      //simple if right>screenwidth then return false and fix
         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
 
-        float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
-        float smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
+        smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // these two must be added to the value as they are the square dimensions
+        smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
 
         //Step 2 - draw lots of smaller squares
         paint.setStrokeWidth(5);
@@ -431,20 +444,31 @@ public class BoardSetupScreen extends GameScreen {
         for (TouchEvent touchEvent : touchEvents)
             if (touchEvent.type == TouchEvent.TOUCH_UP
                     && touchEvent.pointer == shipToDragPointerIndexOfInput) {
+                shipPlacement();            //call ship placement after the user has actually placed it makes more sense. This stops visual glitches.
                 gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
             }
 
     }
 
 
-    private void shipPlacement(IGraphics2D graphics2D){
+    private void shipPlacement(){
 
         for(int i = 0;i<200;i++){
-            if(shipArray[0].getmBound().x > smallBoxCoordinates[i][0] && shipArray[0].getmBound().x < smallBoxCoordinates[i][2]
-                    && shipArray[0].getmBound().y > smallBoxCoordinates[i][1] && shipArray[0].getmBound().y < smallBoxCoordinates[i][3] ){
+            if(selectedShip.getmBound().x > smallBoxCoordinates[i][0] && selectedShip.getmBound().x < smallBoxCoordinates[i][2]
+                    && selectedShip.getmBound().y > smallBoxCoordinates[i][1] && selectedShip.getmBound().y < smallBoxCoordinates[i][3] ){
 
-                smallBoxCoordinates[i][4] = 1;      //this sets that occupancy flag to 1, meaning there is a ship here
+                isShipOutOfBound(i);
 
+                if(shipOutOfBound == true){
+                    resetShipPosition();
+                    break;
+                }
+
+                //smallBoxCoordinates[i][4] = 1;      //this sets that occupancy flag to 1, meaning there is a ship here
+                for(int x = 0; x<selectedShip.getShipLength()-1; x++){
+                    smallBoxCoordinates[i][4] = 1;
+                    i++;
+                }
             }
 
             else{
@@ -456,12 +480,51 @@ public class BoardSetupScreen extends GameScreen {
         //get the first and last coordinates
 
         //if ship bound is in this box, mark it as occupied
-
     }
 
     private void rotateShipBy90Degrees()
     {
         selectedShip.rotate = true;
+    }
+
+    private void isShipOutOfBound(int i){
+        //THIS 0 will need fixed, so can do with all ships
+        if (smallBoxCoordinates[i][3] != smallBoxCoordinates[i + selectedShip.getShipLength() - 1][3]) {
+            shipOutOfBound = true;
+        } else {
+            shipOutOfBound = false;
+        }
+
+    }
+
+    private void resetShipPosition(){
+        selectedShip.setmBound(1500,120, Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5),
+                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.25f);
+    }
+
+    private void shipSnapToBox(int i){
+        //closest box is between smallBoxWidth/2 coor and ship coor
+//        float closestSlotDistanceSqrd = Float.MAX_VALUE;
+//
+//        for(int x = 0; x<100;x++){
+//            if(smallBoxCoordinates[i][4]==1){
+//                break;  //as no need to calculate, this box is occupied
+//            }
+//            else{
+//                float distanceSqrd =
+//                        (smallBoxCoordinates[x][0] - shipArray[0].getmBound().x) * (smallBoxCoordinates[x][0] - shipArray[0].getmBound().x)
+//                                + (smallBoxCoordinates[x][1] - shipArray[0].getmBound().y) * (smallBoxCoordinates[x][1] - shipArray[0].getmBound().y);
+//                if(distanceSqrd < closestSlotDistanceSqrd) {
+//                    numberofSmallBoxDetected = x;
+//                    closestSlotDistanceSqrd = distanceSqrd;
+//                }
+//            }
+//        }
+//
+//        if (Math.sqrt(closestSlotDistanceSqrd) <= MAX_SNAP_TO_DISTANCE){
+//            shipArray[0].setmBound(100,400, Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5),
+//               ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.25f);
+//        }
     }
 
 }

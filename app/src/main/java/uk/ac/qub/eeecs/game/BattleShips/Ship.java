@@ -36,11 +36,12 @@ public class Ship //extends Sprite
     private Paint paint;
     public boolean rotate, isRotated, boundingBoxSetAfterRotation, undoBoundingBoxSetAfterRotation =true;
     private Matrix matrix = new Matrix();
+    private int shipLength;
 
 
     //Constructor
     //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
-    public Ship(String shipType, float startPositionX, float startPositionY, Bitmap bitmap)//, GameScreen gameScreen)
+    public Ship(String shipType, float startPositionX, float startPositionY, Bitmap bitmap, int shipLength)//, GameScreen gameScreen)
     //{
     // super(startPositionX, startPositionY, bitmap, gameScreen);
     //}
@@ -49,6 +50,7 @@ public class Ship //extends Sprite
         this.startPositionX = startPositionX;
         this.startPositionY = startPositionY;
         this.bitmap = bitmap;
+        this.shipLength = shipLength;
     }
 
     private void rotate()
@@ -149,6 +151,8 @@ public class Ship //extends Sprite
 
     public boolean getAfterDrag() { return afterDrag;}
 
+    public int getShipLength(){return shipLength;}
+
 
     //Setters
     //Sprint 4 - Implemented and improved on the Ship class' Setters (40201925)
@@ -170,6 +174,8 @@ public class Ship //extends Sprite
     public void setTargetPosition(Vector2 targetPosition) { this.targetPosition = targetPosition;}
 
     public void setScreenCentre(Vector2 screenCentre) { this.screenCentre = screenCentre;}
+
+    public void setShipLength(int shipLength) {this.shipLength = shipLength;}
 
     public void setmBound(float x, float y, float halfWidth, float halfHeight) {
         mBound.x = x;

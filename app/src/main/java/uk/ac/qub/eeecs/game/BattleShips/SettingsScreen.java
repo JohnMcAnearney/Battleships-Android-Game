@@ -1,13 +1,22 @@
 package uk.ac.qub.eeecs.game.BattleShips;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
@@ -25,13 +34,13 @@ public class   SettingsScreen extends GameScreen {
 
     /*Created by AT: 40207942*/
 
-
     /**Define the properties for the background of the settings screen
      *
      */
     private Bitmap mSettingsBackground;
     private int screenWidth = 0, screenHeight = 0;
     private Rect rect;
+    private SharedPreferences sharedPreferences;
 
 
     /**
@@ -39,7 +48,7 @@ public class   SettingsScreen extends GameScreen {
      * */
     private PushButton mBackButton, mIncreaseMusicButton, mDecreaseMusicButton, mIncreaseEffectButton, mDecreaseEffectButton, mMuteMusicButton, mMusicText, mEffectsText;
     private List<PushButton> mAllButtons = new ArrayList<>();
-
+    //private Map<PushButton, String> mButtonTriggers = new HashMap<>();
 
     /**
      * Define the properties for the volume controls bars for the volume controls
@@ -48,16 +57,8 @@ public class   SettingsScreen extends GameScreen {
     private AudioManager audioManager = getGame().getAudioManager();
     private Music musicOnScreen;
 
-
-     /* private Sound effectSound;
-    private int moveBar=0;
-    private Paint paint = new Paint();
-    */
-
-
     /**
      * Constructor
-     * @param game
      */
     public SettingsScreen(Game game) {
         super("SettingsScreen", game);
@@ -68,43 +69,18 @@ public class   SettingsScreen extends GameScreen {
         musicOnScreen=mGame.getAssetManager().getMusic("RickRoll");
     }
 
-    /*
+    /**
     * Method to load all of the game assets
     * */
     public void loadAssets(){
-
         AssetManager assetManager = mGame.getAssetManager();
-        //Background
-        assetManager.loadAndAddBitmap("SettingBackground","img/SettingsBackground.png" );
-        //Text
-        assetManager.loadAndAddBitmap("MusicText", "img/MusicText.png");
-        assetManager.loadAndAddBitmap("EffectText", "img/EffectsText.png");
-        //Button Images
-        assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
-        assetManager.loadAndAddBitmap("SettingsBackButtonP", "img/BackBPressed.png");
-        assetManager.loadAndAddBitmap("SettingsTitle", "img/SettingsTitle.png");
-        assetManager.loadAndAddBitmap("MuteButton", "img/VolumeOff.png");
-        assetManager.loadAndAddBitmap("UnmuteButton", "img/VolumeOn.png");
-        assetManager.loadAndAddBitmap("IncreaseMusic", "img/RightArrow.png");
-        assetManager.loadAndAddBitmap("DecreaseMusic", "img/LeftArrow.png");
-
+        mGame.getAssetManager().loadAssets("txt/assets/SettingsScreenAssets.JSON");
         mSettingsBackground = assetManager.getBitmap("SettingBackground");
-        //assetManager.loadAndAddSound("ButtonSound", "sound/gage/button/ButtonPush.wav");
-        mGame.getAssetManager().loadAssets("txt/assets/SpaceShipDemoSpaceAssets.JSON");
-
     }
 
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         getWidthAndHeightOfScreen(graphics2D);
-        /*  Matrix barMatric = new Matrix();
-        barMatric.setScale(2.5f, 2.5f);
-        barMatric.postTranslate(moveBar,0 );
-        moveBar += elapsedTime.stepTime *50.0f;
-        if(moveBar>300){
-            moveBar=0;
-        }
-        */
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mSettingsBackground, null, rect, null);
 
@@ -142,7 +118,8 @@ public class   SettingsScreen extends GameScreen {
         rect = new Rect(0, 0, screenWidth, screenHeight);
     }
 
-    /* Creates the display bars
+    /**
+     *  Creates the display bars
      */
     public void createBarDisplayVolume(){
         //numberOfBits and scale added for ease of change
@@ -151,6 +128,54 @@ public class   SettingsScreen extends GameScreen {
         musicBarDisplay = new UpdateBarDisplay(numberOfBits, audioManager.getMusicVolume(), 0f, 1f, mDefaultLayerViewport.getWidth()+600.0f, (mDefaultLayerViewport.getHeight()/0.75f), scaleOfBar, this );
         effectsBarDisplay = new UpdateBarDisplay(numberOfBits,audioManager.getSfxVolume(), 0,1,mDefaultLayerViewport.getWidth()+600.0f, mDefaultLayerViewport.getHeight()/2+600, scaleOfBar, this );
     }
+
+
+    /*private void constructButtons(String buttonsToConstructJSONFile, List<PushButton> buttons) {
+
+        String loadedJSON;
+        try {
+            loadedJSON = mGame.getFileIO().loadJSON(buttonsToConstructJSONFile);
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "DemoMenuScreen.constructButtons: Cannot load JSON [" + buttonsToConstructJSONFile + "]");
+        }
+
+        // Attempt to extract the JSON information
+        try {
+            JSONObject settings = new JSONObject(loadedJSON);
+            JSONArray buttonDetails = settings.getJSONArray("pushButtons");
+
+            // Store the game layer width and height
+            float layerWidth = mDefaultLayerViewport.getWidth();
+            float layerHeight = mDefaultLayerViewport.getHeight();
+
+            // Construct each button
+            for (int i = 0; i < buttonDetails.length(); i++){
+                float x = (float)buttonDetails.getJSONObject(i).getDouble("x");
+                float y = (float)buttonDetails.getJSONObject(i).getDouble("y");
+                float width = (float)buttonDetails.getJSONObject(i).getDouble("width");
+                float height = (float)buttonDetails.getJSONObject(i).getDouble("height");
+
+                String defaultBitmap = buttonDetails.getJSONObject(i).getString("defaultBitmap");
+                String pushBitmap = buttonDetails.getJSONObject(i).getString("pushBitmap");
+                String triggeredGameScreen = buttonDetails.getJSONObject(i).getString("triggeredGameScreen");
+
+                PushButton button = new PushButton(x*layerWidth, y*layerHeight,
+                        width*layerWidth, height*layerHeight,
+                        defaultBitmap, pushBitmap, this);
+                buttons.add(button);
+                mButtonTriggers.put(button, triggeredGameScreen);
+            }
+
+        } catch (JSONException | IllegalArgumentException e) {
+            throw new RuntimeException(
+                    "DemoMenuScreen.constructButtons: JSON parsing error [" + e.getMessage() + "]");
+        }
+    }
+    */
+
+
+
 
     /**
      * Method to create all buttons on screen
@@ -295,7 +320,7 @@ public class   SettingsScreen extends GameScreen {
             preformMuteButtonActions();
         }
         if(mBackButton.isPushTriggered()){
-            mGame.getScreenManager().addScreen(new MainMenu(mGame));
+            changeScreen(new MainMenu(mGame));
         }
         if(mMusicText.isPushTriggered()){
             //ViewPort
@@ -303,7 +328,15 @@ public class   SettingsScreen extends GameScreen {
         if(mEffectsText.isPushTriggered()){
             //ViewPort
         }
-
-
     }
+
+    public void changeScreen(GameScreen screen) {
+        // mGame.getScreenManager().removeScreen(this.getName());
+        // mGame.getScreenManager().dispose();
+
+        mGame.getScreenManager().addScreen(screen);
+    }
+
+
+
 }

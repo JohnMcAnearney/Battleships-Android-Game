@@ -406,15 +406,6 @@ public class BoardSetupScreen extends GameScreen {
 
         }
 
-        /*for(int i = 0; i < 200; i++)
-        {
-            if( x > smallBoxCoordinates[i][0] && x < smallBoxCoordinates[i][2]
-                    && y > smallBoxCoordinates[i][1] && y < smallBoxCoordinates[i][3]) {
-                numberofSmallBoxDetected = i;
-                smallBoxDetected = true;
-                break;
-            }
-        }*/
     }
 
     private void createButtons() {
@@ -598,11 +589,11 @@ public class BoardSetupScreen extends GameScreen {
             if (boxContainsInput(array, mid, x, y)) {
                 return mid;
             }
-            if (x < array[mid][0] && x < array[mid][2])
-                return binarySearchRows(array, numberOfSmallBox, lower, mid % 10 - 1, x, y);
+            if (x < array[mid][0] && x < array[mid][2]){
+                return binarySearchRows(array, numberOfSmallBox, lower, mid % 10 , x, y);}
 
-            if (x > array[mid][0] && x > array[mid][2])
-                return binarySearchRows(array, numberOfSmallBox, mid % 10 + 1, higher, x, y);
+            else if (x > array[mid][0] && x > array[mid][2]){
+                return binarySearchRows(array, numberOfSmallBox, mid % 10 +1 , higher, x, y);}
 
         }
         return -1;

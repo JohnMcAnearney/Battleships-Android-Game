@@ -320,7 +320,9 @@ public class   SettingsScreen extends GameScreen {
             preformMuteButtonActions();
         }
         if(mBackButton.isPushTriggered()){
-            changeScreen(new MainMenu(mGame));
+            // Changed the code so that if the settings is accessed through the pause screen it returns
+            // to the pause screen and if it's accessed through the main menu it returns to the main menu - Edgars
+            mGame.getScreenManager().removeScreen(this);
         }
         if(mMusicText.isPushTriggered()){
             //ViewPort

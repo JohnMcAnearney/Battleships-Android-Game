@@ -85,7 +85,6 @@ public class BoardSetupScreen extends GameScreen {
         shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
 
 
-
     }
 
 
@@ -383,8 +382,9 @@ public class BoardSetupScreen extends GameScreen {
                 if (numberofSmallBoxDetected >= 0)
                     smallBoxDetected = true;
 
-            } else if (x > bigBoxRightCoor){
-                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 100, 200, x, y);
+            }
+             if (x > bigBoxRightCoor){
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 100, 199, x, y);
             if (numberofSmallBoxDetected >= 0)
                 smallBoxDetected = true;
         }
@@ -554,7 +554,7 @@ public class BoardSetupScreen extends GameScreen {
     private int binarySearchBox(float[][] array,int lower, int higher, float x, float y)
     {
         if(lower <=higher) {
-            int mid = (int)( (lower + higher ) / 2);
+            int mid =  (lower + higher) / 2;
 
             if(boxContainsInput(array,mid,x,y))
             {
@@ -567,10 +567,10 @@ public class BoardSetupScreen extends GameScreen {
             }
 
             if(y > array[mid][1] && y > array[mid][3])
-                return binarySearchBox(array,mid,higher,x,y);
+                return binarySearchBox(array,mid+1,higher,x,y);
 
             if(y<array[mid][1] && y < array[mid][3])
-                return binarySearchBox(array,lower,mid,x,y);
+                return binarySearchBox(array,lower,mid-1,x,y);
         }
         return -1;
     }
@@ -578,17 +578,18 @@ public class BoardSetupScreen extends GameScreen {
 
     private int binarySearchRows(float[][] array,int numberOfSmallBox, int lower,int higher, float x, float y)
     {
-        int mid = (int)(numberOfSmallBox + (((lower%10)+higher )/2));
-        if(boxContainsInput(array,mid,x,y))
-        {
-            return mid;
+        if(lower <higher) {
+            int mid = numberOfSmallBox + ((lower + higher) / 2);
+            if (boxContainsInput(array, mid, x, y)) {
+                return mid;
+            }
+            if (x < array[mid][0] && x < array[mid][2])
+                return binarySearchRows(array, numberOfSmallBox, lower, mid % 10 - 1, x, y);
+
+            if (x > array[mid][0] && x > array[mid][2])
+                return binarySearchRows(array, numberOfSmallBox, mid % 10 + 1, higher, x, y);
+
         }
-        if(x < array[mid][0] && x < array[mid][2])
-            return binarySearchRows(array,numberOfSmallBox,lower,mid%10,x,y);
-
-        if(x > array[mid][0] && x > array[mid][2])
-            return binarySearchRows(array,numberOfSmallBox,mid%10,higher,x,y);
-
         return -1;
     }
 

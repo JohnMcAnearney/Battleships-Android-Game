@@ -38,32 +38,51 @@ public class PauseScreen extends GameScreen {
         assetManager.loadAndAddBitmap("Paused", "img/Paused.png");
         mPauseBackground = assetManager.getBitmap("BattleshipBackground");
         mPause = assetManager.getBitmap("Paused");
-
     }
+
     @Override
-    public void update(ElapsedTime elapsedTime) {
-        //Used to process any touch input within the screen
+    public void update(ElapsedTime elapsedTime)
+    {
+        // Used to process any touch input within the screen
         Input input = mGame.getInput();
 
-        //A list which stores the history of touch inputs to allow for appropriate processing
+        // A list which stores the history of touch inputs to allow for appropriate processing
         List<TouchEvent> touchEvents = input.getTouchEvents();
-        //If statement to process the possible inputs
-        if (touchEvents.size() > 0) {
+        // If statement to process the possible inputs
+        if (touchEvents.size() > 0)
+        {
+            // Update all the push buttons if a touch event is detected.
             mBackButton.update(elapsedTime);
             mVolumeButton.update(elapsedTime);
-            //If back button is pressed, remove the current screen to return to the main menu
+            mInstructionsButton.update(elapsedTime);
+            mSettingsButton.update(elapsedTime);
+            // If back button is pressed, remove the current screen to return to the main menu
             if (mBackButton.isPushTriggered())
             {
                 mGame.getScreenManager().removeScreen(this);
+            }
+            // If instructions button is triggered, add a new screen to the instruction screen.
+            else if (mInstructionsButton.isPushTriggered())
+            {
+                mGame.getScreenManager().addScreen(new InstructionsScreen(mGame));
+            }
+            // If settings button is triggered, add a new screen to the settings screen.
+            else if (mSettingsButton.isPushTriggered())
+            {
+                mGame.getScreenManager().addScreen(new SettingsScreen(mGame));
             }
         }
     }
 
     @Override
-    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
+    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
+    {
+        // Drawing the screen background
         getWidthAndHeightOfScreen(graphics2D);
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mPauseBackground,null,rect,null);
+
+        // Drawing the buttons and pause text bitmap
         graphics2D.drawBitmap(mPause, null, drawRectangle(mDefaultLayerViewport.getWidth() * 0.1f, mDefaultLayerViewport.getHeight() * 0.5f, mDefaultLayerViewport.getWidth() * 0.5f, mDefaultLayerViewport.getHeight() /1.3f + mDefaultLayerViewport.getHeight()/ 1.5f), null);
         mBackButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
         mVolumeButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
@@ -71,8 +90,8 @@ public class PauseScreen extends GameScreen {
         mSettingsButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 
-    public void getWidthAndHeightOfScreen(IGraphics2D graphics2D) {
-
+    public void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
+    {
         if (screenHeight == 0 || screenWidth == 0) {
             screenWidth = graphics2D.getSurfaceWidth();
             screenHeight = graphics2D.getSurfaceHeight();
@@ -85,7 +104,8 @@ public class PauseScreen extends GameScreen {
     {
         rect = new Rect(0,0,screenWidth,screenHeight);
     }
-    //Method which allows you to put in the float values of the destination rectangle
+
+    // Method which allows you to put in the float values of the destination rectangle
     public Rect drawRectangle(float left, float top, float right, float bottom)
     {
 
@@ -93,6 +113,7 @@ public class PauseScreen extends GameScreen {
         return rectangle;
     }
 
+    // Method which creates all the push buttons
     public void createButton()
     {
         mInstructionsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 5.5f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "InstructionsButton", "InstructionsButtonP", this);

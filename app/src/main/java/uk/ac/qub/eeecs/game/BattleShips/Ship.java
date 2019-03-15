@@ -58,7 +58,7 @@ public class Ship //extends Sprite
         matrix.reset();
 
         matrix.setScale(scaleRatioX,scaleratioY);
-        matrix.postRotate(90.0f, mBound.halfWidth, mBound.halfHeight);
+        matrix.postRotate(90.0f);
         matrix.postTranslate(mBound.x,mBound.y);
     }
 
@@ -66,7 +66,6 @@ public class Ship //extends Sprite
     {
         if(rotate)
         {
-            rotate();
             rotate = false;
             isRotated = !isRotated;
         }
@@ -75,7 +74,7 @@ public class Ship //extends Sprite
 
             if (!boundingBoxSetAfterRotation){
                 updateBoundingBoxAfterRotation(); }
-
+            rotate();
             graphics2D.drawBitmap(bitmap, matrix, null);
         }
         else {

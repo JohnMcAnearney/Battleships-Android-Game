@@ -98,8 +98,8 @@ public class BoardSetupScreen extends GameScreen {
         List<TouchEvent> touchEvents = input.getTouchEvents();
         // Store the x and y co-ordinates from touch events
         for(TouchEvent touchEvent: touchEvents) {
-            y = touchEvent.y;
             x = touchEvent.x;
+            y = touchEvent.y;
         }
 
 
@@ -141,7 +141,7 @@ public class BoardSetupScreen extends GameScreen {
 
 
             // Calling method to check if user input of x,y are inside a small box
-            detectionIfUserSelectedSmallBox();
+            detectionIfUserSelectedSmallBox(x,y);
 
 //            // Update each button and transition if needed
 //            mBackButton.update(elapsedTime);
@@ -275,13 +275,13 @@ public class BoardSetupScreen extends GameScreen {
         int screenWidth = graphics2D.getSurfaceWidth();
         int screenHeight = graphics2D.getSurfaceHeight();
 
-        bigBoxLeftCoor = (screenWidth/14f)*7.5f;        // I could do a test method for these, testing if i change these variables that they all still fit in the
-        bigBoxTopCoor = screenHeight/5f;                // screen and if not set it back so it fits in screen
-        bigBoxRightCoor = (bigBoxLeftCoor*1.684f);      // simple if right>screenwidth then return false and fix
-        bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
+        float bigBoxLeftCoor2 = (screenWidth/14f)*7.5f;       // I could do a test method for these, testing if i change these variables that they all still fit in the
+        float bigBoxTopCoor2 = screenHeight/5f;               // screen and if not set it back so it fits in screen
+        float bigBoxRightCoor2 = (bigBoxLeftCoor2*1.684f);    // simple if right>screenwidth then return false and fix
+        float bigBoxBottomCoor2 = (bigBoxTopCoor2*4.5f);
 
-        smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;       // These two must be added to the value as they are the square dimensions
-        smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
+        smallBoxWidth = (bigBoxRightCoor2 - bigBoxLeftCoor2)/10f;       // these two must be added to the value as they are the square dimensions
+        smallBoxHeight = (bigBoxBottomCoor2 - bigBoxTopCoor2)/10f;
 
         // Step 2 - draw lots of smaller squares
         paint.setStrokeWidth(5);
@@ -292,15 +292,15 @@ public class BoardSetupScreen extends GameScreen {
             for (int column = 0; column < 10; column++) {
                 numberOfSmallBoxesDrawn++;
                 // Draw each of the small boxes
-                graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      // Same start position
-                        (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
+                graphics2D.drawRect((bigBoxLeftCoor2 + moveConstLeft), bigBoxTopCoor2,      //same start position
+                        (bigBoxLeftCoor2 + smallBoxWidth + moveConstLeft), (bigBoxTopCoor2 + smallBoxHeight), paint);
 
                 // Store all of the small box coordinates in a 2d array
                 if(!smallboxCoordinatesCaptured2 ) {
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor2 + moveConstLeft;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor2;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor2 + smallBoxWidth + moveConstLeft;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor2 + smallBoxHeight;
 
                 }
 
@@ -320,44 +320,48 @@ public class BoardSetupScreen extends GameScreen {
 
             }
 
-            bigBoxTopCoor+=smallBoxHeight;
-            bigBoxBottomCoor+=smallBoxHeight;
+            bigBoxTopCoor2+=smallBoxHeight;
+            bigBoxBottomCoor2+=smallBoxHeight;
 
         }
         smallboxCoordinatesCaptured2 = true;
-        bigBoxLeftCoor = (screenWidth/14f);       // I could do a test method for these, testing if i change these variables that they all still fit in the
-        bigBoxTopCoor = screenHeight/5f;          // screen and if not set it back so it fits in screen
-        bigBoxRightCoor = bigBoxLeftCoor*6f;      // simple if right>screenwidth then return false and fix
-        bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
+        bigBoxLeftCoor2 = (screenWidth/14f);       // I could do a test method for these, testing if i change these variables that they all still fit in the
+        bigBoxTopCoor2 = screenHeight/5f;          // screen and if not set it back so it fits in screen
+        bigBoxRightCoor2 = bigBoxLeftCoor2*6f;     // simple if right>screenwidth then return false and fix
+        bigBoxBottomCoor2 = (bigBoxTopCoor2*4.5f);
     }
 
     private void setUpShipmBound(IGraphics2D graphics2D)
     {
+        float screenWidth = graphics2D.getSurfaceWidth();
+        float screenHeight = graphics2D.getSurfaceHeight();
+        float widthOfSmallBox = (bigBoxRightCoor - bigBoxLeftCoor)/10f;
+        float heightOfSmallBox = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
         // Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
-        shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.1),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[0].getShipLength()/2.0f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+        shipArray[0].setmBound(Math.round(screenWidth*0.015),
+                Math.round(screenHeight*0.2),
+                Math.round(widthOfSmallBox*shipArray[0].getShipLength()/2.0f),
+                heightOfSmallBox/2f);
 
-        shipArray[1].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.14),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[1].getShipLength()/2.0f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+        shipArray[1].setmBound(Math.round(screenWidth*0.015),
+                Math.round(screenHeight*0.28),
+                Math.round(widthOfSmallBox*shipArray[1].getShipLength()/2.0f),
+                heightOfSmallBox/2f);
 
-        shipArray[2].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.18),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[2].getShipLength()/2.0f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+        shipArray[2].setmBound(Math.round(screenWidth*0.015),
+                Math.round(screenHeight*0.36),
+                Math.round(widthOfSmallBox*shipArray[2].getShipLength()/2.0f),
+                heightOfSmallBox/2f);
 
-        shipArray[3].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.22),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[3].getShipLength()/2.0f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+        shipArray[3].setmBound(Math.round(screenWidth*0.015),
+                Math.round(screenHeight*0.44),
+                Math.round(widthOfSmallBox*shipArray[3].getShipLength()/2.0f),
+                heightOfSmallBox/2f);
 
-        shipArray[4].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.26),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*shipArray[4].getShipLength()/2.0f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+        shipArray[4].setmBound(Math.round(screenWidth*0.015),
+                Math.round(screenHeight*0.52),
+                Math.round(widthOfSmallBox*shipArray[4].getShipLength()/2.0f),
+                heightOfSmallBox/2f);
 
         setShipBound = true;
     }
@@ -380,10 +384,29 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     // This method checks small box co-ordinates against the x and y input co-ordinates, sets parameter smallBoxDetected to true if yes, false otherwise
-    private void detectionIfUserSelectedSmallBox()
+    private void detectionIfUserSelectedSmallBox(float x,float y)
     {
         smallBoxDetected = false;
-        for(int i = 0; i < 200; i++)
+        if(bigBoxRightCoor == 0)
+        {
+
+        }
+        else {
+
+            if (x <= bigBoxRightCoor) {
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+
+            } else if (x > bigBoxRightCoor){
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 100, 200, x, y);
+            if (numberofSmallBoxDetected >= 0)
+                smallBoxDetected = true;
+        }
+
+        }
+
+        /*for(int i = 0; i < 200; i++)
         {
             if( x > smallBoxCoordinates[i][0] && x < smallBoxCoordinates[i][2]
                     && y > smallBoxCoordinates[i][1] && y < smallBoxCoordinates[i][3]) {
@@ -391,7 +414,7 @@ public class BoardSetupScreen extends GameScreen {
                 smallBoxDetected = true;
                 break;
             }
-        }
+        }*/
     }
 
     private void createButtons() {
@@ -541,6 +564,60 @@ public class BoardSetupScreen extends GameScreen {
 //            shipArray[0].setmBound(100,400, Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5),
 //               ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.25f);
 //        }
+    }
+
+    private int binarySearchBox(float[][] array,int lower, int higher, float x, float y)
+    {
+        if(lower <=higher) {
+            int mid = (int)( (lower + higher ) / 2);
+
+            if(boxContainsInput(array,mid,x,y))
+            {
+                return mid;
+            }
+
+            if(y > array[mid][1] && y < array[mid][3])
+            {
+                return binarySearchRows(array,mid-(mid%10),0,10, x,y );
+            }
+
+            if(y > array[mid][1] && y > array[mid][3])
+                return binarySearchBox(array,mid,higher,x,y);
+
+            if(y<array[mid][1] && y < array[mid][3])
+                return binarySearchBox(array,lower,mid,x,y);
+        }
+        return -1;
+    }
+
+
+    private int binarySearchRows(float[][] array,int numberOfSmallBox, int lower,int higher, float x, float y)
+    {
+        int mid = (int)(numberOfSmallBox + (((lower%10)+higher )/2));
+        if(boxContainsInput(array,mid,x,y))
+        {
+            return mid;
+        }
+        if(x < array[mid][0] && x < array[mid][2])
+            return binarySearchRows(array,numberOfSmallBox,lower,mid%10,x,y);
+
+        if(x > array[mid][0] && x > array[mid][2])
+            return binarySearchRows(array,numberOfSmallBox,mid%10,higher,x,y);
+
+        return -1;
+    }
+
+    private boolean boxContainsInput(float[][] smallBoxCoordinates, int numberOfSmallBox, float x, float y)
+    {
+        if(x > smallBoxCoordinates[numberOfSmallBox][0] &&
+                x < smallBoxCoordinates[numberOfSmallBox][2] &&
+                y > smallBoxCoordinates[numberOfSmallBox][1] &&
+                y < smallBoxCoordinates[numberOfSmallBox][3])
+        {
+            return true;
+        }
+
+        return false;
     }
 
 }

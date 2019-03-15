@@ -145,6 +145,8 @@ public class Ship //extends Sprite
 
     public Vector2 getScreenCentre() { return screenCentre;}
 
+    public Bitmap getBitmap(){return bitmap;}
+
     public BoundingBox getmBound() { return mBound;}
 
     public boolean getSelected() {return selected;}

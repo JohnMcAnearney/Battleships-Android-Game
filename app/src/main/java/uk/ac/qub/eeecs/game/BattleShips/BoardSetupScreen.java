@@ -17,6 +17,7 @@ import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
+import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.util.Vector2;
 import uk.ac.qub.eeecs.gage.world.GameObject;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
@@ -31,8 +32,7 @@ public class BoardSetupScreen extends GameScreen {
     private String message = "Not Detected", message2  ="";
     private float x,y;      //coordinate values
     private int moveBackground =0;
-    private final float MAX_SNAP_TO_DISTANCE = 10.0f;
-    private boolean occupied; //will hold the status of the box, true if there is a
+    private final float MAX_SNAP_TO_DISTANCE = 1000.0f;
 
     ////////////////////////////////////////// - BOX VARIABLES - //////////////////////////////////////////////////////////////////
 
@@ -47,6 +47,9 @@ public class BoardSetupScreen extends GameScreen {
     private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
     private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
     private boolean smallboxCoordinatesCaptured = false, smallboxCoordinatesCaptured2 = false;  //if the smallBoxCoordinates array has been populated by capturing the co ordinates for both boards this will be set to true
+    private int screenWidth = 0;
+    private int screenHeight = 0;
+    private BoundingBox boardBoundingBox;
 
     ////////////////////////////////////////// - SHIP VARIABLES - //////////////////////////////////////////////////////////////////
 
@@ -59,6 +62,7 @@ public class BoardSetupScreen extends GameScreen {
     private Vector2 dragShipOffset = new Vector2(); //Vector to store the x and y coordinates of the ship's coordinates minus the touch location
     private boolean toRotateShip = false;  //boolean value used as a identifier to rotate the ship
     private boolean shipOutOfBound = false;
+
 
     ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
@@ -80,12 +84,9 @@ public class BoardSetupScreen extends GameScreen {
         Ship aircraftCarrier = new Ship("AircraftCarrier", 0,0,assetManager.getBitmap("AircraftCarrier"), 5);
         Ship cargoShip = new Ship("CargoShip", 0,0,assetManager.getBitmap("CargoShip"), 4);
         Ship cruiseShip = new Ship("CruiseShip", 0,0,assetManager.getBitmap("CruiseShip"), 4);
-        Ship submarine = new Ship("Submarine", 0,0,assetManager.getBitmap("Submarine"), 3);
-        Ship destroyer = new Ship("Destroyer", 0,0,assetManager.getBitmap("Destroyer"), 2);
-        shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
-
-
-
+        Ship destroyer = new Ship("Destroyer", 0,0,assetManager.getBitmap("Destroyer"), 3);
+        Ship submarine = new Ship("Submarine", 0,0,assetManager.getBitmap("Submarine"), 2);
+        shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,submarine,destroyer};
     }
 
 
@@ -127,10 +128,8 @@ public class BoardSetupScreen extends GameScreen {
             }
             }
 
-
             //Calling method to check if user input of x,y are inside a small box
             detectionIfUserSelectedSmallBox();
-
 //            // Update each button and transition if needed
 //            mBackButton.update(elapsedTime);
 //            if (mBackButton.isPushTriggered()){
@@ -154,6 +153,7 @@ public class BoardSetupScreen extends GameScreen {
         drawStaticImages(graphics2D);
         drawBoardOne(graphics2D);
         drawBoardTwo(graphics2D);
+        setupBoardBound();
         if (!setShipBound ) {
             setUpShipmBound(graphics2D);
         }
@@ -161,7 +161,7 @@ public class BoardSetupScreen extends GameScreen {
 
 
         graphics2D.drawRect(shipArray[0].mBound.x,shipArray[0].mBound.y,shipArray[0].mBound.x + shipArray[0].mBound.getWidth(), shipArray[0].mBound.y + shipArray[0].mBound.getHeight(),highlight);
-
+        graphics2D.drawRect(boardBoundingBox.x, boardBoundingBox.y, boardBoundingBox.x + boardBoundingBox.getWidth(), boardBoundingBox.y + boardBoundingBox.getHeight(), highlight );
 
 
         //if an user clicked on a small box highlight by painting a square using paint
@@ -186,15 +186,17 @@ public class BoardSetupScreen extends GameScreen {
         mRotateButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
     }
 
-    ////////////////////////////////////////// - OUR OWN METHODS - //////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////// - OUR OWN METHODS - /////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////// - John's methods - //////////////////////////////////////////////////////////////////////////
 
     private void drawBoardOne(IGraphics2D graphics2D){
         paint.setColor(Color.WHITE);
         paint.setStrokeWidth(5);
         paint.setStyle(Paint.Style.STROKE);
 
-        int screenWidth = graphics2D.getSurfaceWidth();
-        int screenHeight = graphics2D.getSurfaceHeight();
+         screenWidth = graphics2D.getSurfaceWidth();
+         screenHeight = graphics2D.getSurfaceHeight();
 
         bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
         bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
@@ -316,30 +318,165 @@ public class BoardSetupScreen extends GameScreen {
         bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
     }
 
+    private void setupBoardBound(){
+        boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
+                (bigBoxBottomCoor + bigBoxTopCoor)/2,
+                ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
+                ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
+    }
+
+    public void drawStaticImages(IGraphics2D graphics2D){
+        Matrix bcgMatrix = new Matrix();
+
+        bcgMatrix.setScale(2.5f, 2.5f);
+        bcgMatrix.postTranslate(-moveBackground,0);
+        graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
+        //                      could do some maths to figure out exact ,middle using bitmaps ac size but looks ok for now
+        Rect titleRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
+        graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
+    }
+
+    private void shipPlacement(){
+
+        isShipOutOfBound();
+
+        for(int i = 0;i<100;i++){
+            if(selectedShip.getmBound().x > smallBoxCoordinates[i][0] && selectedShip.getmBound().x < smallBoxCoordinates[i][2]
+                    && selectedShip.getmBound().y > smallBoxCoordinates[i][1] && selectedShip.getmBound().y < smallBoxCoordinates[i][3] ){
+
+                //isShipOutOfBound();
+
+                if(shipOutOfBound == true){
+                    shipReset();
+                    break;
+                }
+
+                for(int x = 0; x<selectedShip.getShipLength()-1; x++){
+                    smallBoxCoordinates[i][4] = 1;
+                    i++;
+                }
+            }
+
+            else{
+                smallBoxCoordinates[i][4] = 0;
+            }
+        }
+    }
+
+    private void isShipOutOfBound(){   //perfectly checks if inside or not, currently small issue as boundingboxes for ships is slightly too big but ezpz to fix, just reduce bBox foreach
+        if(boardBoundingBox.contains(selectedShip.mBound.x,  selectedShip.mBound.y) &&
+                boardBoundingBox.contains(selectedShip.mBound.x + (selectedShip.mBound.halfWidth * 2),
+                        selectedShip.mBound.y + (selectedShip.mBound.halfHeight * 2))){
+            shipOutOfBound = false;
+        }
+
+//        if (smallBoxCoordinates[i][0] != smallBoxCoordinates[i + selectedShip.getShipLength() - 1][0] &&
+//                smallBoxCoordinates[i][3] != smallBoxCoordinates[i + selectedShip.getShipLength() - 1][3]) {
+//            shipOutOfBound = true;
+//        }
+        else {
+            shipOutOfBound = true;
+            shipReset();
+        }
+
+    }
+
+    private void shipReset(){
+        //closest box is between smallBoxWidth/2 coor and ship coor
+        float closestSlotDistanceSqrd = Float.MAX_VALUE;
+        int numberOfClosestBox = 0;
+
+        for(int x = 0; x<100;x++){
+            if(smallBoxCoordinates[x][4]==1){
+                break;  //as no need to calculate, this box is occupied
+            }
+            else{
+                float distanceSqrd =
+                        (smallBoxCoordinates[x][0] - ((selectedShip.mBound.x)-selectedShip.mBound.halfWidth)) *
+                                (smallBoxCoordinates[x][0] - ((selectedShip.mBound.x)-selectedShip.mBound.halfWidth))     //this is (x2-x2)^2 + (y2-y1)^2
+                                + (smallBoxCoordinates[x][3] - ((selectedShip.mBound.y)-selectedShip.mBound.halfHeight)) *
+                                (smallBoxCoordinates[x][3] - ((selectedShip.mBound.y)-selectedShip.mBound.halfHeight));
+                if(distanceSqrd < closestSlotDistanceSqrd) {
+                    numberOfClosestBox = x;
+                    closestSlotDistanceSqrd = distanceSqrd;
+                }
+            }
+
+        }
+
+        if (Math.sqrt(closestSlotDistanceSqrd) <= MAX_SNAP_TO_DISTANCE){
+            switch (selectedShip.getShipLength()){
+                case 2: selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox-1][0];
+                    selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][3];
+                    break;
+                case 3: selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox-1][0];
+                    selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][3];
+                    break;
+                case 4: selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox-1][0];
+                    selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][3];
+                    break;
+                case 5: selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox-3][0];
+                    selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][3];
+                    break;
+            }
+
+        }
+
+    }
+
+    private void checkIfBoxOccupied(int i){
+        if(smallBoxCoordinates[i][4] ==1 ){
+            selectedShip.mBound.x = smallBoxCoordinates[i++][0];
+            checkIfBoxOccupied(i);
+        }else{
+
+        }
+
+
+    }
+
+    ////////////////////////////////////////////// - Collective methods - //////////////////////////////////////////////////////////////////////////
+
+    private void createButtons() {
+        //Trigger Button at the bottom left of the screen
+        mBackButton = new PushButton(
+                mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
+                "SettingsBackButton","SettingsBackButtonP",  this);
+        mBackButton.setPlaySounds(true, true);
+
+        mRotateButton = new PushButton(
+                mDefaultLayerViewport.getWidth() * 0.88f,   mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
+                "rotateButton", "rotateButton", this);
+    }
+
+    ////////////////////////////////////////////// - Mantas methods - //////////////////////////////////////////////////////////////////////////
+
     private void setUpShipmBound(IGraphics2D graphics2D)
     {
         //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
-        shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.1),
+        shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.1),
+                Math.round(graphics2D.getSurfaceWidth()*0.15),
                 Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
-        shipArray[1].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
+        shipArray[1].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.1),
                 Math.round(graphics2D.getSurfaceWidth()*0.14),
                 Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.0f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
-        shipArray[2].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
+        shipArray[2].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.1),
                 Math.round(graphics2D.getSurfaceWidth()*0.18),
                 Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.5f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
-        shipArray[3].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
+        shipArray[3].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.1),
                 Math.round(graphics2D.getSurfaceWidth()*0.22),
                 Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.0f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
-        shipArray[4].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
+        shipArray[4].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.1),
                 Math.round(graphics2D.getSurfaceWidth()*0.26),
                 Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.5f),
                 ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
@@ -377,31 +514,6 @@ public class BoardSetupScreen extends GameScreen {
                 break;
             }
         }
-    }
-
-    private void createButtons() {
-        //Trigger Button at the bottom left of the screen
-        mBackButton = new PushButton(
-                mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
-                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
-                "SettingsBackButton","SettingsBackButtonP",  this);
-        mBackButton.setPlaySounds(true, true);
-
-        mRotateButton = new PushButton(
-                mDefaultLayerViewport.getWidth() * 0.88f,   mDefaultLayerViewport.getHeight() * 0.10f,
-                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
-                "rotateButton", "rotateButton", this);
-    }
-
-    public void drawStaticImages(IGraphics2D graphics2D){
-        Matrix bcgMatrix = new Matrix();
-
-        bcgMatrix.setScale(2.5f, 2.5f);
-        bcgMatrix.postTranslate(-moveBackground,0);
-        graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
-        //                      could do some maths to figure out exact ,middle using bitmaps ac size but looks ok for now
-        Rect titleRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
-        graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
     }
 
     //When user touches on a ship object store the ship object that was touched
@@ -450,81 +562,8 @@ public class BoardSetupScreen extends GameScreen {
 
     }
 
-
-    private void shipPlacement(){
-
-        for(int i = 0;i<200;i++){
-            if(selectedShip.getmBound().x > smallBoxCoordinates[i][0] && selectedShip.getmBound().x < smallBoxCoordinates[i][2]
-                    && selectedShip.getmBound().y > smallBoxCoordinates[i][1] && selectedShip.getmBound().y < smallBoxCoordinates[i][3] ){
-
-                isShipOutOfBound(i);
-
-                if(shipOutOfBound == true){
-                    resetShipPosition();
-                    break;
-                }
-
-                //smallBoxCoordinates[i][4] = 1;      //this sets that occupancy flag to 1, meaning there is a ship here
-                for(int x = 0; x<selectedShip.getShipLength()-1; x++){
-                    smallBoxCoordinates[i][4] = 1;
-                    i++;
-                }
-            }
-
-            else{
-                smallBoxCoordinates[i][4] = 0;
-            }
-        }
-        //get the ship bound
-
-        //get the first and last coordinates
-
-        //if ship bound is in this box, mark it as occupied
-    }
-
     private void rotateShipBy90Degrees()
     {
         selectedShip.rotate = true;
     }
-
-    private void isShipOutOfBound(int i){
-        //THIS 0 will need fixed, so can do with all ships
-        if (smallBoxCoordinates[i][3] != smallBoxCoordinates[i + selectedShip.getShipLength() - 1][3]) {
-            shipOutOfBound = true;
-        } else {
-            shipOutOfBound = false;
-        }
-
-    }
-
-    private void resetShipPosition(){
-        selectedShip.setmBound(1500,120, Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.25f);
-    }
-
-    private void shipSnapToBox(int i){
-        //closest box is between smallBoxWidth/2 coor and ship coor
-//        float closestSlotDistanceSqrd = Float.MAX_VALUE;
-//
-//        for(int x = 0; x<100;x++){
-//            if(smallBoxCoordinates[i][4]==1){
-//                break;  //as no need to calculate, this box is occupied
-//            }
-//            else{
-//                float distanceSqrd =
-//                        (smallBoxCoordinates[x][0] - shipArray[0].getmBound().x) * (smallBoxCoordinates[x][0] - shipArray[0].getmBound().x)
-//                                + (smallBoxCoordinates[x][1] - shipArray[0].getmBound().y) * (smallBoxCoordinates[x][1] - shipArray[0].getmBound().y);
-//                if(distanceSqrd < closestSlotDistanceSqrd) {
-//                    numberofSmallBoxDetected = x;
-//                    closestSlotDistanceSqrd = distanceSqrd;
-//                }
-//            }
-//        }
-//
-//        if (Math.sqrt(closestSlotDistanceSqrd) <= MAX_SNAP_TO_DISTANCE){
-//            shipArray[0].setmBound(100,400, Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5),
-//               ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/1.25f);
-//        }
-    }
-
 }

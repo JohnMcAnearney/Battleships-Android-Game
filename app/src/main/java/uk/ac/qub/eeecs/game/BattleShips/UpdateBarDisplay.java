@@ -1,7 +1,5 @@
 package uk.ac.qub.eeecs.game.BattleShips;
 import android.graphics.Bitmap;
-
-import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.world.GameObject;
@@ -9,30 +7,27 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 
 public class UpdateBarDisplay extends GameObject {
+    //Created by AT : 40207942
 
-    private static final int WIDTH_FACTOR = 3;
-    private static final int HEIGHT_FACTOR = 5;
+    private static final int WIDTH_FACTOR = 4;
+    private static final int HEIGHT_FACTOR = 4;
 
 
     private float minVal, maxVal, value;
     private GameObject[] barBits;
 
     public UpdateBarDisplay(int numberOfBits, float initialValue, float minValue, float maxValue, float startX, float startY, float scale, GameScreen gameScreen) {
-        super(startX, startY, scale * WIDTH_FACTOR * numberOfBits, scale * HEIGHT_FACTOR, null, gameScreen);
+        super(startX, startY, WIDTH_FACTOR * numberOfBits * scale, HEIGHT_FACTOR*scale, null, gameScreen);
         loadAssets();
         init(numberOfBits, initialValue, minValue, maxValue);
 
 
     }
     private void loadAssets(){
-        mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageDefault", "img/BlankBit.png");
-        mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageHigh", "img/BlankBitHigh.png");
-        mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageLow", "img/BlankBitLow.png");
-        mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageMedium", "img/BlankBitMedium.png");
+        mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageDefault", "img/BlankBitPlain.png");
+        mGameScreen.getGame().getAssetManager().loadAndAddBitmap("BitImageColour", "img/BlankBitHigh.png");
 
     }
-
-
 
     private void init(int numberOfBits, float initialValue, float minValue, float maxValue) {
 
@@ -52,15 +47,12 @@ public class UpdateBarDisplay extends GameObject {
 
             if (i >= (barBits.length * (value - minVal)) / (maxVal - minVal) ) {
                 bitType = "Default";
-            } else if (i >= barBits.length / 1.5) {
-                bitType = "High";
-            } else if (i >= barBits.length / 3) {
-                bitType = "Medium";
-            } else {
-                bitType = "Low";
-            }
+            }else{
 
+                bitType = "Colour";
+            }
             Bitmap bitBitmap = mGameScreen.getGame().getAssetManager().getBitmap("BitImage" + bitType);
+           // bitss[i]= new Bitmap()
             barBits[i] = new GameObject(getBound().getLeft() + offsetBetweenBits, getBound().y, getBound().getWidth() / barBits.length, getBound().getHeight(), bitBitmap, mGameScreen);
             offsetBetweenBits+= (getBound().getWidth()  / barBits.length) - (getBound().getWidth()  / barBits.length) / 6;
         }

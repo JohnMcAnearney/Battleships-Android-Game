@@ -1,0 +1,63 @@
+{
+  "assets": [
+    {
+      "type": "Bitmap",
+      "name": "MusicText",
+      "file": "img/MusicText.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "EffectText",
+      "file": "img/EffectsText.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "SettingsBackButton",
+      "file": "img/BackB.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "SettingsBackButtonP",
+      "file": "img/BackBPressed.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "SettingsTitle",
+      "file": "img/SettingsTitle.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "ScreenDemoIconSelected",
+      "file": "img/ScreenDemoIconSelected.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "MuteButton",
+      "file": "img/VolumeOff.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "UnmuteButton",
+      "file": "img/VolumeOn.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "IncreaseMusic",
+      "file": "img/RightArrow.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "DecreaseMusic",
+      "file": "img/LeftArrow.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "SettingBackground",
+      "file": "img/SettingsBackground.png"
+    }, {
+      "type": "Music",
+      "name": "RickRoll",
+      "file": "sound/RickRoll.mp3"
+    }
+  ]
+}

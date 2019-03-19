@@ -79,6 +79,7 @@ public class AudioManager {
                 .build();
 
         // Request control of the volume
+        if(mGame.getActivity() != null)
         mGame.getActivity().setVolumeControlStream(
                 android.media.AudioManager.STREAM_MUSIC);
     }
@@ -128,6 +129,7 @@ public class AudioManager {
         // Start playback of the new music
         mCurrentMusic = music;
         mCurrentMusic.setVolume(mMusicVolume);
+        mCurrentMusic.setLopping(true);
         mCurrentMusic.play();
     }
 

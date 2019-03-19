@@ -1,0 +1,50 @@
+{
+  "assets": [
+    {
+      "type": "Bitmap",
+      "name": "NewGameButton",
+      "file": "img/NewGameB.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "BattleshipBackground",
+      "file": "img/background.jpg"
+    },
+    {
+      "type": "Bitmap",
+      "name": "InstructionsButton",
+      "file": "img/InstructionsB.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "SettingsButton",
+      "file": "img/SettingsB.png"
+    },{
+      "type": "Bitmap",
+      "name": "NewGameButtonP",
+      "file": "img/NewGameBPressed.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "InstructionsButtonP",
+      "file": "img/InstructionsBPressed.png"
+    }, {
+      "type": "Bitmap",
+      "name": "SettingsButtonP",
+      "file": "img/SettingsB.png"
+    },{
+      "type": "Bitmap",
+      "name": "PauseButton",
+      "file": "img/Pause.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "Title",
+      "file": "img/Title.png"
+    },{
+      "type": "Music",
+      "name": "RickRoll",
+      "file": "sound/RickRoll.mp3"
+    }
+    ]
+}

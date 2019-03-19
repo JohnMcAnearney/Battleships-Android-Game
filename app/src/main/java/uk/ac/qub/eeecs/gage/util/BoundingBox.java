@@ -51,8 +51,8 @@ public class BoundingBox {
     /**
      * Create a bounding box of the specified dimensions
      *
-     * @param x          Centre x location of the box
-     * @param y          Centre y location of the box
+     * @param x          Top Left x location of the box
+     * @param y          Top Left y location of the box
      * @param halfWidth  Half width of the box
      * @param halfHeight Half height of the box
      */
@@ -136,12 +136,14 @@ public class BoundingBox {
      * @param other Bounding box to test for intersection with this bound
      * @return boolean true if the boxes overlap, otherwise false
      */
+
     public boolean intersects(BoundingBox other) {
         return (this.x - this.halfWidth < other.x + other.halfWidth &&
                 this.x + this.halfWidth > other.x - other.halfWidth &&
                 this.y - this.halfHeight < other.y + other.halfHeight &&
                 this.y + this.halfHeight > other.y - other.halfHeight);
     }
+
 
     /**
      * Return a string formatted representation of this bound

@@ -13,6 +13,7 @@ import java.util.Vector;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
+import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
@@ -63,6 +64,12 @@ public class BoardSetupScreen extends GameScreen {
     private boolean toRotateShip = false;  //boolean value used as a identifier to rotate the ship
     private boolean shipOutOfBound = false;
 
+
+    ////////////////////////////////////////// - Animation - //////////////////////////////////////////////////////////////////
+    private static ExplosionAnimation explosionAnimation ;
+    private static AnimationSettings animationSettings;
+
+
     ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
@@ -87,7 +94,8 @@ public class BoardSetupScreen extends GameScreen {
         Ship submarine = new Ship("Submarine", 0.387f,0.573f,assetManager.getBitmap("Submarine"), 3);
         Ship destroyer = new Ship("Destroyer", 0.258f,0.363f,assetManager.getBitmap("Destroyer"), 2);
         shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
-
+        animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");
+        explosionAnimation = new ExplosionAnimation(animationSettings,0);
 
     }
 
@@ -143,7 +151,7 @@ public class BoardSetupScreen extends GameScreen {
 
 
             //Calling method to check if user input of x,y are inside a small box
-            detectionIfUserSelectedSmallBox();
+            detectionIfUserSelectedSmallBox(elapsedTime);
 
 //            // Update each button and transition if needed
 //            mBackButton.update(elapsedTime);
@@ -152,6 +160,7 @@ public class BoardSetupScreen extends GameScreen {
 //            }
         }
 
+        explosionAnimation.update(elapsedTime);
         moveBackground += elapsedTime.stepTime * 50.0f;
         if(moveBackground> 300){
             moveBackground = 0;
@@ -182,15 +191,19 @@ public class BoardSetupScreen extends GameScreen {
         // If an user clicked on a small box highlight by painting a square using paint otherwise do nothing
         if(smallBoxDetected)
         {
+            smallBoxDetected = false;
             highlight.setARGB(75,232,0,0);
-            highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);
+           // highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           used for testing
             //message = "detected" + numberofSmallBoxDetected;
             message = message;
+
         }
         else
         {
             message = "Not detected";
         }
+
+        explosionAnimation.draw(elapsedTime,graphics2D);
 
         textPaint.setTextSize(50.0f);
         textPaint.setTextAlign(Paint.Align.LEFT);
@@ -502,9 +515,15 @@ public class BoardSetupScreen extends GameScreen {
         }
 
     }
-    private void hitOrMiss(int i){
+    private void hitOrMiss(int i, ElapsedTime elapsedTime){
         if(smallBoxDetected == true && smallBoxCoordinates[i][4] == 1){
             message = "HIT!";
+
+            //Play explosion Animation
+            explosionAnimation.play(elapsedTime, smallBoxCoordinates[numberofSmallBoxDetected][0],
+                    smallBoxCoordinates[numberofSmallBoxDetected][1],
+                    smallBoxCoordinates[numberofSmallBoxDetected][2],
+                    smallBoxCoordinates[numberofSmallBoxDetected][3]);
         }
 
         else{
@@ -533,14 +552,12 @@ public class BoardSetupScreen extends GameScreen {
         mPauseButton.setPlaySounds(true, true);
     }
 
-    ////////////////////////////////////////////// - Mantas' methods - //////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////// - Mantas' methods 40203133 - //////////////////////////////////////////////////////////////////////////
 
     //Method to draw the ships stored in the shipArray onto the screen
     private void drawShips(IGraphics2D graphics2D){
-
         for(Ship ship: shipArray) {
-            ship.drawShip(graphics2D);
-        }
+            ship.drawShip(graphics2D); }
     }
 
     private void setUpShipmBound(IGraphics2D graphics2D) {
@@ -573,7 +590,7 @@ public class BoardSetupScreen extends GameScreen {
         setShipBound = true;
     }
 
-    //Highlight the small box passed in as a parameter
+    //Highlight the small box passed in as a parameter used for testing
     private void highlightBoxGiven(int numberofSmallBox,Paint p, IGraphics2D iGraphics2D)
     {
 
@@ -583,9 +600,8 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     //This method checks small box co-ordinates against the x and y input co-ordinates, sets parameter smallBoxDetected to true if yes, false otherwise
-    private void detectionIfUserSelectedSmallBox()
+    private void detectionIfUserSelectedSmallBox(ElapsedTime elapsedTime)
     {
-        smallBoxDetected = false;
         if(bigBoxRightCoor == 0)
         {
 
@@ -596,7 +612,7 @@ public class BoardSetupScreen extends GameScreen {
                 numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
                 if (numberofSmallBoxDetected >= 0)
                     smallBoxDetected = true;
-                    hitOrMiss(numberofSmallBoxDetected);
+                    hitOrMiss(numberofSmallBoxDetected,elapsedTime);
 
             }
              if (x > bigBoxRightCoor){

@@ -1,0 +1,14 @@
+{
+  "spritesheet" : "img/ExplosionSheet.png",
+  "numRows" : 6,
+  "numColumns" : 6,
+  "animations": [
+    {
+      "name": "Explosion",
+      "startFrame" : 0,
+      "endFrame" : 34,
+      "totalPeriod" : 1.5,
+      "loopAnimation" : false
+    }
+  ]
+}

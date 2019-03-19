@@ -29,6 +29,7 @@ public class BoardSetupScreen extends GameScreen {
 
     private Bitmap boardSetupBackground, battleshipTitle;
     private PushButton mBackButton, mRotateButton, mPauseButton;
+    private AssetManager assetManager;
     private Paint paint = new Paint();
     private String message = "Not Detected", message2  ="";
     private float x,y;      // Coordinate values
@@ -54,7 +55,7 @@ public class BoardSetupScreen extends GameScreen {
 
     ////////////////////////////////////////// - SHIP VARIABLES - //////////////////////////////////////////////////////////////////
 
-    private boolean setShipBound = false;
+    private boolean shipSetUp = false;
     private Ship[] shipArray;  // hold all of the ship objects
     private Ship selectedShip; //Ship object holder which will be used when user clicks on the ship and drags it across the screen
     private int shipToDragPointerIndexOfInput; //pointer index holder, when user presses the screen the input index will be stored for dragging
@@ -73,7 +74,7 @@ public class BoardSetupScreen extends GameScreen {
     ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
-        AssetManager assetManager = mGame.getAssetManager();
+        assetManager = mGame.getAssetManager();
         assetManager.loadAndAddBitmap("BackArrow", "img/BackArrow.png");
         assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
         assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
@@ -88,12 +89,7 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
         assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
         assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
-        Ship aircraftCarrier = new Ship("AircraftCarrier", 0.641f,0.537f,assetManager.getBitmap("AircraftCarrier"), 5);
-        Ship cargoShip = new Ship("CargoShip", 0.594f,0.397f,assetManager.getBitmap("CargoShip"), 4);
-        Ship cruiseShip = new Ship("CruiseShip", 0.532f,0.487f,assetManager.getBitmap("CruiseShip"), 4);
-        Ship submarine = new Ship("Submarine", 0.387f,0.573f,assetManager.getBitmap("Submarine"), 3);
-        Ship destroyer = new Ship("Destroyer", 0.258f,0.363f,assetManager.getBitmap("Destroyer"), 2);
-        shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
+
         animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");
         explosionAnimation = new ExplosionAnimation(animationSettings,0);
 
@@ -178,8 +174,10 @@ public class BoardSetupScreen extends GameScreen {
         drawBoardOne(graphics2D);
         drawBoardTwo(graphics2D);
         setupBoardBound();
-        if (!setShipBound ) {
+        if (!shipSetUp ) {
+            createShipObjects();
             setUpShipmBound(graphics2D);
+            shipSetUp = true;
         }
         drawShips(graphics2D);
 
@@ -554,6 +552,29 @@ public class BoardSetupScreen extends GameScreen {
 
     ////////////////////////////////////////////// - Mantas' methods 40203133 - //////////////////////////////////////////////////////////////////////////
 
+    //Method to create all of the ships
+    private void createShipObjects()
+    {
+        Ship aircraftCarrier = new Ship("AircraftCarrier", calculateShipRatioX("AircraftCarrier", 5),calculateShipRatioY("AircraftCarrier"),assetManager.getBitmap("AircraftCarrier"), 5);
+        Ship cargoShip = new Ship("CargoShip", calculateShipRatioX("CargoShip",4),calculateShipRatioY("CargoShip"),assetManager.getBitmap("CargoShip"), 4);
+        Ship cruiseShip = new Ship("CruiseShip", calculateShipRatioX("CruiseShip",4),calculateShipRatioY("CruiseShip"),assetManager.getBitmap("CruiseShip"), 4);
+        Ship submarine = new Ship("Submarine", calculateShipRatioX("Submarine",3),calculateShipRatioY("Submarine"),assetManager.getBitmap("Submarine"), 3);
+        Ship destroyer = new Ship("Destroyer", calculateShipRatioX("Destroyer",2),calculateShipRatioY("Destroyer"),assetManager.getBitmap("Destroyer"), 2);
+        shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
+    }
+
+    private float calculateShipRatioX(String bitmapName, int shipLength)
+    {
+        int shipBitmapWidth = assetManager.getBitmap(bitmapName).getWidth();
+        return (((bigBoxRightCoor - bigBoxLeftCoor)/10f) * shipLength) / shipBitmapWidth;
+    }
+
+    private float calculateShipRatioY(String bitmapName)
+    {
+        int shipBitmapHeight = assetManager.getBitmap(bitmapName).getHeight();
+        return (((bigBoxBottomCoor - bigBoxTopCoor)/10f)) / shipBitmapHeight;
+    }
+
     //Method to draw the ships stored in the shipArray onto the screen
     private void drawShips(IGraphics2D graphics2D){
         for(Ship ship: shipArray) {
@@ -561,33 +582,19 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     private void setUpShipmBound(IGraphics2D graphics2D) {
+        int screenWidth = graphics2D.getSurfaceWidth();
+        int screenHeight = graphics2D.getSurfaceHeight();
+        float screenHeightOffset = 0.1f;
         //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
-        shipArray[0].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.1),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.5f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
+        for (Ship ship : shipArray) {
+            screenHeightOffset = screenHeightOffset + 0.08f;
+            ship.setmBound(Math.round(screenWidth * 0.015),
+                    Math.round(screenHeight * screenHeightOffset),
+                    Math.round(((bigBoxRightCoor - bigBoxLeftCoor) / 10f) * ship.getShipLength()) / 2.0f,
+                    ((bigBoxBottomCoor - bigBoxTopCoor) / 10f) / 2f);
 
-        shipArray[1].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.14),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*2.0f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
 
-        shipArray[2].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.18),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.5f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
-
-        shipArray[3].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.22),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.0f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
-
-        shipArray[4].setmBound(Math.round(graphics2D.getSurfaceWidth()*0.015),
-                Math.round(graphics2D.getSurfaceWidth()*0.26),
-                Math.round(((bigBoxRightCoor - bigBoxLeftCoor)/10f)*1.5f),
-                ((bigBoxBottomCoor - bigBoxTopCoor)/10f)/2f);
-
-        setShipBound = true;
+        }
     }
 
     //Highlight the small box passed in as a parameter used for testing

@@ -123,7 +123,7 @@ public class Ship //extends Sprite
     }*/
     //Getters
     //Sprint 4 - Implemented and improved on the Ship class' Getters (40201925)
-    public String shipType()
+    public String getShipType()
     {
         return shipType;
     }

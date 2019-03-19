@@ -596,6 +596,7 @@ public class BoardSetupScreen extends GameScreen {
                 numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
                 if (numberofSmallBoxDetected >= 0)
                     smallBoxDetected = true;
+                    hitOrMiss(numberofSmallBoxDetected);
 
             }
              if (x > bigBoxRightCoor){

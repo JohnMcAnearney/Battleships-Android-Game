@@ -11,6 +11,8 @@ import java.util.List;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
+import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
+import uk.ac.qub.eeecs.gage.engine.audio.Music;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
@@ -18,40 +20,33 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 public class LoadingScreen extends GameScreen
 {
-
+    // Defining variables to be used for the pause screen background
     private Bitmap mLoadingBackground;
     private int screenWidth=0, screenHeight=0;
     private Rect rect;
 
-    public LoadingScreen(Game game)
-    {
+    // Defining variables related to audio
+    private AudioManager audioManager = getGame().getAudioManager();
+    private Music backgroundMusic;
+
+    /*
+   CONSTRUCTOR
+   */
+    public LoadingScreen(Game game) {
         super("LoadingScreen", game);
 
-        // Load all the assets needed for the screen
-        AssetManager assetManager = mGame.getAssetManager();
-        assetManager.loadAndAddBitmap("BattleshipBackground", "img/background.jpg");
-        mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
+        // Method which loads all the assets
+        loadAssets();
 
+        // Start to play the background music and make sure background music is playing
+        playBackgroundMusicIfNotPlaying();
     }
 
-    /**
-     * Update the menu screen
-     *
-     * @param elapsedTime Elapsed time information
-     */
     @Override
     public void update(ElapsedTime elapsedTime)
     {
-        // try-catch to catch the InterruptedException which can occur using the delayLoading method; and a transition after a delay to the main game.
-        try
-        {
-            delayLoading(3);
-            mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
-        }
-        catch(InterruptedException e)
-        {
-            System.out.println(e);
-        }
+        // Method which delays the game loading allowing for the effects of loading assets
+        delayLoading();
 
         // Used to process any touch input within the screen
         Input input = mGame.getInput();
@@ -66,12 +61,6 @@ public class LoadingScreen extends GameScreen
         }
     }
 
-    /**
-     * Draw the menu screen
-     *
-     * @param elapsedTime Elapsed time information
-     * @param graphics2D  Graphics instance
-     */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
@@ -79,8 +68,12 @@ public class LoadingScreen extends GameScreen
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mLoadingBackground,null,rect,null);
     }
+    /*
+    METHODS
+    */
 
-    public void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
+    // Method which gets the screen width and height of the device screen
+    private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
         if (screenHeight == 0 || screenWidth == 0) {
             screenWidth = graphics2D.getSurfaceWidth();
@@ -88,17 +81,48 @@ public class LoadingScreen extends GameScreen
             updateRect();
         }
     }
-
-    public void updateRect()
+    // Method which creates a new rectangle size of the screen
+    private void updateRect()
     {
         rect = new Rect(0,0,screenWidth,screenHeight);
     }
 
     // Method which takes a integer (seconds) and then sets up an appropriate time delay
-    public void delayLoading(int seconds) throws InterruptedException
+    private void delay(int seconds) throws InterruptedException
     {
         int sleepTime = seconds*1000;
         Thread.sleep(sleepTime);
     }
 
+    // Method which applies the delay method, this is done to allow for more control over the delay method if needed
+    private void delayLoading()
+    {
+        try
+        {
+            delay(3);
+            mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
+        }
+        catch(InterruptedException e)
+        {
+            System.out.println(e);
+        }
+    }
+
+    // Method which loads all the assets
+    private void loadAssets()
+    {
+        AssetManager assetManager = mGame.getAssetManager();
+        mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
+        mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
+        backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
+    }
+
+    // Method which starts the music and also checks if the music is playing
+    private void playBackgroundMusicIfNotPlaying()
+    {
+        if(!audioManager.isMusicPlaying())
+        {
+            audioManager.playMusic(backgroundMusic);
+        }
+    }
 }

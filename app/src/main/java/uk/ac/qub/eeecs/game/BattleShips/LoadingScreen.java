@@ -1,6 +1,5 @@
 package uk.ac.qub.eeecs.game.BattleShips;
 
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -68,9 +67,18 @@ public class LoadingScreen extends GameScreen
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mLoadingBackground,null,rect,null);
     }
+
     /*
     METHODS
     */
+    // Method which loads all the assets
+    private void loadAssets()
+    {
+        AssetManager assetManager = mGame.getAssetManager();
+        mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
+        mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
+        backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
+    }
 
     // Method which gets the screen width and height of the device screen
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
@@ -81,6 +89,7 @@ public class LoadingScreen extends GameScreen
             updateRect();
         }
     }
+
     // Method which creates a new rectangle size of the screen
     private void updateRect()
     {
@@ -99,22 +108,13 @@ public class LoadingScreen extends GameScreen
     {
         try
         {
-            delay(3);
+            delay(1);
             mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
         }
         catch(InterruptedException e)
         {
-            System.out.println(e);
+            System.out.println();
         }
-    }
-
-    // Method which loads all the assets
-    private void loadAssets()
-    {
-        AssetManager assetManager = mGame.getAssetManager();
-        mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
-        mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
-        backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
     }
 
     // Method which starts the music and also checks if the music is playing

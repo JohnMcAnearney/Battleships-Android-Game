@@ -84,30 +84,22 @@ public class PauseScreen extends GameScreen {
     /*
     METHODS
     */
-
-    // Method which gets the screen width and height of the device screen
-    private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
+    // Method which loads all the assets
+    private void loadAssets()
     {
-        if (screenHeight == 0 || screenWidth == 0) {
-            screenWidth = graphics2D.getSurfaceWidth();
-            screenHeight = graphics2D.getSurfaceHeight();
-            updateRect();
-            createButton();
-        }
+        AssetManager assetManager = mGame.getAssetManager();
+        mGame.getAssetManager().loadAssets("txt/assets/PauseScreenAssets.JSON");
+        mPauseBackground = assetManager.getBitmap("BattleshipBackground");
+        mPause = assetManager.getBitmap("Paused");
+        backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
     }
 
-    // Method which creates a new rectangle size of the screen
-    private void updateRect()
+    // Method which draws the screen background
+    private void drawScreenBackground(IGraphics2D graphics2D)
     {
-        rect = new Rect(0,0,screenWidth,screenHeight);
-    }
-
-    // Method which allows you to put in the float values of the destination rectangle
-    private Rect drawRectangle(float left, float top, float right, float bottom)
-    {
-
-        Rect rectangle = new Rect((int)left, (int)top, (int)right, (int)bottom);
-        return rectangle;
+        getWidthAndHeightOfScreen(graphics2D);
+        graphics2D.clear(Color.WHITE);
+        graphics2D.drawBitmap(mPauseBackground,null,rect,null);
     }
 
     // Method which creates all the push buttons
@@ -130,25 +122,12 @@ public class PauseScreen extends GameScreen {
         mButtonCollection.add(mPauseTitle);
     }
 
-    // Method which performs the mute button actions
-    private void performMuteButtonActions(){
-
-        if(audioManager.isMusicPlaying()){
-            audioManager.stopMusic();
-            mVolumeButton.setBitmap(mGame.getAssetManager().getBitmap("VolumeOff"));
-
-        }else{
-            mVolumeButton.setBitmap(mGame.getAssetManager().getBitmap("VolumeOn"));
-            playBackgroundMusicIfNotPlaying();
-        }
-    }
-
-    // Method which starts the music and also checks if the music is playing
-    private void playBackgroundMusicIfNotPlaying()
+    // Method which draws all the buttons
+    private void drawButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
-        if(!audioManager.isMusicPlaying())
+        for(PushButton button: mButtonCollection)
         {
-            audioManager.playMusic(backgroundMusic);
+            button.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
         }
     }
 
@@ -159,33 +138,6 @@ public class PauseScreen extends GameScreen {
         {
             button.update(elapsedTime);
         }
-    }
-
-    // Method which loads all the assets
-    private void loadAssets()
-    {
-        AssetManager assetManager = mGame.getAssetManager();
-        mGame.getAssetManager().loadAssets("txt/assets/PauseScreenAssets.JSON");
-        mPauseBackground = assetManager.getBitmap("BattleshipBackground");
-        mPause = assetManager.getBitmap("Paused");
-        backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
-    }
-
-    // Method which draws all the buttons
-    private void drawButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
-    {
-        for(PushButton button: mButtonCollection)
-        {
-            button.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
-        }
-    }
-
-    // Method which draws the screen background
-    private void drawScreenBackground(IGraphics2D graphics2D)
-    {
-        getWidthAndHeightOfScreen(graphics2D);
-        graphics2D.clear(Color.WHITE);
-        graphics2D.drawBitmap(mPauseBackground,null,rect,null);
     }
 
     // Method which executes the actions of all the push buttons
@@ -213,6 +165,53 @@ public class PauseScreen extends GameScreen {
         else if(mVolumeButton.isPushTriggered())
         {
             performMuteButtonActions();
+        }
+    }
+
+    // Method which gets the screen width and height of the device screen
+    private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
+    {
+        if (screenHeight == 0 || screenWidth == 0) {
+            screenWidth = graphics2D.getSurfaceWidth();
+            screenHeight = graphics2D.getSurfaceHeight();
+            updateRect();
+            createButton();
+        }
+    }
+
+    // Method which creates a new rectangle size of the screen
+    private void updateRect()
+    {
+        rect = new Rect(0,0,screenWidth,screenHeight);
+    }
+
+    // Method which allows you to put in the float values of the destination rectangle
+    private Rect drawRectangle(float left, float top, float right, float bottom)
+    {
+
+        Rect rectangle = new Rect((int)left, (int)top, (int)right, (int)bottom);
+        return rectangle;
+    }
+
+    // Method which performs the mute button actions
+    private void performMuteButtonActions(){
+
+        if(audioManager.isMusicPlaying()){
+            audioManager.stopMusic();
+            mVolumeButton.setBitmap(mGame.getAssetManager().getBitmap("VolumeOff"));
+
+        }else{
+            mVolumeButton.setBitmap(mGame.getAssetManager().getBitmap("VolumeOn"));
+            playBackgroundMusicIfNotPlaying();
+        }
+    }
+
+    // Method which starts the music and also checks if the music is playing
+    private void playBackgroundMusicIfNotPlaying()
+    {
+        if(!audioManager.isMusicPlaying())
+        {
+            audioManager.playMusic(backgroundMusic);
         }
     }
 }

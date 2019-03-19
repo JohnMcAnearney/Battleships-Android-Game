@@ -25,19 +25,8 @@ public class MainMenu extends GameScreen {
 
     public MainMenu(Game game) {
         super("MenuScreen", game);
-
         // Load all of the assets
-        AssetManager assetManager = mGame.getAssetManager();
-        assetManager.loadAndAddBitmap("NewGameButton", "img/NewGameB.png");
-        assetManager.loadAndAddBitmap("BattleshipBackground", "img/background.jpg");
-        assetManager.loadAndAddBitmap("InstructionsButton", "img/InstructionsB.png");
-        assetManager.loadAndAddBitmap("SettingsButton", "img/SettingsB.png");
-        assetManager.loadAndAddBitmap("NewGameButtonP", "img/NewGameBPressed.png");
-        assetManager.loadAndAddBitmap("InstructionsButtonP", "img/InstructionsBPressed.png");
-        assetManager.loadAndAddBitmap("SettingsButtonP", "img/SettingsBPressed.png");
-        assetManager.loadAndAddBitmap("Title", "img/Title.png");
-        assetManager.loadAndAddSound("BackgroundMusic", "sound/RickRoll.mp3");
-        mBattleShipBackground = assetManager.getBitmap("BattleshipBackground");
+        loadAssets();
     }
 
     /**
@@ -79,7 +68,6 @@ public class MainMenu extends GameScreen {
             screenHeight = graphics2D.getSurfaceHeight();
             createButton();
             updateRect();
-
         }
     }
 
@@ -113,15 +101,34 @@ public class MainMenu extends GameScreen {
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
 
         // Draw the battleship background
-        getWidthAndHeightOfScreen(graphics2D);
-        graphics2D.clear(Color.WHITE);
-        graphics2D.drawBitmap(mBattleShipBackground, null, rect, null);
+        drawScreenBackground(graphics2D);
 
         // Draw all the push buttons
+        drawButtons(elapsedTime, graphics2D);
+    }
+
+    // Method which loads all the assets for the screen
+    private void loadAssets()
+    {
+        AssetManager assetManager = mGame.getAssetManager();
+        mGame.getAssetManager().loadAssets("txt/assets/MainMenuScreenAssets.JSON");
+        mBattleShipBackground = assetManager.getBitmap("BattleshipBackground");
+    }
+
+    // Method which draws all of the push buttons
+    private void drawButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
+    {
         mStartButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mInstructionsButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mSettingsButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mTitle.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
     }
 
+    // Method which draws the screen background
+    private void drawScreenBackground(IGraphics2D graphics2D)
+    {
+        getWidthAndHeightOfScreen(graphics2D);
+        graphics2D.clear(Color.WHITE);
+        graphics2D.drawBitmap(mBattleShipBackground,null,rect,null);
+    }
 }

@@ -1,0 +1,14 @@
+{
+  "spritesheet" : "img/LoadingImageStrip.png",
+  "numRows" : 24,
+  "animations" :
+  [
+    {
+      "name" : "Loading",
+      "startFrame" : 0,
+      "endFrame" : 24,
+      "totalPeriod" : 1,
+      "loopAnimation" : true
+    }
+  ]
+}

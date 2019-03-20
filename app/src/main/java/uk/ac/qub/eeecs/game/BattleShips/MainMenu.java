@@ -23,10 +23,14 @@ public class MainMenu extends GameScreen {
     private Rect rect;
     private PushButton mStartButton, mInstructionsButton, mSettingsButton, mTitle;
 
+    /*
+    CONSTRUCTOR
+    */
     public MainMenu(Game game) {
         super("MenuScreen", game);
         // Load all of the assets
         loadAssets();
+        createButtons();
     }
 
     /**
@@ -61,36 +65,6 @@ public class MainMenu extends GameScreen {
         }
     }
 
-    public void getWidthAndHeightOfScreen(IGraphics2D graphics2D) {
-
-        if (screenHeight == 0 || screenWidth == 0) {
-            screenWidth = graphics2D.getSurfaceWidth();
-            screenHeight = graphics2D.getSurfaceHeight();
-            createButton();
-            updateRect();
-        }
-    }
-
-    public void updateRect() {
-        rect = new Rect(0, 0, screenWidth, screenHeight);
-    }
-
-    // Create the buttons and set the sound to true
-    public void createButton() {
-
-        mStartButton = new PushButton(mDefaultLayerViewport.getWidth() / 2,mDefaultLayerViewport.getHeight()  / 2, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "NewGameButton", "NewGameButtonP", this);
-        mStartButton.setPlaySounds(true, true);
-
-        mInstructionsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 5.5f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "InstructionsButton", "InstructionsButtonP", this);
-        mInstructionsButton.setPlaySounds(true, true);
-
-        mSettingsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 3f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "SettingsButton", "SettingsButtonP", this);
-        mSettingsButton.setPlaySounds(true, true);
-
-        mTitle = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() /1.3f , mDefaultLayerViewport.getWidth() / 2f, mDefaultLayerViewport.getHeight()/ 3f, "Title", this);
-        // Why is this a button? I think this is a mistake but it could be used for an easter egg
-    }
-
     /**
      * Draw the menu screen
      *
@@ -105,6 +79,38 @@ public class MainMenu extends GameScreen {
 
         // Draw all the push buttons
         drawButtons(elapsedTime, graphics2D);
+    }
+
+    /*
+    METHODS
+    */
+    private void getWidthAndHeightOfScreen(IGraphics2D graphics2D) {
+
+        if (screenHeight == 0 || screenWidth == 0) {
+            screenWidth = graphics2D.getSurfaceWidth();
+            screenHeight = graphics2D.getSurfaceHeight();
+            updateRect();
+        }
+    }
+
+    private void updateRect() {
+        rect = new Rect(0, 0, screenWidth, screenHeight);
+    }
+
+    // Create the buttons and set the sound to true
+    private void createButtons() {
+
+        mStartButton = new PushButton(mDefaultLayerViewport.getWidth() / 2,mDefaultLayerViewport.getHeight()  / 2, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "NewGameButton", "NewGameButtonP", this);
+        mStartButton.setPlaySounds(true, true);
+
+        mInstructionsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 5.5f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "InstructionsButton", "InstructionsButtonP", this);
+        mInstructionsButton.setPlaySounds(true, true);
+
+        mSettingsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 3f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "SettingsButton", "SettingsButtonP", this);
+        mSettingsButton.setPlaySounds(true, true);
+
+        mTitle = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() /1.3f , mDefaultLayerViewport.getWidth() / 2f, mDefaultLayerViewport.getHeight()/ 3f, "Title", this);
+        // Why is this a button? I think this is a mistake but it could be used for an easter egg
     }
 
     // Method which loads all the assets for the screen

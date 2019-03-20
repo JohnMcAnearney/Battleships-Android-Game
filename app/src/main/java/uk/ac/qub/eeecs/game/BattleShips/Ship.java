@@ -57,7 +57,7 @@ public class Ship //extends Sprite
     {
         matrix.reset();
         matrix.setScale(scaleRatioX,scaleratioY);
-        matrix.postRotate(90.0f);
+        matrix.postRotate(90.0f, mBound.halfWidth, mBound.halfWidth);
         matrix.postTranslate(mBound.x,mBound.y);
     }
 
@@ -123,7 +123,7 @@ public class Ship //extends Sprite
     }*/
     //Getters
     //Sprint 4 - Implemented and improved on the Ship class' Getters (40201925)
-    public String shipType()
+    public String getShipType()
     {
         return shipType;
     }

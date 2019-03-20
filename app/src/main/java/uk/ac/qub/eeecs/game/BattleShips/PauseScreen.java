@@ -45,6 +45,9 @@ public class PauseScreen extends GameScreen {
 
         // Start to play the background music and make sure background music is playing
         playBackgroundMusicIfNotPlaying();
+
+        // Method which creates all the buttons
+        createButtons();
     }
 
     @Override
@@ -103,12 +106,12 @@ public class PauseScreen extends GameScreen {
     }
 
     // Method which creates all the push buttons
-    private void createButton()
+    private void createButtons()
     {
         // Instruction Button
         mInstructionsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 5.5f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "InstructionsButton", "InstructionsButtonP", this);
         mButtonCollection.add(mInstructionsButton);
-        // Setting Button
+        // Settings Button
         mSettingsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 3f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "SettingsButton", "SettingsButtonP", this);
         mButtonCollection.add(mSettingsButton);
         // Back Button
@@ -175,7 +178,6 @@ public class PauseScreen extends GameScreen {
             screenWidth = graphics2D.getSurfaceWidth();
             screenHeight = graphics2D.getSurfaceHeight();
             updateRect();
-            createButton();
         }
     }
 

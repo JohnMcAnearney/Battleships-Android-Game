@@ -5,6 +5,8 @@ package uk.ac.qub.eeecs.game.BattleShips;
 
 
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
 import android.text.method.Touch;
 
 import java.util.List;
@@ -26,13 +28,15 @@ public class BoardSetupScreen extends GameScreen {
 
     /////////////////////////////////////////// - GENERAL STUFF - /////////////////////////////////////////////////////////////////
 
-    private Bitmap boardSetupBackground, battleshipTitle;
+    private Bitmap boardSetupBackground, battleshipTitle, boundsMessage;
     private PushButton mBackButton, mRotateButton, mPauseButton;
     private Paint paint = new Paint();
     private String message = "Not Detected", message2  ="";
     private float x,y;      // Coordinate values
     private int moveBackground =0;
     private final float MAX_SNAP_TO_DISTANCE = 1000.0f;
+    float closestSlotDistanceSqrd = Float.MAX_VALUE;
+    int numberOfClosestBox = 0;
 
     ////////////////////////////////////////// - BOX VARIABLES - //////////////////////////////////////////////////////////////////
 
@@ -74,8 +78,10 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
         assetManager.loadAndAddBitmap("Title", "img/Title.png");
         assetManager.loadAndAddBitmap("PauseButton", "img/Pause.png");
+        assetManager.loadAndAddBitmap("boundsMessage", "img/OutOfBoundsMessage.png");
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
+        boundsMessage = assetManager.getBitmap("boundsMessage");
         assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
         assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
         assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
@@ -165,7 +171,7 @@ public class BoardSetupScreen extends GameScreen {
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         graphics2D.clear(Color.WHITE);
-        drawStaticImages(graphics2D);
+        drawConstantImages(graphics2D);
         drawBoardOne(graphics2D);
         drawBoardTwo(graphics2D);
         setupBoardBound();
@@ -184,12 +190,17 @@ public class BoardSetupScreen extends GameScreen {
         {
             highlight.setARGB(75,232,0,0);
             highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);
-            //message = "detected" + numberofSmallBoxDetected;
-            message = message;
+            message = "detected" + numberofSmallBoxDetected;
+            //message = message;
         }
         else
         {
             message = "Not detected";
+        }
+
+        if(shipOutOfBound){
+
+                drawMessageToScreen(graphics2D);
         }
 
         textPaint.setTextSize(50.0f);
@@ -205,7 +216,7 @@ public class BoardSetupScreen extends GameScreen {
 
     ////////////////////////////////////////////// - OUR OWN METHODS - /////////////////////////////////////////////////////////////////////////
 
-    ////////////////////////////////////////////// - John's methods - //////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////// - John's methods - ////s//////////////////////////////////////////////////////////////////////
 
     private void drawBoardOne(IGraphics2D graphics2D){
         paint.setColor(Color.WHITE);
@@ -266,9 +277,9 @@ public class BoardSetupScreen extends GameScreen {
         }
         smallboxCoordinatesCaptured = true;
         bigBoxLeftCoor = (screenWidth/14f);       //i could do a test method for these, testing if i change these variables that they all still fit in the
-        bigBoxTopCoor = screenHeight/5f;          //screen and if not set it back so it fits in screen
+        bigBoxTopCoor = screenHeight/3f;          //screen and if not set it back so it fits in screen
         bigBoxRightCoor = bigBoxLeftCoor*6f;      //simple if right>screenwidth then return false and fix
-        bigBoxBottomCoor = (bigBoxTopCoor*4.5f);
+        bigBoxBottomCoor = (bigBoxTopCoor*2.9f);
     }
 
     private void drawBoardTwo(IGraphics2D graphics2D){
@@ -342,10 +353,9 @@ public class BoardSetupScreen extends GameScreen {
                 ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
     }
 
-    public void drawStaticImages(IGraphics2D graphics2D){
+    public void drawConstantImages(IGraphics2D graphics2D){
         Matrix bcgMatrix = new Matrix();
-
-        bcgMatrix.setScale(2.5f, 2.5f);
+        bcgMatrix.setScale(3.5f, 3.5f);
         bcgMatrix.postTranslate(-moveBackground,0);
         graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
         // Could do some maths to figure out exact ,middle using bitmaps ac size but looks ok for now
@@ -353,13 +363,9 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
     }
 
-
     private void shipPlacement(){
         isShipOutOfBound();
-//        if(shipOutOfBound == true){       LINES 365, 368 ALSO COMMENTED OUT BECAUSE MAY NEED THESE TO REFACTOR RESET
-//            shipReset();
-//        }
-        for(int i = 0;i<100;i++){
+        for(int i = 0;i<200;i++){
             if (selectedShip.mBound.x > smallBoxCoordinates[i][0] && selectedShip.mBound.x < smallBoxCoordinates[i][2]
                     && selectedShip.mBound.y > smallBoxCoordinates[i][1] && selectedShip.mBound.y < smallBoxCoordinates[i][3]) {
                 checkIfBoxOccupied(i);
@@ -372,14 +378,15 @@ public class BoardSetupScreen extends GameScreen {
         if(boardBoundingBox.contains(selectedShip.mBound.x,  selectedShip.mBound.y) &&
                 boardBoundingBox.contains(selectedShip.mBound.x + (selectedShip.mBound.halfWidth * 2),
                         selectedShip.mBound.y + (selectedShip.mBound.halfHeight * 2))){
-            // shipOutOfBound = false;
+             shipOutOfBound = false;
         }
         else {
-            //shipOutOfBound =true;
+            shipOutOfBound =true;
             shipReset();
         }
 
     }
+
     private void markShipInBox(int i){
         for (int x = 0; x < selectedShip.getShipLength(); x++) {
             smallBoxCoordinates[i][4] = 1;                          //minor bug here, colours one extra than length of ship
@@ -387,10 +394,10 @@ public class BoardSetupScreen extends GameScreen {
         }
     }
 
-    private void shipReset(){
+    private int calculateClosestBox(){
         //closest box is between smallBoxWidth/2 coor and ship coor
-        float closestSlotDistanceSqrd = Float.MAX_VALUE;
-        int numberOfClosestBox = 0;
+        closestSlotDistanceSqrd = Float.MAX_VALUE;
+        numberOfClosestBox = 0;
 
         for(int x = 0; x<100;x++){
             if(smallBoxCoordinates[x][4]==1){   //as no need to calculate, this box is occupied
@@ -407,6 +414,12 @@ public class BoardSetupScreen extends GameScreen {
             }
 
         }
+
+        return numberOfClosestBox;
+    }
+
+    private void shipReset(){
+        calculateClosestBox();
 
         if (Math.sqrt(closestSlotDistanceSqrd) <= MAX_SNAP_TO_DISTANCE){
             if(numberOfClosestBox == 9|| numberOfClosestBox == 19|| numberOfClosestBox == 29|| numberOfClosestBox == 39|| numberOfClosestBox == 49||
@@ -455,6 +468,7 @@ public class BoardSetupScreen extends GameScreen {
         }
 
     }
+
     private void shipSnapToBox(){
         float closestSlotDistanceSqrd = Float.MAX_VALUE;
         int numberOfClosestBox = 0;
@@ -494,14 +508,35 @@ public class BoardSetupScreen extends GameScreen {
                 break;
         }
     }
+
     private void checkIfBoxOccupied(int i){
         if(smallBoxCoordinates[i][4] ==1 ){
-            selectedShip.mBound.x = 1000;
+            switch (selectedShip.getShipLength()) {
+                case 2:
+                    selectedShip.mBound.x = smallBoxCoordinates[130][0];
+                    selectedShip.mBound.y = smallBoxCoordinates[130][1];
+                    break;
+                case 3:
+                    selectedShip.mBound.x = smallBoxCoordinates[120][0];
+                    selectedShip.mBound.y = smallBoxCoordinates[120][1];
+                    break;
+                case 4:
+                    selectedShip.mBound.x = smallBoxCoordinates[110][0];
+                    selectedShip.mBound.y = smallBoxCoordinates[110][1];
+                    break;
+                case 5:
+                    selectedShip.mBound.x = smallBoxCoordinates[100][0];
+                    selectedShip.mBound.y = smallBoxCoordinates[100][1];
+                    break;
+              }
+
+
         }else{
 
         }
 
     }
+
     private void hitOrMiss(int i){
         if(smallBoxDetected == true && smallBoxCoordinates[i][4] == 1){
             message = "HIT!";
@@ -512,6 +547,18 @@ public class BoardSetupScreen extends GameScreen {
         }
 
     }
+
+    private void drawMessageToScreen(IGraphics2D graphics2D) {
+        Paint messagePaint = new Paint();
+        //https://stackoverflow.com/questions/11285961/how-to-make-a-background-20-transparent-on-android source on how to do transparency
+        messagePaint.setAlpha(220); //this is an opacity of 80%, no need to convert to hex
+        Rect messageRect = new Rect((graphics2D.getSurfaceWidth()/2) - (battleshipTitle.getWidth()/2),
+                (graphics2D.getSurfaceHeight()/2) - (battleshipTitle.getHeight()/2),
+                (graphics2D.getSurfaceWidth()/2) + (battleshipTitle.getWidth()/2),
+                (graphics2D.getSurfaceHeight()/2) + (battleshipTitle.getHeight()));
+        graphics2D.drawBitmap(boundsMessage, null, messageRect, messagePaint);
+    }
+
     ////////////////////////////////////////////// - Collective methods - //////////////////////////////////////////////////////////////////////////
 
     private void createButtons() {

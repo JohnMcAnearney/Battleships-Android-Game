@@ -25,16 +25,21 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 public class BoardSetupScreen extends GameScreen {
 
-    /////////////////////////////////////////// - GENERAL STUFF - /////////////////////////////////////////////////////////////////
+    /**
+     * Class Authors: Mantas Stadnik 40203133 and John Mcanearney 40203900
+     */
+
+    /////////////////////////////////////////// - GENERAL VARIABLES - /////////////////////////////////////////////////////////////////
 
     private Bitmap boardSetupBackground, battleshipTitle;
     private PushButton mBackButton, mRotateButton, mPauseButton;
     private AssetManager assetManager;
     private Paint paint = new Paint();
     private String message = "Not Detected", message2  ="";
-    private float x,y;      // Coordinate values
+    private float x,y;      // Coordinate values of user input
     private int moveBackground =0;
     private final float MAX_SNAP_TO_DISTANCE = 1000.0f;
+    private PushButton[] pushButtonArray;      //Array to store all of the buttons
 
     ////////////////////////////////////////// - BOX VARIABLES - //////////////////////////////////////////////////////////////////
 
@@ -55,7 +60,7 @@ public class BoardSetupScreen extends GameScreen {
 
     ////////////////////////////////////////// - SHIP VARIABLES - //////////////////////////////////////////////////////////////////
 
-    private boolean shipSetUp = false;
+    private boolean shipSetUp = false;  //flag which indicates if the ship objects have been created
     private Ship[] shipArray;  // hold all of the ship objects
     private Ship selectedShip; //Ship object holder which will be used when user clicks on the ship and drags it across the screen
     private int shipToDragPointerIndexOfInput; //pointer index holder, when user presses the screen the input index will be stored for dragging
@@ -67,14 +72,18 @@ public class BoardSetupScreen extends GameScreen {
 
 
     ////////////////////////////////////////// - Animation - //////////////////////////////////////////////////////////////////
-    private static ExplosionAnimation explosionAnimation ;
-    private static AnimationSettings animationSettings;
+    private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimation
+    private static AnimationSettings animationSettings;        //Object holder for animationSettings
 
 
     ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
-        assetManager = mGame.getAssetManager();
+        assetManager = mGame.getAssetManager();  // create a global asset Manager
+        /**
+         * Load all of the required images
+         *
+         */
         assetManager.loadAndAddBitmap("BackArrow", "img/BackArrow.png");
         assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
         assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
@@ -89,8 +98,14 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
         assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
         assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
-
+        /**
+         * Creating animationSettings object which will load the JSON file and the image spritesheet
+         * to be used for an explosion animation
+         */
         animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");
+        /**
+         * create explosion animation object which will allow for explosion to be drawn
+         */
         explosionAnimation = new ExplosionAnimation(animationSettings,0);
 
     }
@@ -109,6 +124,7 @@ public class BoardSetupScreen extends GameScreen {
         }
 
 
+        //Determine if the used is selecting ship or dragging ship
         switch(gameShipPlacementState)
         {
             case SHIP_SELECT: shipSelect(input); break;
@@ -137,10 +153,11 @@ public class BoardSetupScreen extends GameScreen {
             {
                 if(selectedShip == null)
                 {
-                selectedShip = shipArray[0];
+                    //check if a ship has been selected, do nothing no ship has been selected
                 }
             else
             {
+                //rotate the ship by 90 degrees
                 rotateShipBy90Degrees();
             }
             }
@@ -156,7 +173,10 @@ public class BoardSetupScreen extends GameScreen {
 //            }
         }
 
+        //update the animation frame
         explosionAnimation.update(elapsedTime);
+
+
         moveBackground += elapsedTime.stepTime * 50.0f;
         if(moveBackground> 300){
             moveBackground = 0;
@@ -170,17 +190,21 @@ public class BoardSetupScreen extends GameScreen {
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         graphics2D.clear(Color.WHITE);
-        drawStaticImages(graphics2D);
-        drawBoardOne(graphics2D);
-        drawBoardTwo(graphics2D);
+
+        //Collective method which draws required items, boards and static images
+        drawItems(graphics2D);
         setupBoardBound();
+
+        //Set up ship bounds and create ship objects only once
         if (!shipSetUp ) {
-            createShipObjects();
-            setUpShipmBound(graphics2D);
+            createShipObjects(graphics2D);
             shipSetUp = true;
         }
+
+        //Call draw methods for all of the ship in the ship's object class
         drawShips(graphics2D);
 
+        //Used for testing to display the bounding box of the ships
         for(Ship shipArray: shipArray)
         {
             graphics2D.drawRect(shipArray.mBound.x, shipArray.mBound.y, shipArray.mBound.x + shipArray.mBound.getWidth(), shipArray.mBound.y + shipArray.mBound.getHeight(), highlight);
@@ -192,7 +216,7 @@ public class BoardSetupScreen extends GameScreen {
             smallBoxDetected = false;
             highlight.setARGB(75,232,0,0);
            // highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           used for testing
-            //message = "detected" + numberofSmallBoxDetected;
+            //message = "detected" + numberofSmallBoxDetected;                                            used for testing
             message = message;
 
         }
@@ -201,17 +225,20 @@ public class BoardSetupScreen extends GameScreen {
             message = "Not detected";
         }
 
+        //Call the explosion animation method in the object's class
         explosionAnimation.draw(elapsedTime,graphics2D);
 
+        //Set up and draw messages used for testing
         textPaint.setTextSize(50.0f);
         textPaint.setTextAlign(Paint.Align.LEFT);
         graphics2D.drawText(message, 100.0f, 100.0f, textPaint);
         graphics2D.drawText(message2, 100.0f, 200.0f, textPaint);
+
+        //Create all of the buttons used in this gamescreen collectively
         createButtons();
 
-        mBackButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
-        mRotateButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
-        mPauseButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
+        //Draw all of the buttons
+        drawAllButtons(elapsedTime,graphics2D);
     }
 
     ////////////////////////////////////////////// - OUR OWN METHODS - /////////////////////////////////////////////////////////////////////////
@@ -356,7 +383,7 @@ public class BoardSetupScreen extends GameScreen {
     public void drawStaticImages(IGraphics2D graphics2D){
         Matrix bcgMatrix = new Matrix();
 
-        bcgMatrix.setScale(2.5f, 2.5f);
+        bcgMatrix.setScale(3.5f, 3.5f);
         bcgMatrix.postTranslate(-moveBackground,0);
         graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
         // Could do some maths to figure out exact ,middle using bitmaps ac size but looks ok for now
@@ -531,6 +558,7 @@ public class BoardSetupScreen extends GameScreen {
     }
     ////////////////////////////////////////////// - Collective methods - //////////////////////////////////////////////////////////////////////////
 
+
     private void createButtons() {
         // Trigger Button at the bottom left of the screen
         mBackButton = new PushButton(
@@ -548,12 +576,32 @@ public class BoardSetupScreen extends GameScreen {
                 mDefaultLayerViewport.getWidth() * 0.05f, mDefaultLayerViewport.getHeight() * 0.05f,
                 "PauseButton", this);
         mPauseButton.setPlaySounds(true, true);
+
+        pushButtonArray = new PushButton[]{mBackButton,mRotateButton,mPauseButton};
     }
 
     ////////////////////////////////////////////// - Mantas' methods 40203133 - //////////////////////////////////////////////////////////////////////////
 
+    /**
+     * 
+     */
+    private void drawItems(IGraphics2D graphics2D)
+    {
+        drawStaticImages(graphics2D);
+        drawBoardOne(graphics2D);
+        drawBoardTwo(graphics2D);
+    }
+
+    private void drawAllButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
+    {
+        for(PushButton pushButton: pushButtonArray)
+        {
+            pushButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
+        }
+    }
+
     //Method to create all of the ships
-    private void createShipObjects()
+    private void createShipObjects(IGraphics2D graphics2D)
     {
         Ship aircraftCarrier = new Ship("AircraftCarrier", calculateShipRatioX("AircraftCarrier", 5),calculateShipRatioY("AircraftCarrier"),assetManager.getBitmap("AircraftCarrier"), 5);
         Ship cargoShip = new Ship("CargoShip", calculateShipRatioX("CargoShip",4),calculateShipRatioY("CargoShip"),assetManager.getBitmap("CargoShip"), 4);
@@ -561,6 +609,7 @@ public class BoardSetupScreen extends GameScreen {
         Ship submarine = new Ship("Submarine", calculateShipRatioX("Submarine",3),calculateShipRatioY("Submarine"),assetManager.getBitmap("Submarine"), 3);
         Ship destroyer = new Ship("Destroyer", calculateShipRatioX("Destroyer",2),calculateShipRatioY("Destroyer"),assetManager.getBitmap("Destroyer"), 2);
         shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
+        setUpShipmBound(graphics2D);
     }
 
     private float calculateShipRatioX(String bitmapName, int shipLength)

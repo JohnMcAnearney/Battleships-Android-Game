@@ -13,6 +13,7 @@ import java.util.Vector;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
+
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
@@ -20,7 +21,6 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.util.Vector2;
-import uk.ac.qub.eeecs.gage.world.GameObject;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 public class BoardSetupScreen extends GameScreen {

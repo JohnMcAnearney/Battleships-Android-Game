@@ -13,7 +13,6 @@ import java.util.Vector;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
-
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
@@ -21,6 +20,7 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.util.Vector2;
+import uk.ac.qub.eeecs.gage.world.GameObject;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 public class BoardSetupScreen extends GameScreen {
@@ -32,7 +32,7 @@ public class BoardSetupScreen extends GameScreen {
     /////////////////////////////////////////// - GENERAL VARIABLES - /////////////////////////////////////////////////////////////////
 
     private Bitmap boardSetupBackground, battleshipTitle;
-    private PushButton mBackButton, mRotateButton, mPauseButton;
+    private PushButton mBackButton, mRotateButton, mPauseButton, mPlayButton;
     private AssetManager assetManager;
     private Paint paint = new Paint();
     private String message = "Not Detected", message2  ="";
@@ -98,6 +98,8 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
         assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
         assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
+        assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
+
         /**
          * Creating animationSettings object which will load the JSON file and the image spritesheet
          * to be used for an explosion animation
@@ -137,6 +139,7 @@ public class BoardSetupScreen extends GameScreen {
             mBackButton.update(elapsedTime);
             mRotateButton.update(elapsedTime);
             mPauseButton.update(elapsedTime);
+            mPlayButton.update(elapsedTime);
 
             // If statement which processes all the appropriate touch events within the class
             if(mBackButton.isPushTriggered())
@@ -155,6 +158,17 @@ public class BoardSetupScreen extends GameScreen {
                 {
                     //check if a ship has been selected, do nothing no ship has been selected
                 }
+            else if(mPlayButton.isPushTriggered())
+            {
+                //TODO - MJ
+                //Check all ships have been placed
+                //place bitmaps in the correct positions
+                //Create AI class
+                //Place AI ships
+                //Turn indicator
+                //Enter game loop
+
+            }
             else
             {
                 //rotate the ship by 90 degrees
@@ -237,6 +251,10 @@ public class BoardSetupScreen extends GameScreen {
         //Create all of the buttons used in this gamescreen collectively
         createButtons();
 
+        mBackButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
+        mRotateButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
+        mPauseButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
+        mPlayButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         //Draw all of the buttons
         drawAllButtons(elapsedTime,graphics2D);
     }
@@ -558,17 +576,16 @@ public class BoardSetupScreen extends GameScreen {
     }
     ////////////////////////////////////////////// - Collective methods - //////////////////////////////////////////////////////////////////////////
 
-
     private void createButtons() {
         // Trigger Button at the bottom left of the screen
         mBackButton = new PushButton(
-                mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.88f, mDefaultLayerViewport.getHeight() * 0.10f,
                 mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
                 "SettingsBackButton","SettingsBackButtonP",  this);
         mBackButton.setPlaySounds(true, true);
 
         mRotateButton = new PushButton(
-                mDefaultLayerViewport.getWidth() * 0.88f,   mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.80f,   mDefaultLayerViewport.getHeight() * 0.10f,
                 mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
                 "rotateButton", "rotateButton", this);
 
@@ -577,13 +594,17 @@ public class BoardSetupScreen extends GameScreen {
                 "PauseButton", this);
         mPauseButton.setPlaySounds(true, true);
 
+        mPlayButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight()* 0.10f,
+                mDefaultLayerViewport.getWidth()*0.075f, mDefaultLayerViewport.getHeight()*0.10f, "PlayButton", this);
+        mPlayButton.setPlaySounds(true, true);
+
         pushButtonArray = new PushButton[]{mBackButton,mRotateButton,mPauseButton};
     }
 
     ////////////////////////////////////////////// - Mantas' methods 40203133 - //////////////////////////////////////////////////////////////////////////
 
     /**
-     * 
+     *
      */
     private void drawItems(IGraphics2D graphics2D)
     {

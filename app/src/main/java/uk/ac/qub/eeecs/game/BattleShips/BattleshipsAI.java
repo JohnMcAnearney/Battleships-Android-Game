@@ -3,7 +3,13 @@ package uk.ac.qub.eeecs.game.BattleShips;
 import java.util.ArrayList;
 import java.util.Collections;
 public class BattleshipsAI {
-    //This class is used to allow the ai to decide where to hit next and store its shots so far so it can make a more educated shot
+    /*This class is used to allow the ai to decide where to hit next and store its shots so far so it can make a more educated shot
+            This class contains 3 methods:
+                -setupBoard()   which prepares the AI's board before the game
+                -nextShot()     which returns the next shot which the AI is going to take (depending on the difficulty)
+                -checkAIBoard() which checks the coordinates passed through against the aiboard[][] array and returns the state of the relevant field
+
+            */
 
     //Explanation of shooting algorithms:
         /*  The AI has 3 different difficulty levels
@@ -34,11 +40,23 @@ public class BattleshipsAI {
     private static int[][] board = new int[10][10]; // players board as seen by AI
     private static int[][] pboard = new int [10][10]; // players board used to verify hits/misses
     //This array has been made public so that we can verify if the player has hit any of the AI's ships outside of this class
-    //TO-DO: make this array private and create a public method which checks if the player hit or miss a ship.
-    public static int[][] aiboard = new int [10][10]; //AI's board used for ship placement;
+                //Key: 0 - empty ; 1 - unhit ship ; 2 - hit ship
+    private static int[][] aiboard = new int [10][10]; //AI's board used for ship placement;
+
 
     /**
-     * @return Returns a Letter-Number combo representing the x and y coordinates of the AI's next shot. If the difficulty hasnt been set to either 0, 1 or 2 this method will return "ERROR".
+     *
+     * @param x the x coordinate to check
+     * @param y the y coordinate to check
+     * @return 0, 1 or 2. 0 means this spot is empty, 1 means there is a ship here which hasn't been hit yet. 2 means that this spot has been hit before
+     */
+    public int checkAIBoard(int x, int y){
+        return aiboard[y][x];
+    }
+
+
+    /**
+     * @return Returns a 2 digit string representing the x & y coordinates to be hit. If the difficulty hasnt been set to either 0, 1 or 2 this method will return "ERROR - incorrect difficulty".
      *
      */
     public String nextShot()
@@ -52,7 +70,7 @@ public class BattleshipsAI {
                 break;
 
         }
-        return "ERROR";
+        return "ERROR - incorrect difficulty";
     }
 
     /**
@@ -130,9 +148,15 @@ public class BattleshipsAI {
 
 
     //this method will be called by the easiest AI, just randomly picks a point which hasn't been picked this game with no strategy
+
+    /**
+     * This method picks a random point on the players board which hasn't been hit yet and returns a 2 digit string of the format XY.
+     * @return 2 digit string made up from the X and Y coordinates of the format XY.
+     */
+
     private String randomShot(){
         int x,y;
-        String shot;
+        String shot = "";
         do{
             x = (int)Math.round(Math.random()*boardLength);
             y = (int)Math.round(Math.random()*boardLength);}while(board[y][x]!=0);
@@ -141,7 +165,9 @@ public class BattleshipsAI {
             board[y][x] = 2;
         }else{board[y][x] = 1;}
 
-        return String.valueOf((char)(44+x) + y);
+        shot.concat(String.valueOf(x));
+        shot.concat(String.valueOf(y));
+        return shot;
     }
 
         //To keep the game random and to prevent a strategy to always beat the AI arising

@@ -643,7 +643,7 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     /**
-     * Will dynamically calculate the ship's X ratio to the size of the squares by comparing
+     * Dynamically calculate the ship's X ratio to the size of the squares by comparing
      * image size to required size and ship's length
      * @param bitmapName
      * @param shipLength

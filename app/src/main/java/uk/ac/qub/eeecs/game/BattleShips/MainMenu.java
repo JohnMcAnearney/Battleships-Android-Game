@@ -23,21 +23,14 @@ public class MainMenu extends GameScreen {
     private Rect rect;
     private PushButton mStartButton, mInstructionsButton, mSettingsButton, mTitle;
 
+    /*
+    CONSTRUCTOR
+    */
     public MainMenu(Game game) {
         super("MenuScreen", game);
-
         // Load all of the assets
-        AssetManager assetManager = mGame.getAssetManager();
-        assetManager.loadAndAddBitmap("NewGameButton", "img/NewGameB.png");
-        assetManager.loadAndAddBitmap("BattleshipBackground", "img/background.jpg");
-        assetManager.loadAndAddBitmap("InstructionsButton", "img/InstructionsB.png");
-        assetManager.loadAndAddBitmap("SettingsButton", "img/SettingsB.png");
-        assetManager.loadAndAddBitmap("NewGameButtonP", "img/NewGameBPressed.png");
-        assetManager.loadAndAddBitmap("InstructionsButtonP", "img/InstructionsBPressed.png");
-        assetManager.loadAndAddBitmap("SettingsButtonP", "img/SettingsBPressed.png");
-        assetManager.loadAndAddBitmap("Title", "img/Title.png");
-        assetManager.loadAndAddSound("BackgroundMusic", "sound/RickRoll.mp3");
-        mBattleShipBackground = assetManager.getBitmap("BattleshipBackground");
+        loadAssets();
+        createButtons();
     }
 
     /**
@@ -72,23 +65,40 @@ public class MainMenu extends GameScreen {
         }
     }
 
-    public void getWidthAndHeightOfScreen(IGraphics2D graphics2D) {
+    /**
+     * Draw the menu screen
+     *
+     * @param elapsedTime Elapsed time information
+     * @param graphics2D  Graphics instance
+     */
+    @Override
+    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
+
+        // Draw the battleship background
+        drawScreenBackground(graphics2D);
+
+        // Draw all the push buttons
+        drawButtons(elapsedTime, graphics2D);
+    }
+
+    /*
+    METHODS
+    */
+    private void getWidthAndHeightOfScreen(IGraphics2D graphics2D) {
 
         if (screenHeight == 0 || screenWidth == 0) {
             screenWidth = graphics2D.getSurfaceWidth();
             screenHeight = graphics2D.getSurfaceHeight();
-            createButton();
             updateRect();
-
         }
     }
 
-    public void updateRect() {
+    private void updateRect() {
         rect = new Rect(0, 0, screenWidth, screenHeight);
     }
 
     // Create the buttons and set the sound to true
-    public void createButton() {
+    private void createButtons() {
 
         mStartButton = new PushButton(mDefaultLayerViewport.getWidth() / 2,mDefaultLayerViewport.getHeight()  / 2, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "NewGameButton", "NewGameButtonP", this);
         mStartButton.setPlaySounds(true, true);
@@ -103,25 +113,28 @@ public class MainMenu extends GameScreen {
         // Why is this a button? I think this is a mistake but it could be used for an easter egg
     }
 
-    /**
-     * Draw the menu screen
-     *
-     * @param elapsedTime Elapsed time information
-     * @param graphics2D  Graphics instance
-     */
-    @Override
-    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
+    // Method which loads all the assets for the screen
+    private void loadAssets()
+    {
+        AssetManager assetManager = mGame.getAssetManager();
+        mGame.getAssetManager().loadAssets("txt/assets/MainMenuScreenAssets.JSON");
+        mBattleShipBackground = assetManager.getBitmap("BattleshipBackground");
+    }
 
-        // Draw the battleship background
-        getWidthAndHeightOfScreen(graphics2D);
-        graphics2D.clear(Color.WHITE);
-        graphics2D.drawBitmap(mBattleShipBackground, null, rect, null);
-
-        // Draw all the push buttons
+    // Method which draws all of the push buttons
+    private void drawButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
+    {
         mStartButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mInstructionsButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mSettingsButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mTitle.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
     }
 
+    // Method which draws the screen background
+    private void drawScreenBackground(IGraphics2D graphics2D)
+    {
+        getWidthAndHeightOfScreen(graphics2D);
+        graphics2D.clear(Color.WHITE);
+        graphics2D.drawBitmap(mBattleShipBackground,null,rect,null);
+    }
 }

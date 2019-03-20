@@ -1,0 +1,21 @@
+{
+  "assets": [
+    {
+      "type" : "Bitmap",
+      "name" : "BattleshipBackground",
+      "file" : "img/background.jpg"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "LoadingTitle",
+      "file" : "img/LoadingTitle.png"
+    },
+    {
+      "type" : "Music",
+      "name" : "RickRoll",
+      "file" : "sound/RickRoll.mp3"
+
+    }
+  ]
+}

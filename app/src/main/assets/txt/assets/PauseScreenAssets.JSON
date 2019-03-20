@@ -1,0 +1,76 @@
+{
+  "assets": [
+    {
+      "type" : "Bitmap",
+      "name" : "BackArrow",
+      "file" : "img/BackB.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "BackArrowP",
+      "file" : "img/BackBPressed.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "VolumeOn",
+      "file" : "img/VolumeOn.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "VolumeOff",
+      "file" : "img/VolumeOff.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "InstructionsButton",
+      "file" : "img/InstructionsB.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "InstructionsButtonP",
+      "file" : "img/InstructionsBPressed.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "SettingsButton",
+      "file" : "img/SettingsB.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "SettingsButtonP",
+      "file" : "img/SettingsBPressed.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "Paused",
+      "file" : "img/Paused.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "PauseTitle",
+      "file" : "img/Paused.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "BattleshipBackground",
+      "file" : "img/background.jpg"
+
+    },
+    {
+      "type" : "Music",
+      "name" : "RickRoll",
+      "file" : "sound/RickRoll.mp3"
+
+    }
+  ]
+}

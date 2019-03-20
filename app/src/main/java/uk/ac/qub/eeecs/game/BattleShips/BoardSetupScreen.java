@@ -143,7 +143,14 @@ public class BoardSetupScreen extends GameScreen {
                 }
             else if(mPlayButton.isPushTriggered())
             {
-                // PREP THE SCREEN AND MOVE ON TO GAME LOOP  - MJ
+                //TODO - MJ
+                //Check all ships have been placed
+                //place bitmaps in the correct positions
+                //Create AI class
+                //Place AI ships
+                //Turn indicator
+                //Enter game loop
+
             }
             else
             {
@@ -541,13 +548,13 @@ public class BoardSetupScreen extends GameScreen {
     private void createButtons() {
         // Trigger Button at the bottom left of the screen
         mBackButton = new PushButton(
-                mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.88f, mDefaultLayerViewport.getHeight() * 0.10f,
                 mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
                 "SettingsBackButton","SettingsBackButtonP",  this);
         mBackButton.setPlaySounds(true, true);
 
         mRotateButton = new PushButton(
-                mDefaultLayerViewport.getWidth() * 0.88f,   mDefaultLayerViewport.getHeight() * 0.10f,
+                mDefaultLayerViewport.getWidth() * 0.80f,   mDefaultLayerViewport.getHeight() * 0.10f,
                 mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f,
                 "rotateButton", "rotateButton", this);
 
@@ -556,8 +563,8 @@ public class BoardSetupScreen extends GameScreen {
                 "PauseButton", this);
         mPauseButton.setPlaySounds(true, true);
 
-        mPlayButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.97f, mDefaultLayerViewport.getHeight()* 0.05f,
-                mDefaultLayerViewport.getWidth()*0.1f, mDefaultLayerViewport.getHeight()*0.10f, "PlayButton", this);
+        mPlayButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight()* 0.10f,
+                mDefaultLayerViewport.getWidth()*0.075f, mDefaultLayerViewport.getHeight()*0.10f, "PlayButton", this);
         mPlayButton.setPlaySounds(true, true);
     }
 

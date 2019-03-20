@@ -28,7 +28,7 @@ public class BoardSetupScreen extends GameScreen {
     /////////////////////////////////////////// - GENERAL STUFF - /////////////////////////////////////////////////////////////////
 
     private Bitmap boardSetupBackground, battleshipTitle;
-    private PushButton mBackButton, mRotateButton, mPauseButton;
+    private PushButton mBackButton, mRotateButton, mPauseButton, mPlayButton;
     private AssetManager assetManager;
     private Paint paint = new Paint();
     private String message = "Not Detected", message2  ="";
@@ -89,6 +89,7 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
         assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
         assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
+        assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
 
         animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");
         explosionAnimation = new ExplosionAnimation(animationSettings,0);
@@ -121,6 +122,7 @@ public class BoardSetupScreen extends GameScreen {
             mBackButton.update(elapsedTime);
             mRotateButton.update(elapsedTime);
             mPauseButton.update(elapsedTime);
+            mPlayButton.update(elapsedTime);
 
             // If statement which processes all the appropriate touch events within the class
             if(mBackButton.isPushTriggered())
@@ -139,6 +141,10 @@ public class BoardSetupScreen extends GameScreen {
                 {
                 selectedShip = shipArray[0];
                 }
+            else if(mPlayButton.isPushTriggered())
+            {
+                // PREP THE SCREEN AND MOVE ON TO GAME LOOP  - MJ
+            }
             else
             {
                 rotateShipBy90Degrees();
@@ -212,6 +218,7 @@ public class BoardSetupScreen extends GameScreen {
         mBackButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         mRotateButton.draw(elapsedTime,graphics2D,mDefaultLayerViewport,mDefaultScreenViewport);
         mPauseButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
+        mPlayButton.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
     }
 
     ////////////////////////////////////////////// - OUR OWN METHODS - /////////////////////////////////////////////////////////////////////////
@@ -548,6 +555,10 @@ public class BoardSetupScreen extends GameScreen {
                 mDefaultLayerViewport.getWidth() * 0.05f, mDefaultLayerViewport.getHeight() * 0.05f,
                 "PauseButton", this);
         mPauseButton.setPlaySounds(true, true);
+
+        mPlayButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.97f, mDefaultLayerViewport.getHeight()* 0.05f,
+                mDefaultLayerViewport.getWidth()*0.1f, mDefaultLayerViewport.getHeight()*0.10f, "PlayButton", this);
+        mPlayButton.setPlaySounds(true, true);
     }
 
     ////////////////////////////////////////////// - Mantas' methods 40203133 - //////////////////////////////////////////////////////////////////////////

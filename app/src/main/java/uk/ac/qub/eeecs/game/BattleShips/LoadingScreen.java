@@ -20,9 +20,10 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 public class LoadingScreen extends GameScreen
 {
     // Defining variables to be used for the pause screen background
-    private Bitmap mLoadingBackground;
+    private Bitmap mLoadingBackground, mLoadingTitle;
     private int screenWidth=0, screenHeight=0;
     private Rect rect;
+    private Paint mPaint;
 
     // Defining variables related to audio
     private AudioManager audioManager = getGame().getAudioManager();
@@ -63,9 +64,7 @@ public class LoadingScreen extends GameScreen
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
-        getWidthAndHeightOfScreen(graphics2D);
-        graphics2D.clear(Color.WHITE);
-        graphics2D.drawBitmap(mLoadingBackground,null,rect,null);
+        drawBitmaps(graphics2D);
     }
 
     /*
@@ -78,6 +77,8 @@ public class LoadingScreen extends GameScreen
         mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
         mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
         backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
+        mLoadingTitle = assetManager.getBitmap("LoadingTitle");
+        mPaint = new Paint();
     }
 
     // Method which gets the screen width and height of the device screen
@@ -108,7 +109,7 @@ public class LoadingScreen extends GameScreen
     {
         try
         {
-            delay(1);
+            delay(2);
             mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
         }
         catch(InterruptedException e)
@@ -124,5 +125,18 @@ public class LoadingScreen extends GameScreen
         {
             audioManager.playMusic(backgroundMusic);
         }
+    }
+
+    // Method which draws all the appropriate bitmaps within the screen
+    private void drawBitmaps(IGraphics2D graphics2D)
+    {
+        // Drawing the background image
+        getWidthAndHeightOfScreen(graphics2D);
+        graphics2D.clear(Color.WHITE);
+        graphics2D.drawBitmap(mLoadingBackground,null,rect,null);
+
+        // Drawing the loading title bitmap
+        Rect titleRectangle = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/4);
+        graphics2D.drawBitmap(mLoadingTitle, null, titleRectangle, mPaint);
     }
 }

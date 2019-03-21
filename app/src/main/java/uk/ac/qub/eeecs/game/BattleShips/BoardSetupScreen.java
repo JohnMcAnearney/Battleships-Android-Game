@@ -182,12 +182,6 @@ public class BoardSetupScreen extends GameScreen {
             }
             //Calling method to check if user input of x,y are inside a small box
             detectionIfUserSelectedSmallBox(elapsedTime);
-
-//            // Update each button and transition if needed
-//            mBackButton.update(elapsedTime);
-//            if (mBackButton.isPushTriggered()){
-//                mGame.getScreenManager().removeScreen(this);
-//            }
         }
 
         //update the animation frame
@@ -204,9 +198,13 @@ public class BoardSetupScreen extends GameScreen {
 
     Paint textPaint = new Paint();
     Paint highlight = new Paint();
+
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
         graphics2D.clear(Color.WHITE);
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(5);
+        paint.setStyle(Paint.Style.STROKE);
         screenWidth = graphics2D.getSurfaceWidth();
         screenHeight = graphics2D.getSurfaceHeight();
         //Collective method which draws required items, boards and static images
@@ -281,24 +279,23 @@ public class BoardSetupScreen extends GameScreen {
      * @param boxNumberConstant - the number of boxes currently drawn. Used so that the method knows the number of the box that it is storing the small box coordinates for.
      */
     private void drawBoards(IGraphics2D graphics2D, float bigBoxLeft, float bigBoxTop, float bigBoxRight, float bigBoxBottom, int boxNumberConstant){
-        paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(5);
-        paint.setStyle(Paint.Style.STROKE);
 
-        bigBoxLeftCoor = bigBoxLeft;
+        bigBoxLeftCoor = bigBoxLeft;            //these are the variables for the big outer box, enclosing the smaller boxes, for each grid (left and right)
         bigBoxTopCoor = bigBoxTop;
         bigBoxRightCoor = bigBoxRight;
         bigBoxBottomCoor = bigBoxBottom;
 
-        smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;
-        smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;
+        smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;     //this calculates the size of each small box.
+        smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;    //each box is a 10th of the bigger box
 
         //Step 2 - draw lots of smaller squares
-        paint.setStrokeWidth(5);
-        paint.setColor(Color.WHITE);
         numberOfSmallBoxesDrawn =boxNumberConstant-1;
         smallboxCoordinatesCaptured = false;
+
+        //calculates each smaller box and stores their coordinates in a 2d array
         for(int rows =0; rows<NUMBER_ROWS; rows++) {
+
+            //move constant defined to MOVE EACH BOX TO THE RIGHT. Called moveConstLeft as it moves the left hand coordinate of each box.
             float moveConstLeft = 0;
             for (int column = 0; column < NUMBER_COLUMNS; column++) {
                 numberOfSmallBoxesDrawn++;
@@ -315,11 +312,12 @@ public class BoardSetupScreen extends GameScreen {
 
                 }
 
+                //paint where the ship actually is. Basic visual evidence of where the ship has been placed.
                 if(smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 1){
                     paint.setStyle(Paint.Style.FILL);
                     paint.setColor(Color.YELLOW);
                 } else if (smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 0){
-                    paint.setStyle(Paint.Style.STROKE);       //THIS METHOD COULD BE USED FOR IF HIT PAINT RED ETC.
+                    paint.setStyle(Paint.Style.STROKE);
                     paint.setColor(Color.WHITE);
                 }
 
@@ -327,13 +325,17 @@ public class BoardSetupScreen extends GameScreen {
                 graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
                         (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
 
+                //move the box to the right
                 moveConstLeft += smallBoxWidth;
             }
 
+            //after first row is drawn, move down a row and draw 10 more boxes.
+            //these two lines move the boxes down a row
             bigBoxTopCoor+=smallBoxHeight;
             bigBoxBottomCoor+=smallBoxHeight;
 
         }
+        //resetting the bounds
         smallboxCoordinatesCaptured = true;
         bigBoxLeftCoor = bigBoxLeft;
         bigBoxTopCoor = bigBoxTop;
@@ -373,6 +375,7 @@ public class BoardSetupScreen extends GameScreen {
      * Method to setup the bound for the board in order to be used to detect if ships are out of bound.
      */
     private void setupBoardBound(){
+        //simply sets board bound of first board
         boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
                 (bigBoxBottomCoor + bigBoxTopCoor)/2,
                 ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
@@ -385,10 +388,15 @@ public class BoardSetupScreen extends GameScreen {
      */
     public void drawConstantImages(IGraphics2D graphics2D){
         Matrix bcgMatrix = new Matrix();
+        //magnifies background image
         bcgMatrix.setScale(3.5f, 3.5f);
+        //moves background image to the left
         bcgMatrix.postTranslate(-moveBackground,0);
+        //draws background image
         graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
-        Rect titleRect = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/9);
+        //draws the battlehships title at the top of the screen. titleTop returns 1% of screen, therefore multiply by whatever you desire.
+        int titleLeft = graphics2D.getSurfaceWidth()/3, titleTop = graphics2D.getSurfaceHeight()/graphics2D.getSurfaceHeight();
+        Rect titleRect = new Rect(titleLeft, titleTop*10, titleLeft*2, titleTop*160);
         graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
     }
 
@@ -397,12 +405,19 @@ public class BoardSetupScreen extends GameScreen {
      * and then it finally marks the ship's placement
      */
     private void shipPlacement(){
+        //check if ship out of bounds
         isShipOutOfBound();
         for(int i = 0;i<100;i++){
+
+            //then see if the ship is in the box
             if (selectedShip.mBound.x > smallBoxCoordinates[i][0] && selectedShip.mBound.x < smallBoxCoordinates[i][2]
                     && selectedShip.mBound.y > smallBoxCoordinates[i][1] && selectedShip.mBound.y < smallBoxCoordinates[i][3]) {
+                //check if box is occupied
                 checkIfBoxOccupied(i);
+                //if check above is ok then snap to box
                 shipSnapToBox();
+                //shipReset();
+                //mark the ship in this position
                 markShipInBox(i);
             }
         }
@@ -412,7 +427,9 @@ public class BoardSetupScreen extends GameScreen {
      * Compares the mBound of the selected ship and the boards bound, and returns appropriate answer.
      * If out of bounds, then reset the ship
      */
-    private void isShipOutOfBound(){   //perfectly checks if inside or not, currently small issue as boundingboxes for ships is slightly too big but ezpz to fix, just reduce bBox foreach
+    private void isShipOutOfBound(){
+
+        //pretty self explanatory
         if(boardBoundingBox.contains(selectedShip.mBound.x,  selectedShip.mBound.y) &&
                 boardBoundingBox.contains(selectedShip.mBound.x + (selectedShip.mBound.halfWidth * 2),
                         selectedShip.mBound.y + (selectedShip.mBound.halfHeight * 2))){
@@ -420,7 +437,9 @@ public class BoardSetupScreen extends GameScreen {
         }
         else {
             shipOutOfBound =true;
+            //if its out of bound, reset the ship
             shipReset();
+
         }
 
     }
@@ -431,7 +450,8 @@ public class BoardSetupScreen extends GameScreen {
      */
     private void markShipInBox(int currentBox){
         for (int x = 0; x < selectedShip.getShipLength(); x++) {
-            smallBoxCoordinates[currentBox][4] = 1;                          //minor bug here, colours one extra than length of ship
+            //mark each box as occupied, starting with the leftmost box the ship is in until the length of the ship
+            smallBoxCoordinates[currentBox][4] = 1;
             currentBox++;
         }
     }
@@ -442,18 +462,22 @@ public class BoardSetupScreen extends GameScreen {
      */
     private int calculateClosestBox(){
         //closest box is between smallBoxWidth/2 coor and ship coor
+        //set to this becasuse the closest distance will, basically, always be less than this. Always less in this game.
         closestSlotDistanceSqrd = Float.MAX_VALUE;
+        //variable to track the closest box
         numberOfClosestBox = 0;
 
         for(int x = 0; x<100;x++){
-            if(smallBoxCoordinates[x][4]==1){   //as no need to calculate, this box is occupied
+            if(smallBoxCoordinates[x][4]==1){   //if box is occupied, skip the calculation as no need
                 continue;
             }
             else{
+                //this is (x2-x2)^2 + (y2-y1)^2, using equation between two points
                 float distanceSqrd =
-                        ((smallBoxCoordinates[x][0] - selectedShip.mBound.x) * (smallBoxCoordinates[x][0] - selectedShip.mBound.x)    //this is (x2-x2)^2 + (y2-y1)^2
+                        ((smallBoxCoordinates[x][0] - selectedShip.mBound.x) * (smallBoxCoordinates[x][0] - selectedShip.mBound.x)
                                 + (smallBoxCoordinates[x][1] - selectedShip.mBound.y) * (smallBoxCoordinates[x][1] - selectedShip.mBound.y));
                 if(distanceSqrd < closestSlotDistanceSqrd) {
+                    //if the new calculated distance to the current evaluated square is less than the current closest square, then this evaluated square becomes the closest one.
                     numberOfClosestBox = x;
                     closestSlotDistanceSqrd = distanceSqrd;
                 }
@@ -468,9 +492,11 @@ public class BoardSetupScreen extends GameScreen {
      * Uses the calculation of the closest box then snaps the selected ship to the appropriate box
      */
     private void shipReset(){
+        //get the closest square
         calculateClosestBox();
         if (Math.sqrt(closestSlotDistanceSqrd) <= MAX_SNAP_TO_DISTANCE){
             //if smallboxcoors[closestbox] is greater than bound then go back some steps
+            //if the closest box is any of these then move it back some boxes as before the ship would snap to these and still stick out
             if(numberOfClosestBox == 9|| numberOfClosestBox == 19|| numberOfClosestBox == 29|| numberOfClosestBox == 39|| numberOfClosestBox == 49||
                     numberOfClosestBox == 59|| numberOfClosestBox == 69|| numberOfClosestBox == 79|| numberOfClosestBox == 89|| numberOfClosestBox == 99){
 
@@ -489,6 +515,7 @@ public class BoardSetupScreen extends GameScreen {
                         break;
                 }
             }
+            //otherwise just snap to the closest box
             else {
                 switch (selectedShip.getShipLength()) {
                     case 2:
@@ -520,6 +547,8 @@ public class BoardSetupScreen extends GameScreen {
 
     private void shipSnapToBox(){
         calculateClosestBox();
+        //same as ship reset but doesnt check out of bounds
+        //needed these two separated as there was a strange glitch where it would mark the ship where it wasn't present and I couldn't figure it out.
         switch (selectedShip.getShipLength()) {
             case 2:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
@@ -546,6 +575,7 @@ public class BoardSetupScreen extends GameScreen {
      */
     private void checkIfBoxOccupied(int currentBox){
         if(smallBoxCoordinates[currentBox][4] ==1 ){
+            //simple rest, if the box is occupied set it back to the given box
             switch (selectedShip.getShipLength()) {
                 case 2:
                     selectedShip.mBound.x = smallBoxCoordinates[30][0];
@@ -564,12 +594,7 @@ public class BoardSetupScreen extends GameScreen {
                     selectedShip.mBound.y = smallBoxCoordinates[40][1];
                     break;
               }
-
-
-        }else{
-
         }
-
     }
 
     /**
@@ -581,6 +606,7 @@ public class BoardSetupScreen extends GameScreen {
      */
     private void hitOrMiss(int currentBox, ElapsedTime elapsedTime){
 
+        //if box is occupied by a ship and the user clicks the box, it is a hit
         if(smallBoxDetected == true && smallBoxCoordinates[currentBox][4] == 1){
             message = "HIT!";
 
@@ -595,6 +621,7 @@ public class BoardSetupScreen extends GameScreen {
             //////////////////////////////////////////////////////////////////////////////////////////
         }
 
+        //otherwise its a miss
         else{
             message = "MISS!";
         }
@@ -608,6 +635,7 @@ public class BoardSetupScreen extends GameScreen {
     private void drawMessageToScreen(IGraphics2D graphics2D) {
         Paint messagePaint = new Paint();
         //https://stackoverflow.com/questions/11285961/how-to-make-a-background-20-transparent-on-android source on how to do transparency
+        //the above was referenced in order to find out how to change the opacity of an image
         messagePaint.setAlpha(220); //this is an opacity of 80%, no need to convert to hex
         Rect messageRect = new Rect((graphics2D.getSurfaceWidth()/2) - (battleshipTitle.getWidth()/2),
                 (graphics2D.getSurfaceHeight()/2) - (battleshipTitle.getHeight()/2),

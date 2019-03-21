@@ -1,0 +1,25 @@
+//@author Hannah Cunningham (40201925)
+{
+  "assets":
+  [
+    {
+      "type" : "Bitmap",
+      "name" : "splashBackground",
+      "file" : "img/splashBackground.png"
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "symbol",
+      "file" : "img/symbol.png"
+    },
+    {
+      "type": "Font",
+      "name": "regularUnderworld",
+      "file": "fonts/underworld.ttf"
+
+    }
+  ]
+}
+
+
+

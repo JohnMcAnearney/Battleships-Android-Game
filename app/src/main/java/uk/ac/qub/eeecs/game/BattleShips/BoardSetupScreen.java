@@ -640,13 +640,13 @@ public class BoardSetupScreen extends GameScreen {
                 mDefaultLayerViewport.getWidth()*0.075f, mDefaultLayerViewport.getHeight()*0.10f, "PlayButton", this);
         mPlayButton.setPlaySounds(true, true);
 
-        pushButtonArray = new PushButton[]{mBackButton,mRotateButton,mPauseButton};
+        pushButtonArray = new PushButton[]{mBackButton,mRotateButton,mPauseButton,mPlayButton};
     }
 
     ////////////////////////////////////////////// - Mantas' methods 40203133 - //////////////////////////////////////////////////////////////////////////
 
     /**
-     *
+     * Draw required objects
      */
     private void drawItems(IGraphics2D graphics2D)
     {
@@ -655,6 +655,11 @@ public class BoardSetupScreen extends GameScreen {
         drawBoardTwo(graphics2D);
     }
 
+    /**
+     * Draw all of the buttons in the pushButtonArray
+     * @param elapsedTime
+     * @param graphics2D
+     */
     private void drawAllButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
         for(PushButton pushButton: pushButtonArray)
@@ -663,7 +668,11 @@ public class BoardSetupScreen extends GameScreen {
         }
     }
 
-    //Method to create all of the ships
+    /**
+     * Create all of the ship objects
+     * More ships can easily be added to the list as this method is extensible
+     * @param graphics2D
+     */
     private void createShipObjects(IGraphics2D graphics2D)
     {
         Ship aircraftCarrier = new Ship("AircraftCarrier", calculateShipRatioX("AircraftCarrier", 5),calculateShipRatioY("AircraftCarrier"),assetManager.getBitmap("AircraftCarrier"), 5);
@@ -675,24 +684,44 @@ public class BoardSetupScreen extends GameScreen {
         setUpShipmBound(graphics2D);
     }
 
+    /**
+     * Dynamically calculate the ship's X ratio to the size of the squares by comparing
+     * image size to required size and ship's length
+     * @param bitmapName
+     * @param shipLength
+     * @return
+     */
     private float calculateShipRatioX(String bitmapName, int shipLength)
     {
         int shipBitmapWidth = assetManager.getBitmap(bitmapName).getWidth();
         return (((bigBoxRightCoor - bigBoxLeftCoor)/10f) * shipLength) / shipBitmapWidth;
     }
 
+    /**
+     * Will dynamically calculate the ship's Y ratio to the size of the squares by comparing
+     * image size to required size
+     * @param bitmapName
+     * @return
+     */
     private float calculateShipRatioY(String bitmapName)
     {
         int shipBitmapHeight = assetManager.getBitmap(bitmapName).getHeight();
         return (((bigBoxBottomCoor - bigBoxTopCoor)/10f)) / shipBitmapHeight;
     }
 
-    //Method to draw the ships stored in the shipArray onto the screen
+    /**
+     * Method to draw the ships stored in the shipArray onto the screen
+     * * @param graphics2D
+     */
     private void drawShips(IGraphics2D graphics2D){
         for(Ship ship: shipArray) {
             ship.drawShip(graphics2D); }
     }
 
+    /**
+     * Set up the ships bounding box, placing them 0.08% apart
+     * @param graphics2D
+     */
     private void setUpShipmBound(IGraphics2D graphics2D) {
         int screenWidth = graphics2D.getSurfaceWidth();
         int screenHeight = graphics2D.getSurfaceHeight();
@@ -703,47 +732,58 @@ public class BoardSetupScreen extends GameScreen {
             ship.setmBound(Math.round(screenWidth * 0.015),
                     Math.round(screenHeight * screenHeightOffset),
                     Math.round(((bigBoxRightCoor - bigBoxLeftCoor) / 10f) * ship.getShipLength()) / 2.0f,
-                    ((bigBoxBottomCoor - bigBoxTopCoor) / 10f) / 2f);
-
-
-        }
+                    ((bigBoxBottomCoor - bigBoxTopCoor) / 10f) / 2f); }
     }
 
-    //Highlight the small box passed in as a parameter used for testing
+    /**
+     * Highlight the small box passed in as a parameter used for testing
+     * @param numberofSmallBox
+     * @param p
+     * @param iGraphics2D
+     */
     private void highlightBoxGiven(int numberofSmallBox,Paint p, IGraphics2D iGraphics2D)
     {
-
         iGraphics2D.drawRect(smallBoxCoordinates[numberofSmallBox][0], smallBoxCoordinates[numberofSmallBox][1],
                 smallBoxCoordinates[numberofSmallBox][2],smallBoxCoordinates[numberofSmallBox][3], p);
-
     }
 
-    //This method checks small box co-ordinates against the x and y input co-ordinates, sets parameter smallBoxDetected to true if yes, false otherwise
+    /**
+     * This method checks small box co-ordinates against the x and y input co-ordinates, sets parameter smallBoxDetected to true if yes, false otherwise
+     * calls hitOrMiss method
+     * @param elapsedTime
+     */
     private void detectionIfUserSelectedSmallBox(ElapsedTime elapsedTime)
     {
-        if(bigBoxRightCoor == 0)
-        {
-
+        if(bigBoxRightCoor == 0){ //if board co-ordinates have not been set do nothing}
         }
         else {
-
+            //if user input x co-ordinate is in the first box x region check if the user has clicked
+            //on one of the boxes in the first box
             if (x <= bigBoxRightCoor) {
+                //carry out a binary search for a box on the first board setting the return int to numberOfSmallBoxDetected
                 numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
                 if (numberofSmallBoxDetected >= 0)
                     smallBoxDetected = true;
                     hitOrMiss(numberofSmallBoxDetected,elapsedTime);
-
             }
+            //if user input x co-ordinate is in the second box x region check if the user has clicked
+            //on one of the boxes in the second board
              if (x > bigBoxRightCoor){
+                 //carry out a binary search for a box on the second board setting the return int to numberOfSmallBoxDetected
                 numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 100, 199, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
             if (numberofSmallBoxDetected >= 0)
                 smallBoxDetected = true;
-        }
-
+             }
         }
 
     }
-    // When user touches on a ship object store the ship object that was touched
+
+    /**
+     * Checks if an user has clicked on the screen, if so, check if the user has clicked onto a ship
+     * @param input
+     */
     private void shipSelect(Input input)
     {
         //Check if the user has pressed on the screen
@@ -755,10 +795,7 @@ public class BoardSetupScreen extends GameScreen {
                 // Check if the touch was on any of the ships bounding box if yes change game state, store the pointer index and the ship
                 for(Ship ship: shipArray)
                 {
-                    if(touchEvent.x > ship.mBound.x &&
-                            touchEvent.x < (ship.mBound.x + ship.mBound.getWidth()) &&
-                            touchEvent.y > ship.mBound.y &&
-                            touchEvent.y < (ship.mBound.y + ship.mBound.getHeight() ))
+                    if(boundingBoxContainsUserInput(ship.mBound,touchEvent.x,touchEvent.y))
                     {
                         // Set x and y coordinates dragShipOffset vector, so when user drags the ship, the ship will be dragged from the point of touch
                         dragShipOffset.set(ship.mBound.x - touchEvent.x, ship.mBound.y - touchEvent.y);
@@ -771,8 +808,14 @@ public class BoardSetupScreen extends GameScreen {
         }
     }
 
-    // Drag the stored ship following the user's input
+    /**
+     * Drag the stored ship following the user's input as long as the user has the same finger
+     * onto the screen the whole time
+     * @param input
+     */
     private void shipDrag(Input input) {
+
+        //Move the ship to the users finger's location
         if (input.existsTouch(shipToDragPointerIndexOfInput)) {
             selectedShip.mBound.x = input.getTouchX(shipToDragPointerIndexOfInput) + dragShipOffset.x;
             selectedShip.mBound.y = input.getTouchY(shipToDragPointerIndexOfInput) + dragShipOffset.y;
@@ -783,51 +826,99 @@ public class BoardSetupScreen extends GameScreen {
         for (TouchEvent touchEvent : touchEvents)
             if (touchEvent.type == TouchEvent.TOUCH_UP
                     && touchEvent.pointer == shipToDragPointerIndexOfInput) {
-                shipPlacement(); // Call ship placement after the user has actually placed it makes more sense. This stops visual glitches.
+                // Call ship placement after the user has placed the ship object.
+                shipPlacement();
+                //Set the gamestate to ship select since the user is no longer pressing onto the screen
                 gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
             }
 
     }
 
+    /**
+     * Sets a rotation flag to true
+     */
     private void rotateShipBy90Degrees()
     {
         selectedShip.rotate = true;
     }
 
+    /**
+     * Searches for the number of the small box which the user has clicked on, otherwise returns -1
+     * @param array
+     * @param lower
+     * @param higher
+     * @param x
+     * @param y
+     * @return
+     */
     private int binarySearchBox(float[][] array,int lower, int higher, float x, float y)
     {
+        //Check if the lower bound is less than or equal to higher bound
+        //this is used to ensure when the user has not clicked onto a small box, the loop
+        //is broken
+        //if lower bound is less than or equal to higher bound find a mid value
         if(lower <=higher) {
             int mid =  (lower + higher) / 2;
 
-            if(boxContainsInput(array,mid,x,y))
+            //if the mid small box contains the user's input x and y values the box
+            // have been found return the number of the small box
+            if(boxContainsInput(mid,x,y))
             {
                 return mid;
             }
 
+            //check if the user's input y value is in the current row, if yes the row has been found
+            //proceed to calling a binary search on the current row
             if(y > array[mid][1] && y < array[mid][3])
             {
                 return binarySearchRows(array,mid-(mid%10),0,10, x,y );
             }
 
+            //check if the user's input y value is below the current row, if yes recursive call
+            //current method with lower boundary being the current row + 1
             if(y > array[mid][1] && y > array[mid][3])
                 return binarySearchBox(array,mid+1,higher,x,y);
 
+            //check if the user's input y value is below the current row, if yes recursive call
+            //current method with higher boundary being the current row -1
             if(y<array[mid][1] && y < array[mid][3])
                 return binarySearchBox(array,lower,mid-1,x,y);
         }
         return -1;
     }
 
+    /**
+     * Searches for the user clicked on small box when the row has been identified, returning
+     * the number of the small box detected otherwise returning -1
+     * @param array
+     * @param numberOfSmallBox
+     * @param lower
+     * @param higher
+     * @param x
+     * @param y
+     * @return
+     */
     private int binarySearchRows(float[][] array,int numberOfSmallBox, int lower,int higher, float x, float y)
     {
+        //Check if the lower bound is less than or equal to higher bound
+        //this is used to ensure when the user has not clicked onto a small box, the loop
+        //is broken
+        //if lower bound is less than the higher bound find a mid value
         if(lower <higher) {
             int mid = numberOfSmallBox + ((lower + higher) / 2);
-            if (boxContainsInput(array, mid, x, y)) {
+
+            //if the mid small box contains the user's input x and y values the box
+            // have been found, return the number of the small box
+            if (boxContainsInput(mid, x, y)) {
                 return mid;
             }
+            //if the user's input x value is lower than the current small box, recursive call
+            //current method with the higher bound set to mid
             if (x < array[mid][0] && x < array[mid][2]){
                 return binarySearchRows(array, numberOfSmallBox, lower, mid % 10 , x, y);}
 
+                //if the user's input x value is higher than the current small box, recursive call
+            //current method with the lower bound set to mid
             else if (x > array[mid][0] && x > array[mid][2]){
                 return binarySearchRows(array, numberOfSmallBox, mid % 10 +1 , higher, x, y);}
 
@@ -835,7 +926,15 @@ public class BoardSetupScreen extends GameScreen {
         return -1;
     }
 
-    private boolean boxContainsInput(float[][] smallBoxCoordinates, int numberOfSmallBox, float x, float y)
+    /**
+     * Check if the user has clicked on the box which is passed in as a parameter, if yes return true
+     * otherwise false
+     * @param numberOfSmallBox
+     * @param x
+     * @param y
+     * @return
+     */
+    private boolean boxContainsInput(int numberOfSmallBox, float x, float y)
     {
         if(x > smallBoxCoordinates[numberOfSmallBox][0] &&
                 x < smallBoxCoordinates[numberOfSmallBox][2] &&
@@ -844,6 +943,24 @@ public class BoardSetupScreen extends GameScreen {
         {
             return true;
         }
+
+        return false;
+    }
+
+    /**
+     * Check if the give x and y coordinates are contained within the bounding box
+     * @param boundingBox
+     * @param x
+     * @param y
+     * @return
+     */
+    private boolean boundingBoxContainsUserInput(BoundingBox boundingBox, float x ,float y)
+    {
+        if(x > boundingBox.x &&
+                x < boundingBox.x + boundingBox.getWidth() &&
+                y > boundingBox.y &&
+                y < boundingBox.y + boundingBox.getHeight())
+            return true;
 
         return false;
     }

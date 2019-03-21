@@ -69,6 +69,14 @@
       "type": "Bitmap",
       "name": "BackArrowSelected",
       "file": "img/BackArrowSelected.png"
+    },
+
+    //Hannah Cunningham (40201925)
+
+    {
+      "type": "Bitmap",
+      "name": "key",
+      "file": "img/key.png"
     }
   ]
 }

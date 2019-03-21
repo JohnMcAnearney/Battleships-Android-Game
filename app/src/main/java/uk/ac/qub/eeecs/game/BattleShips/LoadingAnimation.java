@@ -16,7 +16,7 @@ public class LoadingAnimation
     // Declaring all the relevant variables to the image strip
     private String mName;
     private Bitmap mImageStrip;
-    private int mNumOfRows, mFrameWidth, mFrameHeight, mStartFrame, mEndFrame, mCurrentFrame;
+    private int mNumOfRows, mNumOfColumns, mFrameWidth, mFrameHeight, mStartFrame, mEndFrame, mCurrentFrame;
     private double mStartTime;
     private float mTotalTime, mTimeSinceAnimationStart;
     private boolean mPlaying, mLoopAnimation;
@@ -36,6 +36,7 @@ public class LoadingAnimation
         initialiseVariables(animationSettings, stripIndex);
     }
 
+
     // Update method for the LoadingAnimation class
     public void update(ElapsedTime elapsedTime)
     {
@@ -53,7 +54,7 @@ public class LoadingAnimation
     }
 
     // Draw method for the LoadingAnimation class
-    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
+    public void draw(IGraphics2D graphics2D)
     {
         // If statement which executes the draw method only if the animation is set to playing
         if(mPlaying)
@@ -69,10 +70,11 @@ public class LoadingAnimation
 
             // Calculating the location of the current frame within the image strip
             int rowIndex = mCurrentFrame / mNumOfRows;
+            int columnIndex = mCurrentFrame / mNumOfColumns;
 
             // Offset the source rectangle onto the current frame
-            sourceRect.left = sourceRect.left + rowIndex * mFrameWidth;
-            sourceRect.right = sourceRect.right + rowIndex * mFrameWidth;
+            sourceRect.left = sourceRect.left + columnIndex * mFrameWidth;
+            sourceRect.right = sourceRect.right + columnIndex * mFrameWidth;
             sourceRect.top = sourceRect.top + rowIndex * mFrameHeight;
             sourceRect.bottom = sourceRect.bottom + rowIndex * mFrameHeight;
 
@@ -90,6 +92,7 @@ public class LoadingAnimation
         // Assign variables with appropriate values from the animationSettings class
         mImageStrip = animationSettings.spritesheet;
         mNumOfRows = animationSettings.numRows;
+        mNumOfColumns = animationSettings.numColumns;
         mFrameWidth = animationSettings.spritesheet.getWidth() / mNumOfRows;
         mFrameHeight = animationSettings.spritesheet.getHeight();
 

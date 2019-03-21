@@ -55,6 +55,12 @@ public class LoadingScreen extends GameScreen
     @Override
     public void update(ElapsedTime elapsedTime)
     {
+        // Line of code which will update the animation
+        loadingAnimation.update(elapsedTime);
+
+        // Start to play the animation at a given location as the screen is loaded
+        loadingAnimation.playAnimation(elapsedTime, 10, 10, 360, 360);
+
         // Method which delays the game loading allowing for the effects of loading assets
         delayLoading();
 
@@ -74,7 +80,11 @@ public class LoadingScreen extends GameScreen
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
+        // Method which draws all the bitmaps within the screen
         drawBitmaps(graphics2D);
+
+        // Drawing the loading animation
+        loadingAnimation.draw(graphics2D);
     }
 
     /*
@@ -83,12 +93,23 @@ public class LoadingScreen extends GameScreen
     // Method which loads all the assets
     private void loadAssets()
     {
+        // Initialising the asset manager
         AssetManager assetManager = mGame.getAssetManager();
+        // Loading in the JSON file
         mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
+        // Initialising the Loading Background with appropriate bitmap
         mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
+        // Initialising the Background Music with music file
         backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
+        // Initialising the Loading Title with appropriate bitmap
         mLoadingTitle = assetManager.getBitmap("LoadingTitle");
+        // Initialising a blank paint
         mPaint = new Paint();
+        // Loading in the Image Strip JSON file using animation settings
+        animationSettings = new AnimationSettings(assetManager, "txt/animation/LoadingAnimations.JSON");
+        // Creating a new animation object so that the animation can be used within the class
+        loadingAnimation = new LoadingAnimation(animationSettings, 0);
+
     }
 
     // Method which gets the screen width and height of the device screen
@@ -119,7 +140,7 @@ public class LoadingScreen extends GameScreen
     {
         try
         {
-            delay(2);
+            delay(4);
             mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
         }
         catch(InterruptedException e)

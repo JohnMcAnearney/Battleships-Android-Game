@@ -1,3 +1,6 @@
+/*
+*@reference from Ragnorak Screens
+ */
 package uk.ac.qub.eeecs.game.BattleShips;
 
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
@@ -11,22 +14,25 @@ import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.world.ScreenViewport;
 import uk.ac.qub.eeecs.gage.world.LayerViewport;
 import uk.ac.qub.eeecs.game.MenuScreen;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-
 import java.util.List;
+
+/**
+ * This is a developed splash screen class
+ * which is linked up to the main game interface
+ * @author Hannah Cunningham (40201925)
+ */
 
 public class SplashScreen extends GameScreen
 {
-    final private long SPLASH_TIMEOUT = 5000;
-    private long timeOnCreate, currentTime;
+    //Variables used to define the splash screen class
+    final private long SPLASH_TIMEOUT = 6000;
+    private long timeToCreate, currentTime;
     private GameObject background, symbol;
-    private AssetManager assetManager;
-    private Game game;
     private ScreenViewport mScreenViewport;
     private LayerViewport mLayerViewport;
     private Bitmap backgroundBitmap, symbolBitmap;
@@ -34,12 +40,17 @@ public class SplashScreen extends GameScreen
     private Paint paint;
     private Typeface regularUnderworld;
     private float canvasTextX, canvasTextY, alphaCount = 0;
+    private AssetManager assetManager;
+    private Game game;
 
 
+    //Constructor for this class
     private SplashScreen(Game game) {
         super("SplashScreen", game);
         this.game = game;
 
+        //this method will load the class' assets
+        loadAssets();
 
         mScreenViewport = new ScreenViewport(0, 0, game.getScreenWidth(),
                 game.getScreenHeight());
@@ -47,7 +58,10 @@ public class SplashScreen extends GameScreen
         mLayerViewport = new LayerViewport(mScreenViewport.width / 2, mScreenViewport.height / 2,
                 mScreenViewport.width / 2, mScreenViewport.height / 2);
 
-        timeOnCreate = System.currentTimeMillis();
+        //the timeToCreate variable is set to return the current time in milliseconds
+        timeToCreate = System.currentTimeMillis();
+
+
         assetManager = mGame.getAssetManager();
         createBackground();
         createSymbol();
@@ -56,15 +70,30 @@ public class SplashScreen extends GameScreen
         createCanvas();
     }
 
+    //the below method will load all the assets in this class from the desired JSON files
+    public void loadAssets()
+    {
+        AssetManager assetManager = mGame.getAssetManager();
+        mGame.getAssetManager().loadAssets("txt/assets/SplashScreenAssets.JSON");
+        backgroundBitmap = assetManager.getBitmap("SplashBackground");
+        symbolBitmap = assetManager.getBitmap("symbol");
+        regularUnderworld = assetManager.getFont("regularUnderworld");
+        paint = new Paint();
 
+    }
+
+    //the below method will create a new background for the game screen and is referenced from: https://stackoverflow.com/questions/30425789/convert-immutable-bitmap-file-to-mutable-bitmap
+    //this particular method will convert an immutable bitmap file, such as the "splashBackground" image to scale, to a mutable bitmap
     public void createBackground() {
         assetManager.loadAndAddBitmap("splashBackground", "img/splashBackground.png");
         backgroundBitmap = Bitmap.createScaledBitmap(assetManager.getBitmap("splashBackground"),
                 mScreenViewport.width, mScreenViewport.height, false);
+        //the below demonstrates that the background bitmap will store each pixel on 4 bytes
         Bitmap backgroundBitmapMutable = backgroundBitmap.copy(Bitmap.Config.ARGB_8888, true);
         background = new GameObject(game.getScreenWidth() * 0.5f, game.getScreenHeight() * 0.5f, game.getScreenWidth(), game.getScreenHeight(), backgroundBitmapMutable, this);
     }
 
+    //this method will draw the symbol bitmap from gameObject
     public void createSymbol()
     {
         assetManager.loadAndAddBitmap("symbol", "img/symbol.png");
@@ -72,20 +101,27 @@ public class SplashScreen extends GameScreen
         symbol = new GameObject(game.getScreenWidth()* 0.5f, game.getScreenHeight() * 0.5f, symbolBitmap, this);
     }
 
+    //this method will draw the desired font type
     public void createFont()
     {
         assetManager.loadAndAddFont("regularUnderworld", "fonts/underworld.ttf");
         regularUnderworld = assetManager.getFont("regularUnderworld");
     }
 
+    //this method will store the desired text and colour styles
     public void createPaint()
     {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.WHITE);
         paint.setTextSize(game.getScreenWidth() * 0.08f);
         paint.setTypeface(regularUnderworld);
+        //this sets the colour's alpha value
         paint.setAlpha(0);
     }
+
+    /*this method will create a canvas which initially represents a blank rectangular area on the game screen of a
+      given width and height which will capture and draw the background "splashBackground" image
+     */
     public void createCanvas()
     {
         canvas = new Canvas(background.getBitmap());
@@ -93,24 +129,24 @@ public class SplashScreen extends GameScreen
         canvasTextY = game.getScreenHeight() * 0.92f;
     }
 
+    //this set method will allow to increase the opacity
     private void increaseAlpha()
     {
         paint.setAlpha(paint.getAlpha() + 1);
     }
 
+    //this method will display the title "Battleships" on the canvas created
     public void writeTitleOnBackground()
     {
         canvas.drawText("Battleships", canvasTextX, canvasTextY, paint);
     }
 
-    /**
-     * following method will update the splash screen
-     * @param elapsedTime Elapsed time information
-     */
+    //Update method for the Splash Screen class which will update its elapsed time information using
+    //an if statement
     @Override
     public void update(ElapsedTime elapsedTime)
     {
-        //increase of opacity over a period of time
+        //this particular if statement will gradually increase the opacity over a period of time
         if (paint.getAlpha() < 100)
         {
             if(alphaCount % 3 == 0)
@@ -123,7 +159,7 @@ public class SplashScreen extends GameScreen
 
         //the below method will get the current time and check for a timeout
         currentTime = System.currentTimeMillis();
-        if(currentTime - timeOnCreate >= SPLASH_TIMEOUT)
+        if(currentTime - timeToCreate >= SPLASH_TIMEOUT)
         {
             goToMenuScreen();
         }
@@ -160,7 +196,6 @@ public class SplashScreen extends GameScreen
         background.draw(elapsedTime, graphics2D, mLayerViewport, mScreenViewport);
         symbol.draw(elapsedTime, graphics2D);
     }
-
 
     //the below are the class' getters and setters
     public GameObject getBackgroundObject()

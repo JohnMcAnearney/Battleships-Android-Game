@@ -115,7 +115,7 @@ public class PauseScreen extends GameScreen {
         mSettingsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 3f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "SettingsButton", "SettingsButtonP", this);
         mButtonCollection.add(mSettingsButton);
         // Back Button
-        mBackButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.1f, mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.1f, "BackArrow", "BackArrowP", this);
+        mBackButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.1f, mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.1f, "SettingsBackButton", "SettingsBackButtonP", this);
         mButtonCollection.add(mBackButton);
         // Volume Button
         mVolumeButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.05f, mDefaultLayerViewport.getHeight() * 0.1f, mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.1f, "VolumeOn", this);

@@ -10,6 +10,7 @@ import java.util.List;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
+import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
 import uk.ac.qub.eeecs.gage.engine.audio.Music;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
@@ -17,6 +18,11 @@ import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
+/* Author : Edgars (40203154)
+ * This is a loading screen class, which will appear before the game begins to simulate actual loading
+ * within the game, it will display a 'Loading' bitmap and a animation which will help as a indication
+ * that a loading process is happening.
+ */
 public class LoadingScreen extends GameScreen
 {
     // Defining variables to be used for the pause screen background
@@ -28,6 +34,10 @@ public class LoadingScreen extends GameScreen
     // Defining variables related to audio
     private AudioManager audioManager = getGame().getAudioManager();
     private Music backgroundMusic;
+
+    // Defining variables related to the loading animation
+    private static LoadingAnimation loadingAnimation ;
+    private static AnimationSettings animationSettings;
 
     /*
    CONSTRUCTOR
@@ -135,8 +145,12 @@ public class LoadingScreen extends GameScreen
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mLoadingBackground,null,rect,null);
 
+        // Working out variables which will hold, 1% of the device screen width and height to allow for easy usage
+        int onePercentOfScreenHeight, onePercentOfScreenWidth;
+        onePercentOfScreenHeight = graphics2D.getSurfaceHeight()/100;
+        onePercentOfScreenWidth = graphics2D.getSurfaceWidth()/100;
         // Drawing the loading title bitmap
-        Rect titleRectangle = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/4);
+        Rect titleRectangle = new Rect(onePercentOfScreenWidth*28, onePercentOfScreenHeight*1, onePercentOfScreenWidth*73, onePercentOfScreenHeight*35);
         graphics2D.drawBitmap(mLoadingTitle, null, titleRectangle, mPaint);
     }
 }

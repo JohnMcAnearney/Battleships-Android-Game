@@ -1,5 +1,5 @@
 {
-  "spritesheet" : "img/LoadingImageStrip.png",
+  "spritesheet" : "img/24xLoadingImageStrip.png",
   "numRows" : 24,
   "animations" :
   [

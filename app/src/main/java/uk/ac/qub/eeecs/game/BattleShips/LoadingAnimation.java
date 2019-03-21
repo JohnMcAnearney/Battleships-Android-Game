@@ -7,7 +7,10 @@ import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 
-// Added class for loading the loading screen image strip and animate it - can't finish it as left the image strip at home
+/* Author : Edgars (40203154)
+* This is a custom animation class which will take an Image Strip and animate it
+*/
+// Added class for loading the loading screen image strip and animate it
 public class LoadingAnimation
 {
     // Declaring all the relevant variables to the image strip
@@ -29,28 +32,8 @@ public class LoadingAnimation
     CONSTRUCTOR
     */
     public LoadingAnimation(AnimationSettings animationSettings, int stripIndex) {
-        // Assign variables with appropriate values from the animationSettings class
-        mImageStrip = animationSettings.spritesheet;
-        mNumOfRows = animationSettings.numRows;
-        mFrameWidth = animationSettings.spritesheet.getWidth() / mNumOfRows;
-        mFrameHeight = animationSettings.spritesheet.getHeight();
-
-        // Assign the name of the given animation image strip
-        mName = animationSettings.name[stripIndex];
-
-        // Assign the start and end frame of the given animation image strip
-        mStartFrame = animationSettings.startFrame[stripIndex];
-        mEndFrame = animationSettings.endFrame[stripIndex];
-
-        // Assign the total time of the animation, and if the animation is a meant to loop
-        mTotalTime = animationSettings.totalPeriod[stripIndex];
-        mLoopAnimation = animationSettings.loopAnimation[stripIndex];
-
-        // Assign the current frame to the starting frame
-        mCurrentFrame = animationSettings.startFrame[stripIndex];
-
-        // Assign the playing variable with false, to have it not play as default
-        mPlaying = false;
+        // Method which initialises all of the variables needed within the class.
+        initialiseVariables(animationSettings, stripIndex);
     }
 
     // Update method for the LoadingAnimation class
@@ -96,6 +79,36 @@ public class LoadingAnimation
             // Draw the actual frame
             graphics2D.drawBitmap(mImageStrip, sourceRect, screenRect, null);
         }
+    }
+
+    /*
+    METHODS
+    */
+    // Method which initialises all of the variables needed within the class
+    public void initialiseVariables(AnimationSettings animationSettings, int stripIndex)
+    {
+        // Assign variables with appropriate values from the animationSettings class
+        mImageStrip = animationSettings.spritesheet;
+        mNumOfRows = animationSettings.numRows;
+        mFrameWidth = animationSettings.spritesheet.getWidth() / mNumOfRows;
+        mFrameHeight = animationSettings.spritesheet.getHeight();
+
+        // Assign the name of the given animation image strip
+        mName = animationSettings.name[stripIndex];
+
+        // Assign the start and end frame of the given animation image strip
+        mStartFrame = animationSettings.startFrame[stripIndex];
+        mEndFrame = animationSettings.endFrame[stripIndex];
+
+        // Assign the total time of the animation, and if the animation is a meant to loop
+        mTotalTime = animationSettings.totalPeriod[stripIndex];
+        mLoopAnimation = animationSettings.loopAnimation[stripIndex];
+
+        // Assign the current frame to the starting frame
+        mCurrentFrame = animationSettings.startFrame[stripIndex];
+
+        // Assign the playing variable with false, to have it not play as default
+        mPlaying = false;
     }
 
     // Method which starts the playing of the image strip in a given location

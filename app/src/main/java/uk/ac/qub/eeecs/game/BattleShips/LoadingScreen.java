@@ -10,6 +10,7 @@ import java.util.List;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
+import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
 import uk.ac.qub.eeecs.gage.engine.audio.Music;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
@@ -17,6 +18,11 @@ import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
+/* Author : Edgars (40203154)
+ * This is a loading screen class, which will appear before the game begins to simulate actual loading
+ * within the game, it will display a 'Loading' bitmap and a animation which will help as a indication
+ * that a loading process is happening.
+ */
 public class LoadingScreen extends GameScreen
 {
     // Defining variables to be used for the pause screen background
@@ -28,6 +34,10 @@ public class LoadingScreen extends GameScreen
     // Defining variables related to audio
     private AudioManager audioManager = getGame().getAudioManager();
     private Music backgroundMusic;
+
+    // Defining variables related to the loading animation
+    private static LoadingAnimation loadingAnimation ;
+    private static AnimationSettings animationSettings;
 
     /*
    CONSTRUCTOR
@@ -45,6 +55,12 @@ public class LoadingScreen extends GameScreen
     @Override
     public void update(ElapsedTime elapsedTime)
     {
+        // Line of code which will update the animation
+        loadingAnimation.update(elapsedTime);
+
+        // Start to play the animation at a given location as the screen is loaded
+        loadingAnimation.playAnimation(elapsedTime, 10, 10, 360, 360);
+
         // Method which delays the game loading allowing for the effects of loading assets
         delayLoading();
 
@@ -64,7 +80,11 @@ public class LoadingScreen extends GameScreen
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
+        // Method which draws all the bitmaps within the screen
         drawBitmaps(graphics2D);
+
+        // Drawing the loading animation
+        loadingAnimation.draw(graphics2D);
     }
 
     /*
@@ -73,12 +93,23 @@ public class LoadingScreen extends GameScreen
     // Method which loads all the assets
     private void loadAssets()
     {
+        // Initialising the asset manager
         AssetManager assetManager = mGame.getAssetManager();
+        // Loading in the JSON file
         mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
+        // Initialising the Loading Background with appropriate bitmap
         mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
+        // Initialising the Background Music with music file
         backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
+        // Initialising the Loading Title with appropriate bitmap
         mLoadingTitle = assetManager.getBitmap("LoadingTitle");
+        // Initialising a blank paint
         mPaint = new Paint();
+        // Loading in the Image Strip JSON file using animation settings
+        animationSettings = new AnimationSettings(assetManager, "txt/animation/LoadingAnimations.JSON");
+        // Creating a new animation object so that the animation can be used within the class
+        loadingAnimation = new LoadingAnimation(animationSettings, 0);
+
     }
 
     // Method which gets the screen width and height of the device screen
@@ -109,7 +140,7 @@ public class LoadingScreen extends GameScreen
     {
         try
         {
-            delay(2);
+            delay(4);
             mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
         }
         catch(InterruptedException e)
@@ -135,8 +166,12 @@ public class LoadingScreen extends GameScreen
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mLoadingBackground,null,rect,null);
 
+        // Working out variables which will hold, 1% of the device screen width and height to allow for easy usage
+        int onePercentOfScreenHeight, onePercentOfScreenWidth;
+        onePercentOfScreenHeight = graphics2D.getSurfaceHeight()/100;
+        onePercentOfScreenWidth = graphics2D.getSurfaceWidth()/100;
         // Drawing the loading title bitmap
-        Rect titleRectangle = new Rect(graphics2D.getSurfaceWidth()/3, 10, (graphics2D.getSurfaceWidth()/3)*2, graphics2D.getSurfaceHeight()/4);
+        Rect titleRectangle = new Rect(onePercentOfScreenWidth*28, onePercentOfScreenHeight*1, onePercentOfScreenWidth*73, onePercentOfScreenHeight*35);
         graphics2D.drawBitmap(mLoadingTitle, null, titleRectangle, mPaint);
     }
 }

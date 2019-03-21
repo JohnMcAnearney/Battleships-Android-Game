@@ -7,13 +7,16 @@ import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 
-// Added class for loading the loading screen image strip and animate it - can't finish it as left the image strip at home
+/* Author : Edgars (40203154)
+* This is a custom animation class which will take an Image Strip and animate it
+*/
+// Added class for loading the loading screen image strip and animate it
 public class LoadingAnimation
 {
     // Declaring all the relevant variables to the image strip
     private String mName;
     private Bitmap mImageStrip;
-    private int mNumOfRows, mFrameWidth, mFrameHeight, mStartFrame, mEndFrame, mCurrentFrame;
+    private int mNumOfRows, mNumOfColumns, mFrameWidth, mFrameHeight, mStartFrame, mEndFrame, mCurrentFrame;
     private double mStartTime;
     private float mTotalTime, mTimeSinceAnimationStart;
     private boolean mPlaying, mLoopAnimation;
@@ -29,9 +32,67 @@ public class LoadingAnimation
     CONSTRUCTOR
     */
     public LoadingAnimation(AnimationSettings animationSettings, int stripIndex) {
+        // Method which initialises all of the variables needed within the class.
+        initialiseVariables(animationSettings, stripIndex);
+    }
+
+
+    // Update method for the LoadingAnimation class
+    public void update(ElapsedTime elapsedTime)
+    {
+        // If statement which does not if the animation is currently not playing.
+        if (!mPlaying)
+        {
+            return;
+        }
+
+        // A line of code which determines how long the animation has been playing for
+        mTimeSinceAnimationStart = (float) (elapsedTime.totalTime = mStartTime);
+
+        //Method which makes sure the animation is being displayed correctly
+        appropriateAnimationFrame();
+    }
+
+    // Draw method for the LoadingAnimation class
+    public void draw(IGraphics2D graphics2D)
+    {
+        // If statement which executes the draw method only if the animation is set to playing
+        if(mPlaying)
+        {
+            // Method which builds the screen rectangle, using the specified game object
+            buildRectangle();
+
+            // Calculating a source rectangle for a single frame of the image strip
+            sourceRect.left = 0;
+            sourceRect.right = mFrameWidth;
+            sourceRect.top = 0;
+            sourceRect.bottom = mFrameHeight;
+
+            // Calculating the location of the current frame within the image strip
+            int rowIndex = mCurrentFrame / mNumOfRows;
+            int columnIndex = mCurrentFrame / mNumOfColumns;
+
+            // Offset the source rectangle onto the current frame
+            sourceRect.left = sourceRect.left + columnIndex * mFrameWidth;
+            sourceRect.right = sourceRect.right + columnIndex * mFrameWidth;
+            sourceRect.top = sourceRect.top + rowIndex * mFrameHeight;
+            sourceRect.bottom = sourceRect.bottom + rowIndex * mFrameHeight;
+
+            // Draw the actual frame
+            graphics2D.drawBitmap(mImageStrip, sourceRect, screenRect, null);
+        }
+    }
+
+    /*
+    METHODS
+    */
+    // Method which initialises all of the variables needed within the class
+    public void initialiseVariables(AnimationSettings animationSettings, int stripIndex)
+    {
         // Assign variables with appropriate values from the animationSettings class
         mImageStrip = animationSettings.spritesheet;
         mNumOfRows = animationSettings.numRows;
+        mNumOfColumns = animationSettings.numColumns;
         mFrameWidth = animationSettings.spritesheet.getWidth() / mNumOfRows;
         mFrameHeight = animationSettings.spritesheet.getHeight();
 
@@ -51,51 +112,6 @@ public class LoadingAnimation
 
         // Assign the playing variable with false, to have it not play as default
         mPlaying = false;
-    }
-
-    // Update method for the LoadingAnimation class
-    public void update(ElapsedTime elapsedTime)
-    {
-        // If statement which does not if the animation is currently not playing.
-        if (!mPlaying)
-        {
-            return;
-        }
-
-        // A line of code which determines how long the animation has been playing for
-        mTimeSinceAnimationStart = (float) (elapsedTime.totalTime = mStartTime);
-
-        //Method which makes sure the animation is being displayed correctly
-        appropriateAnimationFrame();
-    }
-
-    // Draw method for the LoadingAnimation class
-    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
-    {
-        // If statement which executes the draw method only if the animation is set to playing
-        if(mPlaying)
-        {
-            // Method which builds the screen rectangle, using the specified game object
-            buildRectangle();
-
-            // Calculating a source rectangle for a single frame of the image strip
-            sourceRect.left = 0;
-            sourceRect.right = mFrameWidth;
-            sourceRect.top = 0;
-            sourceRect.bottom = mFrameHeight;
-
-            // Calculating the location of the current frame within the image strip
-            int rowIndex = mCurrentFrame / mNumOfRows;
-
-            // Offset the source rectangle onto the current frame
-            sourceRect.left = sourceRect.left + rowIndex * mFrameWidth;
-            sourceRect.right = sourceRect.right + rowIndex * mFrameWidth;
-            sourceRect.top = sourceRect.top + rowIndex * mFrameHeight;
-            sourceRect.bottom = sourceRect.bottom + rowIndex * mFrameHeight;
-
-            // Draw the actual frame
-            graphics2D.drawBitmap(mImageStrip, sourceRect, screenRect, null);
-        }
     }
 
     // Method which starts the playing of the image strip in a given location

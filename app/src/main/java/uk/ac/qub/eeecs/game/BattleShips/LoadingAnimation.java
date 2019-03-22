@@ -8,7 +8,9 @@ import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 
 /* Author : Edgars (40203154)
-* This is a custom animation class which will take an Image Strip and animate it
+* This is a custom animation class which will take an Image Strip/Spritesheet and animate it, allowing for the
+* animation to then be used in the LoadingScreen class to allow for a loading animation to be drawn to the
+* screen
 */
 // Added class for loading the loading screen image strip and animate it
 public class LoadingAnimation
@@ -21,30 +23,34 @@ public class LoadingAnimation
     private float mTotalTime, mTimeSinceAnimationStart;
     private boolean mPlaying, mLoopAnimation;
 
-    // Declaring the variables used to place the actual animation on the screen
+    // Declaring the variables used to place the animation on screen
     private float x, y, right, bottom;
 
     // Declaring the source and screen rectangles
     private Rect sourceRect = new Rect();
     private Rect screenRect = new Rect();
 
-    /*
-    CONSTRUCTOR
-    */
+    /**
+     * CONSTRUCTOR - for the LoadingAnimation class, which runs a methods which sets up the screen
+     * @param animationSettings
+     * @param stripIndex
+     */
     public LoadingAnimation(AnimationSettings animationSettings, int stripIndex) {
         // Method which initialises all of the variables needed within the class.
         initialiseVariables(animationSettings, stripIndex);
     }
 
-
-    // Update method for the LoadingAnimation class
+    /**
+     * Update method for the LoadingAnimation class
+     * @param elapsedTime
+     */
     public void update(ElapsedTime elapsedTime)
     {
-        // If statement which does not if the animation is currently not playing.
+        // If statement which does nothing if the animation is currently not playing.
         if (!mPlaying)
-        {
-            return;
-        }
+       {
+           return;
+       }
 
         // A line of code which determines how long the animation has been playing for
         mTimeSinceAnimationStart = (float) (elapsedTime.totalTime - mStartTime);
@@ -53,7 +59,10 @@ public class LoadingAnimation
         appropriateAnimationFrame();
     }
 
-    // Draw method for the LoadingAnimation class
+    /**
+     * Draw method for the LoadingAnimation class
+     * @param graphics2D
+     */
     public void draw(IGraphics2D graphics2D)
     {
         // If statement which executes the draw method only if the animation is set to playing
@@ -83,10 +92,13 @@ public class LoadingAnimation
         }
     }
 
-    /*
-    METHODS
-    */
-    // Method which initialises all of the variables needed within the class
+    //----METHODS----
+
+    /**
+     * Method which initialises all of the variables needed within the class
+     * @param animationSettings
+     * @param stripIndex
+     */
     public void initialiseVariables(AnimationSettings animationSettings, int stripIndex)
     {
         // Assign variables with appropriate values from the animationSettings class
@@ -114,7 +126,14 @@ public class LoadingAnimation
         mPlaying = false;
     }
 
-    // Method which starts the playing of the image strip in a given location
+    /**
+     * Method which starts the playing of the image strip in a given location
+     * @param elapsedTime
+     * @param x
+     * @param y
+     * @param right
+     * @param bottom
+     */
     public void playAnimation(ElapsedTime elapsedTime, float x, float y, float right, float bottom)
     {
         this.x = x;

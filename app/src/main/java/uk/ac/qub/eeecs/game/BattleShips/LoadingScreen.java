@@ -40,9 +40,10 @@ public class LoadingScreen extends GameScreen
     private static LoadingAnimation loadingAnimation;
     private static AnimationSettings animationSettings;
 
-    /*
-   CONSTRUCTOR
-   */
+    /**
+     * CONSTRUCTOR - for the LoadingScreen class, which runs two methods which set up the screen
+     * @param game
+     */
     public LoadingScreen(Game game) {
         super("LoadingScreen", game);
 
@@ -53,6 +54,10 @@ public class LoadingScreen extends GameScreen
         playBackgroundMusicIfNotPlaying();
     }
 
+    /**
+     * Update method for the LoadingScreen class
+     * @param elapsedTime
+     */
     @Override
     public void update(ElapsedTime elapsedTime)
     {
@@ -78,24 +83,23 @@ public class LoadingScreen extends GameScreen
         }
     }
 
+    /**
+     * Draw method for the LoadingScreen class
+     * @param elapsedTime
+     * @param graphics2D
+     */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
         // Method which draws all the bitmaps within the screen
         drawBitmaps(graphics2D);
 
-        /* -------THIS CODE I PLACED IN HERE TO TEST, IT JUST DRAWS THE ENTIRE STRIP AS A STATIC IMAGE-----
-        // Start to play the animation at a given location as the screen is loaded
-        loadingAnimation.playAnimation(elapsedTime, 100, 100, 460, 460);
-        */
-
         // Drawing the loading animation
         loadingAnimation.draw(graphics2D);
     }
 
-    /*
-    METHODS
-    */
+    //----METHODS----
+
     // Method which loads all the assets
     private void loadAssets()
     {
@@ -105,7 +109,7 @@ public class LoadingScreen extends GameScreen
         // Loading in the JSON file
         mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
 
-        // Initialising the Loading Background with appropriate bitmap
+        // Initialising the Loading Background with an appropriate bitmap
         mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
 
         // Initialising the Background Music with music file
@@ -124,7 +128,10 @@ public class LoadingScreen extends GameScreen
         loadingAnimation = new LoadingAnimation(animationSettings, 0);
     }
 
-    // Method which gets the screen width and height of the device screen
+    /**
+     * Method which gets the screen width and height of the device screen
+     * @param graphics2D
+     */
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
         if (screenHeight == 0 || screenWidth == 0) {
@@ -140,7 +147,10 @@ public class LoadingScreen extends GameScreen
         rect = new Rect(0,0,screenWidth,screenHeight);
     }
 
-    // Method which takes a integer (seconds) and then sets up an appropriate time delay
+    /**
+     * Method which takes a integer (seconds) and then sets up an appropriate time delay
+     * @param seconds
+     */
     private void delay(int seconds) throws InterruptedException
     {
         int sleepTime = seconds*1000;
@@ -170,7 +180,10 @@ public class LoadingScreen extends GameScreen
         }
     }
 
-    // Method which draws all the appropriate bitmaps within the screen
+    /**
+     * Method which draws all the appropriate bitmaps within the screen
+     * @param graphics2D
+     */
     private void drawBitmaps(IGraphics2D graphics2D)
     {
         // Drawing the background image
@@ -187,7 +200,10 @@ public class LoadingScreen extends GameScreen
         graphics2D.drawBitmap(mLoadingTitle, null, titleRectangle, mPaint);
     }
 
-    // Method which allows you to move to a new game screen of your choice
+    /**
+     * Method which allows you to move to a new game screen of your choice
+     * @param newScreen
+     */
     private void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);

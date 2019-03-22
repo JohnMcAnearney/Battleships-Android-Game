@@ -24,8 +24,8 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
  * a pause button; allowing the player to change their settings, return to main menu and give them
  * a quick launch option to mute the music
  */
-public class PauseScreen extends GameScreen {
-
+public class PauseScreen extends GameScreen
+{
     // Defining variables to be used for the pause screen background
     private Bitmap mPauseBackground, mPause;
     private int screenWidth=0, screenHeight=0;
@@ -40,8 +40,9 @@ public class PauseScreen extends GameScreen {
     private AudioManager audioManager = getGame().getAudioManager();
     private Music backgroundMusic;
 
-    /*
-    CONSTRUCTOR
+    /**
+     * CONSTRUCTOR - for the PauseScreen class, which runs three methods which set up the screen
+     * @param game
     */
     public PauseScreen(Game game){
         super("PauseScreen", game);
@@ -56,6 +57,10 @@ public class PauseScreen extends GameScreen {
         createButtons();
     }
 
+    /**
+     * Update method for the PauseScreen class
+     * @param elapsedTime
+     */
     @Override
     public void update(ElapsedTime elapsedTime)
     {
@@ -75,6 +80,11 @@ public class PauseScreen extends GameScreen {
         }
     }
 
+    /**
+     * Draw method for the PauseScreen class
+     * @param elapsedTime
+     * @param graphics2D
+     */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
@@ -85,21 +95,34 @@ public class PauseScreen extends GameScreen {
         drawButtons(elapsedTime, graphics2D);
     }
 
-    /*
-    METHODS
-    */
+    // ----METHODS----
+
     // Method which loads all the assets
     private void loadAssets()
     {
+        // Initialising the asset manager
         AssetManager assetManager = mGame.getAssetManager();
+
+        // Loading in the JSON file
         mGame.getAssetManager().loadAssets("txt/assets/PauseScreenAssets.JSON");
+
+        // Initialising the Pause Background with an appropriate bitmap
         mPauseBackground = assetManager.getBitmap("BattleshipBackground");
+
+        // Initialising the Pause Title with an appropriate bitmap
         mPause = assetManager.getBitmap("Paused");
+
+        // Initialising the Background Music with music file
         backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
+
+        // Initialising a blank paint
         mPaint = new Paint();
     }
 
-    // Method which draws all the appropriate bitmaps within the screen
+    /**
+     * Method which draws all the appropriate bitmaps within the screen
+     * @param graphics2D
+     */
     private void drawBitmaps(IGraphics2D graphics2D)
     {
         // Drawing the background image
@@ -111,6 +134,7 @@ public class PauseScreen extends GameScreen {
         int onePercentOfScreenHeight, onePercentOfScreenWidth;
         onePercentOfScreenHeight = graphics2D.getSurfaceHeight()/100;
         onePercentOfScreenWidth = graphics2D.getSurfaceWidth()/100;
+
         // Drawing the loading title bitmap
         Rect titleRectangle = new Rect(onePercentOfScreenWidth*30, onePercentOfScreenHeight*1, onePercentOfScreenWidth*75, onePercentOfScreenHeight*35);
         graphics2D.drawBitmap(mPause, null, titleRectangle, mPaint);
@@ -133,7 +157,11 @@ public class PauseScreen extends GameScreen {
         mButtonCollection.add(mVolumeButton);
     }
 
-    // Method which draws all the buttons
+    /**
+     * Method which draws all the push buttons using a for loop to cycle through all of the buttons in the collection and applying the draw() method
+     * @param elapsedTime
+     * @param graphics2D
+     */
     private void drawButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
         for(PushButton button: mButtonCollection)
@@ -142,7 +170,10 @@ public class PauseScreen extends GameScreen {
         }
     }
 
-    // Method which carries out all the push button updates
+    /**
+     * Method which carries out all the push button updates, this is done by running through a for loop and calling the update() method on each button
+     * @param elapsedTime
+     */
     private void updateAllPushButtons(ElapsedTime elapsedTime)
     {
         for(PushButton button: mButtonCollection)
@@ -169,13 +200,17 @@ public class PauseScreen extends GameScreen {
         {
             moveToNewGameScreen(new SettingsScreen(mGame));
         }
+        // If volume button is triggered, mute sound and change bitmap
         else if(mVolumeButton.isPushTriggered())
         {
             performMuteButtonActions();
         }
     }
 
-    // Method which gets the screen width and height of the device screen
+    /**
+     * Method which gets the screen width and height of the device screen
+     * @param graphics2D
+     */
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
         if (screenHeight == 0 || screenWidth == 0) {
@@ -191,7 +226,13 @@ public class PauseScreen extends GameScreen {
         rect = new Rect(0,0,screenWidth,screenHeight);
     }
 
-    // Method which allows you to put in the float values of the destination rectangle
+    /**
+     * Method which allows you to put in the float values of the destination rectangle
+     * @param left
+     * @param top
+     * @param right
+     * @param bottom
+     */
     private Rect drawRectangle(float left, float top, float right, float bottom)
     {
 
@@ -221,14 +262,17 @@ public class PauseScreen extends GameScreen {
         }
     }
 
-    // Method which allows you to move to a new game screen of your choice
+    /**
+     * Method which allows you to move to a new game screen of your choice
+     * @param newScreen
+     */
     public void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);
     }
 
     // Method which allows you to return to the previous game screen
-    private void returnToPreviousGameScreen()
+    public void returnToPreviousGameScreen()
     {
         mGame.getScreenManager().removeScreen(this);
     }

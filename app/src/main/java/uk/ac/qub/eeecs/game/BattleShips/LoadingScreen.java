@@ -35,8 +35,8 @@ public class LoadingScreen extends GameScreen
     private AudioManager audioManager = getGame().getAudioManager();
     private Music backgroundMusic;
 
-    // Defining variables related to the loading animation
-    private static LoadingAnimation loadingAnimation ;
+    // Defining variables related to the loading and playing a loading animation
+    private static LoadingAnimation loadingAnimation;
     private static AnimationSettings animationSettings;
 
     /*
@@ -59,7 +59,7 @@ public class LoadingScreen extends GameScreen
         loadingAnimation.update(elapsedTime);
 
         // Start to play the animation at a given location as the screen is loaded
-        loadingAnimation.playAnimation(elapsedTime, 10, 10, 360, 360);
+        loadingAnimation.playAnimation(elapsedTime, 100, 100, 460, 460);
 
         // Method which delays the game loading allowing for the effects of loading assets
         delayLoading();
@@ -83,6 +83,11 @@ public class LoadingScreen extends GameScreen
         // Method which draws all the bitmaps within the screen
         drawBitmaps(graphics2D);
 
+        /* -------THIS CODE I PLACED IN HERE TO TEST, IT JUST DRAWS THE ENTIRE STRIP AS A STATIC IMAGE-----
+        // Start to play the animation at a given location as the screen is loaded
+        loadingAnimation.playAnimation(elapsedTime, 100, 100, 460, 460);
+        */
+
         // Drawing the loading animation
         loadingAnimation.draw(graphics2D);
     }
@@ -95,21 +100,27 @@ public class LoadingScreen extends GameScreen
     {
         // Initialising the asset manager
         AssetManager assetManager = mGame.getAssetManager();
+
         // Loading in the JSON file
         mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
+
         // Initialising the Loading Background with appropriate bitmap
         mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
+
         // Initialising the Background Music with music file
         backgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
+
         // Initialising the Loading Title with appropriate bitmap
         mLoadingTitle = assetManager.getBitmap("LoadingTitle");
+
         // Initialising a blank paint
         mPaint = new Paint();
+
         // Loading in the Image Strip JSON file using animation settings
-        animationSettings = new AnimationSettings(assetManager, "txt/animation/LoadingAnimations.JSON");
+        animationSettings = new AnimationSettings(assetManager, "txt/animation/LoadingAnimation.JSON");
+
         // Creating a new animation object so that the animation can be used within the class
         loadingAnimation = new LoadingAnimation(animationSettings, 0);
-
     }
 
     // Method which gets the screen width and height of the device screen

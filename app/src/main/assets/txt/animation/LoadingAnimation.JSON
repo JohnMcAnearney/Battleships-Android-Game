@@ -1,0 +1,15 @@
+{
+  "spritesheet" : "img/24xLoadingSpritesheet.png",
+  "numRows" : 6,
+  "numColumns" : 4,
+  "animations" :
+  [
+    {
+      "name" : "Loading",
+      "startFrame" : 0,
+      "endFrame" : 24,
+      "totalPeriod" : 1.5,
+      "loopAnimation" : false
+    }
+  ]
+}

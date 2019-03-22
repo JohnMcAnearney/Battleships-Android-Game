@@ -47,7 +47,7 @@ public class LoadingAnimation
         }
 
         // A line of code which determines how long the animation has been playing for
-        mTimeSinceAnimationStart = (float) (elapsedTime.totalTime = mStartTime);
+        mTimeSinceAnimationStart = (float) (elapsedTime.totalTime - mStartTime);
 
         //Method which makes sure the animation is being displayed correctly
         appropriateAnimationFrame();
@@ -70,13 +70,13 @@ public class LoadingAnimation
 
             // Calculating the location of the current frame within the image strip
             int rowIndex = mCurrentFrame / mNumOfRows;
-            int columnIndex = mCurrentFrame / mNumOfColumns;
+            int columnIndex = mCurrentFrame % mNumOfColumns;
 
             // Offset the source rectangle onto the current frame
-            sourceRect.left = sourceRect.left + columnIndex * mFrameWidth;
-            sourceRect.right = sourceRect.right + columnIndex * mFrameWidth;
-            sourceRect.top = sourceRect.top + rowIndex * mFrameHeight;
-            sourceRect.bottom = sourceRect.bottom + rowIndex * mFrameHeight;
+            sourceRect.left = sourceRect.left + ( columnIndex * mFrameWidth );
+            sourceRect.right = sourceRect.right + ( columnIndex * mFrameWidth );
+            sourceRect.top = sourceRect.top + ( rowIndex * mFrameHeight );
+            sourceRect.bottom = sourceRect.bottom + ( rowIndex * mFrameHeight );
 
             // Draw the actual frame
             graphics2D.drawBitmap(mImageStrip, sourceRect, screenRect, null);

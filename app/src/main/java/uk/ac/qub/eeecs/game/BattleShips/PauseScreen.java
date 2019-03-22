@@ -222,7 +222,7 @@ public class PauseScreen extends GameScreen {
     }
 
     // Method which allows you to move to a new game screen of your choice
-    private void moveToNewGameScreen(GameScreen newScreen)
+    public void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);
     }

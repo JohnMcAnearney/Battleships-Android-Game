@@ -10,6 +10,7 @@ import java.util.List;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
+import uk.ac.qub.eeecs.gage.engine.ScreenManager;
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
 import uk.ac.qub.eeecs.gage.engine.audio.Music;
@@ -152,7 +153,7 @@ public class LoadingScreen extends GameScreen
         try
         {
             delay(4);
-            mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
+            moveToNewGameScreen(new BoardSetupScreen(mGame));
         }
         catch(InterruptedException e)
         {
@@ -184,5 +185,11 @@ public class LoadingScreen extends GameScreen
         // Drawing the loading title bitmap
         Rect titleRectangle = new Rect(onePercentOfScreenWidth*28, onePercentOfScreenHeight*1, onePercentOfScreenWidth*73, onePercentOfScreenHeight*35);
         graphics2D.drawBitmap(mLoadingTitle, null, titleRectangle, mPaint);
+    }
+
+    // Method which allows you to move to a new game screen of your choice
+    private void moveToNewGameScreen(GameScreen newScreen)
+    {
+        mGame.getScreenManager().addScreen(newScreen);
     }
 }

@@ -157,17 +157,17 @@ public class PauseScreen extends GameScreen {
         // If back button is pressed, remove the current screen to return to the main menu
         if (mBackButton.isPushTriggered())
         {
-            mGame.getScreenManager().removeScreen(this);
+            returnToPreviousGameScreen();
         }
         // If instructions button is triggered, add a new screen to the instruction screen.
         else if (mInstructionsButton.isPushTriggered())
         {
-            mGame.getScreenManager().addScreen(new InstructionsScreen(mGame));
+            moveToNewGameScreen(new InstructionsScreen(mGame));
         }
         // If settings button is triggered, add a new screen to the settings screen.
         else if (mSettingsButton.isPushTriggered())
         {
-            mGame.getScreenManager().addScreen(new SettingsScreen(mGame));
+            moveToNewGameScreen(new SettingsScreen(mGame));
         }
         else if(mVolumeButton.isPushTriggered())
         {
@@ -219,6 +219,18 @@ public class PauseScreen extends GameScreen {
         {
             audioManager.playMusic(backgroundMusic);
         }
+    }
+
+    // Method which allows you to move to a new game screen of your choice
+    private void moveToNewGameScreen(GameScreen newScreen)
+    {
+        mGame.getScreenManager().addScreen(newScreen);
+    }
+
+    // Method which allows you to return to the previous game screen
+    private void returnToPreviousGameScreen()
+    {
+        mGame.getScreenManager().removeScreen(this);
     }
 }
 

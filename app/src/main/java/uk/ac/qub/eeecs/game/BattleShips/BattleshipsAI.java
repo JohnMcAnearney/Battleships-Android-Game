@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 public class BattleshipsAI {
     /*This class is used to allow the ai to decide where to hit next and store its shots so far so it can make a more educated shot
-            This class contains 3 methods:
-                -setupBoard()   which prepares the AI's board before the game
-                -nextShot()     which returns the next shot which the AI is going to take (depending on the difficulty)
-                -checkAIBoard() which checks the coordinates passed through against the aiboard[][] array and returns the state of the relevant field
-
+            This class contains 5 public methods:
+                -BattleshipsAI() which is the constructor
+                -setupBoard()    which prepares the AI's board before the game
+                -nextShot()      which returns the next shot which the AI is going to take (depending on the difficulty)
+                -checkAIBoard()  which checks the coordinates passed through against the aiboard[][] array and returns the state of the relevant field
+                -updateAIBoard() which sets the field which the player picked to 2 (to demonstrate that it has been hit before and prevent accidental duplicate moves)
             */
 
     //Explanation of shooting algorithms:
@@ -43,6 +44,11 @@ public class BattleshipsAI {
                 //Key: 0 - empty ; 1 - unhit ship ; 2 - hit ship
     private static int[][] aiboard = new int [10][10]; //AI's board used for ship placement;
 
+    //The constructor allowing to set the difficulty and give the ai access to the players board
+    public BattleshipsAI(int diff, int[][] playerBoard){
+        pboard = playerBoard;
+        difficulty = diff;
+    }
 
     /**
      *
@@ -54,6 +60,13 @@ public class BattleshipsAI {
         return aiboard[y][x];
     }
 
+    /**
+     * This method is used to update the AI's board once the player makes their turn.
+     * @param x the x coordinate of the field to update
+     * @param y the y coordinate of the field to update
+     */
+    public void updateAIBoard(int x, int y) { aiboard[y][x] = 2; }
+    
 
     /**
      * @return Returns a 2 digit string representing the x & y coordinates to be hit. If the difficulty hasnt been set to either 0, 1 or 2 this method will return "ERROR - incorrect difficulty".

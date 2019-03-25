@@ -26,11 +26,12 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
  */
 public class LoadingScreen extends GameScreen
 {
-    // Defining variables to be used for the pause screen background
+    // Defining variables to be used for the loading screen background
     private Bitmap mLoadingBackground, mLoadingTitle;
     private int screenWidth=0, screenHeight=0;
     private Rect rect;
     private Paint mPaint;
+    private boolean animationPlayed;
 
     // Defining variables related to audio
     private AudioManager audioManager = getGame().getAudioManager();
@@ -40,7 +41,7 @@ public class LoadingScreen extends GameScreen
     private static LoadingAnimation loadingAnimation;
     private static AnimationSettings animationSettings;
 
-    /**
+     /**
      * CONSTRUCTOR - for the LoadingScreen class, which runs two methods which set up the screen
      * @param game
      */
@@ -126,6 +127,15 @@ public class LoadingScreen extends GameScreen
 
         // Creating a new animation object so that the animation can be used within the class
         loadingAnimation = new LoadingAnimation(animationSettings, 0);
+
+        /**
+         * Creating animationSettings object which will load the JSON file and the image sprite sheet
+         * to be used for an explosion animation
+         */
+        animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");
+
+        // Initialising the boolean value to false, as animation has not played yet
+        animationPlayed = false;
     }
 
     /**
@@ -207,5 +217,14 @@ public class LoadingScreen extends GameScreen
     private void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);
+    }
+
+    // Method which will check if the animation has played through
+    private void hasAnimationPlayed()
+    {
+        if(animationPlayed)
+        {
+            delayLoading();
+        }
     }
 }

@@ -66,8 +66,8 @@ public class LoadingAnimation
     public void draw(IGraphics2D graphics2D)
     {
         // If statement which executes the draw method only if the animation is set to playing
-        if(mPlaying)
-        {
+       if(mPlaying)
+       {
             // Method which builds the screen rectangle, using the specified game object
             buildRectangle();
 
@@ -89,7 +89,7 @@ public class LoadingAnimation
 
             // Draw the actual frame
             graphics2D.drawBitmap(mImageStrip, sourceRect, screenRect, null);
-        }
+       }
     }
 
     //----METHODS----

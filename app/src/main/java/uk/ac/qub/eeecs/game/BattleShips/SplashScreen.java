@@ -30,7 +30,7 @@ import java.util.List;
 public class SplashScreen extends GameScreen
 {
     //Variables used to define the splash screen class
-    final private long SPLASH_TIMEOUT = 6000;
+    private long SPLASH_TIMEOUT = 6000;
     private long timeToCreate, currentTime;
     private GameObject background, symbol;
     private ScreenViewport mScreenViewport;
@@ -45,7 +45,7 @@ public class SplashScreen extends GameScreen
 
 
     //Constructor for this class
-    private SplashScreen(Game game) {
+    public SplashScreen(Game game) {
         super("SplashScreen", game);
         this.game = game;
 
@@ -60,6 +60,8 @@ public class SplashScreen extends GameScreen
 
         //the timeToCreate variable is set to return the current time in milliseconds
         timeToCreate = System.currentTimeMillis();
+
+
 
 
         assetManager = mGame.getAssetManager();
@@ -93,7 +95,7 @@ public class SplashScreen extends GameScreen
         background = new GameObject(game.getScreenWidth() * 0.5f, game.getScreenHeight() * 0.5f, game.getScreenWidth(), game.getScreenHeight(), backgroundBitmapMutable, this);
     }
 
-    //this method will draw the symbol bitmap from gameObject
+    //this method will load and draw the symbol bitmap from gameObject
     public void createSymbol()
     {
         assetManager.loadAndAddBitmap("symbol", "img/symbol.png");
@@ -164,6 +166,7 @@ public class SplashScreen extends GameScreen
             goToMenuScreen();
         }
 
+
         //the below method will process any touch events occurring since the last update
         Input input = mGame.getInput();
         List<TouchEvent> touchEvents = input.getTouchEvents();
@@ -178,6 +181,7 @@ public class SplashScreen extends GameScreen
      */
     public void goToMenuScreen()
     {
+
         mGame.getScreenManager().removeScreen(this.getName());
         mGame.getScreenManager().addScreen(new MenuScreen(mGame));
     }
@@ -202,16 +206,11 @@ public class SplashScreen extends GameScreen
     {
         return background;
     }
-    public void setBackgroundObject(GameObject backgroundObject)
-    {
-        this.background = backgroundObject;
-    }
-
+    public void setBackgroundObject(GameObject backgroundObject) { this.background = backgroundObject; }
     public Bitmap getBackground()
     {
         return backgroundBitmap;
     }
-
     public void setBackground(Bitmap backgroundBitmap)
     {
         this.backgroundBitmap = backgroundBitmap;
@@ -240,5 +239,7 @@ public class SplashScreen extends GameScreen
     {
         this.symbolBitmap = symbolBitmap;
     }
+    public long getCurrentTime(){ return currentTime;}
+    public void setCurrentTime(long currentTime) {this.currentTime = currentTime;}
 
 }

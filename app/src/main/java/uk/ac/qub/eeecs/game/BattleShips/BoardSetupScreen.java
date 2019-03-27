@@ -823,7 +823,7 @@ public class BoardSetupScreen extends GameScreen {
                 // Check if the touch was on any of the ships bounding box if yes change game state, store the pointer index and the ship
                 for(Ship ship: shipArray)
                 {
-                    if(boundingBoxContainsUserInput(ship.mBound,touchEvent.x,touchEvent.y))
+                    if(boxContainsInput(ship.mBound.x, ship.mBound.x +ship.mBound.getWidth(),ship.mBound.y, ship.mBound.y + ship.mBound.getHeight(),touchEvent.x,touchEvent.y))
                     {
                         // Set x and y coordinates dragShipOffset vector, so when user drags the ship, the ship will be dragged from the point of touch
                         dragShipOffset.set(ship.mBound.x - touchEvent.x, ship.mBound.y - touchEvent.y);
@@ -890,7 +890,7 @@ public class BoardSetupScreen extends GameScreen {
 
             //if the mid small box contains the user's input x and y values the box
             // have been found return the number of the small box
-            if(boxContainsInput(mid,x,y))
+            if(boxContainsInput(array[mid][0],array[mid][2], array[mid][1], array[mid][3],x,y))
             {
                 return mid;
             }
@@ -937,7 +937,7 @@ public class BoardSetupScreen extends GameScreen {
 
             //if the mid small box contains the user's input x and y values the box
             // have been found, return the number of the small box
-            if (boxContainsInput(mid, x, y)) {
+            if (boxContainsInput(array[mid][0],array[mid][2], array[mid][1], array[mid][3], x, y)) {
                 return mid;
             }
             //if the user's input x value is lower than the current small box, recursive call
@@ -955,40 +955,25 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     /**
-     * Check if the user has clicked on the box which is passed in as a parameter, if yes return true
-     * otherwise false
-     * @param numberOfSmallBox
-     * @param x
-     * @param y
+     * Check if the user has clicked within the box of which co-ordinates passed
+     * in as parameters, if yes return true
+     * @param leftX
+     * @param rightX
+     * @param TopY
+     * @param bottomY
+     * @param inputX
+     * @param inputY
      * @return
      */
-    private boolean boxContainsInput(int numberOfSmallBox, float x, float y)
+    private boolean boxContainsInput(float leftX,  float rightX, float TopY, float bottomY, float inputX, float inputY)
     {
-        if(x > smallBoxCoordinates[numberOfSmallBox][0] &&
-                x < smallBoxCoordinates[numberOfSmallBox][2] &&
-                y > smallBoxCoordinates[numberOfSmallBox][1] &&
-                y < smallBoxCoordinates[numberOfSmallBox][3])
+        if(inputX > leftX&&
+                inputX < rightX &&
+                inputY > TopY &&
+                inputY < bottomY)
         {
             return true;
         }
-
-        return false;
-    }
-
-    /**
-     * Check if the give x and y coordinates are contained within the bounding box
-     * @param boundingBox
-     * @param x
-     * @param y
-     * @return
-     */
-    private boolean boundingBoxContainsUserInput(BoundingBox boundingBox, float x ,float y)
-    {
-        if(x > boundingBox.x &&
-                x < boundingBox.x + boundingBox.getWidth() &&
-                y > boundingBox.y &&
-                y < boundingBox.y + boundingBox.getHeight())
-            return true;
 
         return false;
     }

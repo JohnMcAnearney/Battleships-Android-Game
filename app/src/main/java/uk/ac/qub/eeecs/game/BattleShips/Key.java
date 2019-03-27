@@ -18,14 +18,13 @@ import uk.ac.qub.eeecs.gage.world.ScreenViewport;
 
 public class Key extends PushButton
 {
-    //properties of this class is shown below
-
+    //variables for this class is as shown below
     private String mKeyChar;
     private Paint mKeyPaint;
 
     private StringBuffer mLinkedStringBuffer = null;
 
-    //constructors can be found below
+    //constructors can be found below which consists of the width and height of each key
     public Key(float x, float y, float width, float height, char KeyChar, GameScreen gameScreen)
     {
         super(x, y, width, height, "Key", gameScreen);

@@ -10,6 +10,7 @@ import java.util.List;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
+import uk.ac.qub.eeecs.gage.engine.ScreenManager;
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
 import uk.ac.qub.eeecs.gage.engine.audio.Music;
@@ -25,11 +26,12 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
  */
 public class LoadingScreen extends GameScreen
 {
-    // Defining variables to be used for the pause screen background
+    // Defining variables to be used for the loading screen background
     private Bitmap mLoadingBackground, mLoadingTitle;
     private int screenWidth=0, screenHeight=0;
     private Rect rect;
     private Paint mPaint;
+    private boolean animationPlayed;
 
     // Defining variables related to audio
     private AudioManager audioManager = getGame().getAudioManager();
@@ -39,9 +41,10 @@ public class LoadingScreen extends GameScreen
     private static LoadingAnimation loadingAnimation;
     private static AnimationSettings animationSettings;
 
-    /*
-   CONSTRUCTOR
-   */
+     /**
+     * CONSTRUCTOR - for the LoadingScreen class, which runs two methods which set up the screen
+     * @param game
+     */
     public LoadingScreen(Game game) {
         super("LoadingScreen", game);
 
@@ -52,6 +55,10 @@ public class LoadingScreen extends GameScreen
         playBackgroundMusicIfNotPlaying();
     }
 
+    /**
+     * Update method for the LoadingScreen class
+     * @param elapsedTime
+     */
     @Override
     public void update(ElapsedTime elapsedTime)
     {
@@ -77,24 +84,23 @@ public class LoadingScreen extends GameScreen
         }
     }
 
+    /**
+     * Draw method for the LoadingScreen class
+     * @param elapsedTime
+     * @param graphics2D
+     */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
         // Method which draws all the bitmaps within the screen
         drawBitmaps(graphics2D);
 
-        /* -------THIS CODE I PLACED IN HERE TO TEST, IT JUST DRAWS THE ENTIRE STRIP AS A STATIC IMAGE-----
-        // Start to play the animation at a given location as the screen is loaded
-        loadingAnimation.playAnimation(elapsedTime, 100, 100, 460, 460);
-        */
-
         // Drawing the loading animation
         loadingAnimation.draw(graphics2D);
     }
 
-    /*
-    METHODS
-    */
+    //----METHODS----
+
     // Method which loads all the assets
     private void loadAssets()
     {
@@ -104,7 +110,7 @@ public class LoadingScreen extends GameScreen
         // Loading in the JSON file
         mGame.getAssetManager().loadAssets("txt/assets/LoadingScreenAssets.JSON");
 
-        // Initialising the Loading Background with appropriate bitmap
+        // Initialising the Loading Background with an appropriate bitmap
         mLoadingBackground = assetManager.getBitmap("BattleshipBackground");
 
         // Initialising the Background Music with music file
@@ -121,9 +127,21 @@ public class LoadingScreen extends GameScreen
 
         // Creating a new animation object so that the animation can be used within the class
         loadingAnimation = new LoadingAnimation(animationSettings, 0);
+
+        /**
+         * Creating animationSettings object which will load the JSON file and the image sprite sheet
+         * to be used for an explosion animation
+         */
+        animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");
+
+        // Initialising the boolean value to false, as animation has not played yet
+        animationPlayed = false;
     }
 
-    // Method which gets the screen width and height of the device screen
+    /**
+     * Method which gets the screen width and height of the device screen
+     * @param graphics2D
+     */
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
         if (screenHeight == 0 || screenWidth == 0) {
@@ -139,7 +157,10 @@ public class LoadingScreen extends GameScreen
         rect = new Rect(0,0,screenWidth,screenHeight);
     }
 
-    // Method which takes a integer (seconds) and then sets up an appropriate time delay
+    /**
+     * Method which takes a integer (seconds) and then sets up an appropriate time delay
+     * @param seconds
+     */
     private void delay(int seconds) throws InterruptedException
     {
         int sleepTime = seconds*1000;
@@ -152,7 +173,7 @@ public class LoadingScreen extends GameScreen
         try
         {
             delay(4);
-            mGame.getScreenManager().addScreen(new BoardSetupScreen(mGame));
+            moveToNewGameScreen(new BoardSetupScreen(mGame));
         }
         catch(InterruptedException e)
         {
@@ -169,7 +190,10 @@ public class LoadingScreen extends GameScreen
         }
     }
 
-    // Method which draws all the appropriate bitmaps within the screen
+    /**
+     * Method which draws all the appropriate bitmaps within the screen
+     * @param graphics2D
+     */
     private void drawBitmaps(IGraphics2D graphics2D)
     {
         // Drawing the background image
@@ -184,5 +208,23 @@ public class LoadingScreen extends GameScreen
         // Drawing the loading title bitmap
         Rect titleRectangle = new Rect(onePercentOfScreenWidth*28, onePercentOfScreenHeight*1, onePercentOfScreenWidth*73, onePercentOfScreenHeight*35);
         graphics2D.drawBitmap(mLoadingTitle, null, titleRectangle, mPaint);
+    }
+
+    /**
+     * Method which allows you to move to a new game screen of your choice
+     * @param newScreen
+     */
+    private void moveToNewGameScreen(GameScreen newScreen)
+    {
+        mGame.getScreenManager().addScreen(newScreen);
+    }
+
+    // Method which will check if the animation has played through
+    private void hasAnimationPlayed()
+    {
+        if(animationPlayed)
+        {
+            delayLoading();
+        }
     }
 }

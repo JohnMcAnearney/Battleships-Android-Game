@@ -17,12 +17,13 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
-// Created by Edgars(40203154) & Aileen(40207942) & Mantas()
-// Class created by Mantas()
-// Class populated by Aileen(40207942)
-// Class refactored by Edgars(40203154)
-public class MainMenu extends GameScreen {
-
+/* Authors : Edgars(40203154), Aileen(40207942), Mantas()
+ * Class created by Mantas()
+ * Class populated by Aileen(40207942)
+ * Class refactored by Edgars(40203154)
+ */
+public class MainMenu extends GameScreen
+{
     // Defining variables to be used for the main menu screen background
     private Bitmap mBattleShipBackground;
     private int screenWidth = 0, screenHeight = 0;
@@ -32,9 +33,10 @@ public class MainMenu extends GameScreen {
     private PushButton mStartButton, mInstructionsButton, mSettingsButton, mTitle;
     private List<PushButton> mButtonCollection = new ArrayList<>();
 
-    /*
-    CONSTRUCTOR
-    */
+    /**
+     * CONSTRUCTOR - for the MainMenu class, which runs two methods which set up the screen
+     * @param game
+     */
     public MainMenu(Game game) {
         super("MenuScreen", game);
         // Load all of the assets
@@ -44,7 +46,10 @@ public class MainMenu extends GameScreen {
         createButtons();
     }
 
-    // Update method for the MainMenu class
+    /**
+     * Update method for the MainMenu class
+     * @param elapsedTime
+     */
     @Override
     public void update(ElapsedTime elapsedTime)
     {
@@ -62,7 +67,11 @@ public class MainMenu extends GameScreen {
         }
     }
 
-    // Draw method for the MainMenu class
+    /**
+     * Draw method for the MainMenu class
+     * @param elapsedTime
+     * @param graphics2D
+     */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
@@ -73,10 +82,12 @@ public class MainMenu extends GameScreen {
         drawButtons(elapsedTime, graphics2D);
     }
 
-    /*
-    METHODS
-    */
-    // Method which gets the screen width and height of the device screen
+    //----METHODS----
+
+    /**
+     * Method which gets the screen width and height of the device
+     * @param graphics2D
+     */
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
         if (screenHeight == 0 || screenWidth == 0)
@@ -88,11 +99,12 @@ public class MainMenu extends GameScreen {
     }
 
     // Method which creates a new rectangle size of the screen
-    private void updateRect() {
+    private void updateRect()
+    {
         rect = new Rect(0, 0, screenWidth, screenHeight);
     }
 
-    // Create the buttons and set the sound to true
+    // Create the buttons and set their sound to true and also add each button to the mButtonCollection List.
     private void createButtons()
     {
         mStartButton = new PushButton(mDefaultLayerViewport.getWidth() / 2,mDefaultLayerViewport.getHeight()  / 2, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "NewGameButton", "NewGameButtonP", this);
@@ -115,12 +127,21 @@ public class MainMenu extends GameScreen {
     // Method which loads all the assets for the screen
     private void loadAssets()
     {
+        // Initialising the asset manager
         AssetManager assetManager = mGame.getAssetManager();
+
+        // Loading in the JSON file
         mGame.getAssetManager().loadAssets("txt/assets/MainMenuScreenAssets.JSON");
+
+        // Initialising the BattleShip Background with an appropriate bitmap
         mBattleShipBackground = assetManager.getBitmap("BattleshipBackground");
     }
 
-    // Method which draws all of the push buttons
+    /**
+     * Method which draws all the push buttons using a for loop to cycle through all of the buttons in the collection and applying the draw() method
+     * @param elapsedTime
+     * @param graphics2D
+     */
     private void drawButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
         for(PushButton button: mButtonCollection)
@@ -129,7 +150,10 @@ public class MainMenu extends GameScreen {
         }
     }
 
-    // Method which draws the screen background
+    /**
+     * Method which draws the screen background
+     * @param graphics2D
+     */
     private void drawScreenBackground(IGraphics2D graphics2D)
     {
         getWidthAndHeightOfScreen(graphics2D);
@@ -137,8 +161,10 @@ public class MainMenu extends GameScreen {
         graphics2D.drawBitmap(mBattleShipBackground,null,rect,null);
     }
 
-
-    // Method which carries out all the push button updates
+    /**
+     * Method which carries out all the push button updates, this is done by running through a for loop and calling the update() method on each button
+     * @param elapsedTime
+     */
     private void updateAllPushButtons(ElapsedTime elapsedTime)
     {
         for(PushButton button : mButtonCollection)

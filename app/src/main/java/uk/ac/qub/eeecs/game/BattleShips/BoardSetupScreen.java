@@ -92,20 +92,21 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
         assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
         assetManager.loadAndAddBitmap("SettingsBackButtonP", "img/BackBPressed.png");
-        assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
         assetManager.loadAndAddBitmap("Title", "img/Title.png");
         assetManager.loadAndAddBitmap("PauseButton", "img/Pause.png");
         assetManager.loadAndAddBitmap("boundsMessage", "img/OutOfBoundsMessage.png");
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
         boundsMessage = assetManager.getBitmap("boundsMessage");
-        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
-        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
-        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
-        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
-        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
-        assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
 
+        //Mantas Stadnik (40203133) loaded bitmaps which were used by my methods
+        boolean check1 = assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
+        boolean check2 =assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
+        boolean check3 =assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
+        boolean check4 =assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
+        boolean check5 =assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        boolean check6 =assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        boolean check7 =assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
         /**
          * Creating animationSettings object which will load the JSON file and the image sprite sheet
          * to be used for an explosion animation
@@ -672,7 +673,7 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     ////////////////////////////////////////////// - Mantas' methods 40203133 - //////////////////////////////////////////////////////////////////////////
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Draw required objects
      */

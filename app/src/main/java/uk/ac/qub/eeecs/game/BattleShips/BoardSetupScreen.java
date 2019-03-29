@@ -27,6 +27,7 @@ public class BoardSetupScreen extends GameScreen {
 
     /**
      * Class Authors: John McAnearney 40203900 and Mantas Stadnik 40203133
+     * John McA KEY: I used camelCase for all except FINAL variables where I_USED_THIS_SYNYAX
      */
 
     /////////////////////////////////////////// - GENERAL VARIABLES - /////////////////////////////////////////////////////////////////
@@ -74,7 +75,6 @@ public class BoardSetupScreen extends GameScreen {
     private boolean toRotateShip = false;  //boolean value used as a identifier to rotate the ship
     private boolean shipOutOfBound = false;
 
-
     ////////////////////////////////////////// - Animation - //////////////////////////////////////////////////////////////////
     private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimation
     private static AnimationSettings animationSettings;        //Object holder for animationSettings
@@ -92,20 +92,21 @@ public class BoardSetupScreen extends GameScreen {
         assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
         assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
         assetManager.loadAndAddBitmap("SettingsBackButtonP", "img/BackBPressed.png");
-        assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
         assetManager.loadAndAddBitmap("Title", "img/Title.png");
         assetManager.loadAndAddBitmap("PauseButton", "img/Pause.png");
         assetManager.loadAndAddBitmap("boundsMessage", "img/OutOfBoundsMessage.png");
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
         boundsMessage = assetManager.getBitmap("boundsMessage");
-        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
-        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
-        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
-        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
-        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
-        assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
 
+        //Mantas Stadnik (40203133) loaded bitmaps which were used by my methods
+        boolean check1 = assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
+        boolean check2 =assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
+        boolean check3 =assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
+        boolean check4 =assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
+        boolean check5 =assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        boolean check6 =assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        boolean check7 =assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
         /**
          * Creating animationSettings object which will load the JSON file and the image sprite sheet
          * to be used for an explosion animation
@@ -344,6 +345,12 @@ public class BoardSetupScreen extends GameScreen {
                 }
 
                 //draw each of the small boxes
+                /**
+                 * https://developer.android.com/reference/android/graphics/Rect
+                 * Used the above link in order to understand how rect's were actually used.
+                 * Specifically how they used the left, top, right and bottom parameters
+                 */
+
                 graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
                         (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
 
@@ -409,6 +416,12 @@ public class BoardSetupScreen extends GameScreen {
      * @param graphics2D
      */
     public void drawConstantImages(IGraphics2D graphics2D){
+
+        /**
+         * for the moving of the background I followed Philip's tutorials. https://www.youtube.com/watch?v=tsQYqFiZ26Q
+         * I watched this, got an understanding and then altered it to suit what I wanted. Phil also done a presentation in class
+         * but I can't find if he had sent any source code out or not
+         */
         Matrix bcgMatrix = new Matrix();
         //magnifies background image
         bcgMatrix.setScale(3.5f, 3.5f);
@@ -436,11 +449,8 @@ public class BoardSetupScreen extends GameScreen {
                     && selectedShip.mBound.y > smallBoxCoordinates[i][1] && selectedShip.mBound.y < smallBoxCoordinates[i][3]) {
                 //check if box is occupied
                 checkIfBoxOccupied(i);
-                //if check above is ok then snap to box
+                //if check above is ok then snap to box and mark the boxes
                 shipSnapToBox();
-                //shipReset();
-                //mark the ship in this position
-                markShipInBox(i);
             }
         }
     }
@@ -461,7 +471,6 @@ public class BoardSetupScreen extends GameScreen {
             shipOutOfBound =true;
             //if its out of bound, reset the ship
             shipReset();
-
         }
 
     }
@@ -483,6 +492,10 @@ public class BoardSetupScreen extends GameScreen {
      * @return returns the number of the closest box from the smallBoxCoordinates array
      */
     private int calculateClosestBox(){
+
+        /**
+         * this is basically all phil's code except with the applicable alterations I needed to suit our game
+         */
         //closest box is between smallBoxWidth/2 coor and ship coor
         //set to this becasuse the closest distance will, basically, always be less than this. Always less in this game.
         closestSlotDistanceSqrd = Float.MAX_VALUE;
@@ -543,22 +556,18 @@ public class BoardSetupScreen extends GameScreen {
                     case 2:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        markShipInBox(selectedShip.getShipLength());
                         break;
                     case 3:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        markShipInBox(selectedShip.getShipLength());
                         break;
                     case 4:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        markShipInBox(selectedShip.getShipLength());
                         break;
                     case 5:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        markShipInBox(selectedShip.getShipLength());
                         break;
                 }
             }
@@ -575,18 +584,22 @@ public class BoardSetupScreen extends GameScreen {
             case 2:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
+                markShipInBox(numberOfClosestBox);
                 break;
             case 3:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
+                markShipInBox(numberOfClosestBox);
                 break;
             case 4:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
+                markShipInBox(numberOfClosestBox);
                 break;
             case 5:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
+                markShipInBox(numberOfClosestBox);
                 break;
         }
     }
@@ -597,7 +610,7 @@ public class BoardSetupScreen extends GameScreen {
      */
     private void checkIfBoxOccupied(int currentBox){
         if(smallBoxCoordinates[currentBox][4] ==1 ){
-            //simple rest, if the box is occupied set it back to the given box
+            //simple reset, if the box is occupied set it back to the given box
             switch (selectedShip.getShipLength()) {
                 case 2:
                     selectedShip.mBound.x = smallBoxCoordinates[30][0];
@@ -694,7 +707,7 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     ////////////////////////////////////////////// - Mantas' methods 40203133 - //////////////////////////////////////////////////////////////////////////
-
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Draw required objects
      */
@@ -779,9 +792,9 @@ public class BoardSetupScreen extends GameScreen {
         //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
         for (Ship ship : shipArray) {
             screenHeightOffset = screenHeightOffset + 0.08f;
-            ship.setmBound(Math.round(screenWidth * 0.015),
-                    Math.round(screenHeight * screenHeightOffset),
-                    Math.round(((bigBoxRightCoor - bigBoxLeftCoor) / 10f) * ship.getShipLength()) / 2.0f,
+            ship.setmBound(screenWidth * 0.015f,
+                    screenHeight * screenHeightOffset,
+                    ((bigBoxRightCoor - bigBoxLeftCoor) / 10f) * ship.getShipLength() / 2.0f,
                     ((bigBoxBottomCoor - bigBoxTopCoor) / 10f) / 2f); }
     }
 
@@ -845,7 +858,7 @@ public class BoardSetupScreen extends GameScreen {
                 // Check if the touch was on any of the ships bounding box if yes change game state, store the pointer index and the ship
                 for(Ship ship: shipArray)
                 {
-                    if(boundingBoxContainsUserInput(ship.mBound,touchEvent.x,touchEvent.y))
+                    if(boxContainsInput(ship.mBound.x, ship.mBound.x +ship.mBound.getWidth(),ship.mBound.y, ship.mBound.y + ship.mBound.getHeight(),touchEvent.x,touchEvent.y))
                     {
                         // Set x and y coordinates dragShipOffset vector, so when user drags the ship, the ship will be dragged from the point of touch
                         dragShipOffset.set(ship.mBound.x - touchEvent.x, ship.mBound.y - touchEvent.y);
@@ -912,7 +925,7 @@ public class BoardSetupScreen extends GameScreen {
 
             //if the mid small box contains the user's input x and y values the box
             // have been found return the number of the small box
-            if(boxContainsInput(mid,x,y))
+            if(boxContainsInput(array[mid][0],array[mid][2], array[mid][1], array[mid][3],x,y))
             {
                 return mid;
             }
@@ -959,7 +972,7 @@ public class BoardSetupScreen extends GameScreen {
 
             //if the mid small box contains the user's input x and y values the box
             // have been found, return the number of the small box
-            if (boxContainsInput(mid, x, y)) {
+            if (boxContainsInput(array[mid][0],array[mid][2], array[mid][1], array[mid][3], x, y)) {
                 return mid;
             }
             //if the user's input x value is lower than the current small box, recursive call
@@ -977,40 +990,25 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     /**
-     * Check if the user has clicked on the box which is passed in as a parameter, if yes return true
-     * otherwise false
-     * @param numberOfSmallBox
-     * @param x
-     * @param y
+     * Check if the user has clicked within the box of which co-ordinates passed
+     * in as parameters, if yes return true
+     * @param leftX
+     * @param rightX
+     * @param TopY
+     * @param bottomY
+     * @param inputX
+     * @param inputY
      * @return
      */
-    private boolean boxContainsInput(int numberOfSmallBox, float x, float y)
+    private boolean boxContainsInput(float leftX,  float rightX, float TopY, float bottomY, float inputX, float inputY)
     {
-        if(x > smallBoxCoordinates[numberOfSmallBox][0] &&
-                x < smallBoxCoordinates[numberOfSmallBox][2] &&
-                y > smallBoxCoordinates[numberOfSmallBox][1] &&
-                y < smallBoxCoordinates[numberOfSmallBox][3])
+        if(inputX > leftX&&
+                inputX < rightX &&
+                inputY > TopY &&
+                inputY < bottomY)
         {
             return true;
         }
-
-        return false;
-    }
-
-    /**
-     * Check if the give x and y coordinates are contained within the bounding box
-     * @param boundingBox
-     * @param x
-     * @param y
-     * @return
-     */
-    private boolean boundingBoxContainsUserInput(BoundingBox boundingBox, float x ,float y)
-    {
-        if(x > boundingBox.x &&
-                x < boundingBox.x + boundingBox.getWidth() &&
-                y > boundingBox.y &&
-                y < boundingBox.y + boundingBox.getHeight())
-            return true;
 
         return false;
     }

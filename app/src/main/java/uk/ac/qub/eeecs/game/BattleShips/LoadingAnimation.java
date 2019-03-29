@@ -17,7 +17,7 @@ public class LoadingAnimation
 {
     // Declaring all the relevant variables to the image strip
     private String mName;
-    private Bitmap mImageStrip;
+    private Bitmap mSpritesheet;
     private int mNumOfRows, mNumOfColumns, mFrameWidth, mFrameHeight, mStartFrame, mEndFrame, mCurrentFrame;
     private double mStartTime;
     private float mTotalTime, mTimeSinceAnimationStart;
@@ -88,7 +88,7 @@ public class LoadingAnimation
             sourceRect.bottom = sourceRect.bottom + ( rowIndex * mFrameHeight );
 
             // Draw the actual frame
-            graphics2D.drawBitmap(mImageStrip, sourceRect, screenRect, null);
+            graphics2D.drawBitmap(mSpritesheet, sourceRect, screenRect, null);
        }
     }
 
@@ -102,11 +102,11 @@ public class LoadingAnimation
     public void initialiseVariables(AnimationSettings animationSettings, int stripIndex)
     {
         // Assign variables with appropriate values from the animationSettings class
-        mImageStrip = animationSettings.spritesheet;
+        mSpritesheet = animationSettings.spritesheet;
         mNumOfRows = animationSettings.numRows;
         mNumOfColumns = animationSettings.numColumns;
         mFrameWidth = animationSettings.spritesheet.getWidth() / mNumOfRows;
-        mFrameHeight = animationSettings.spritesheet.getHeight();
+        mFrameHeight = animationSettings.spritesheet.getHeight() / mNumOfColumns ;
 
         // Assign the name of the given animation image strip
         mName = animationSettings.name[stripIndex];
@@ -188,5 +188,17 @@ public class LoadingAnimation
         screenRect.right = (int)right;
         screenRect.top = (int)y;
         screenRect.bottom = (int)bottom;
+    }
+
+    // Getter to get the current frame
+    protected int getCurrentFrame()
+    {
+        return mCurrentFrame;
+    }
+
+    // Getter to get the end frame
+    protected int getEndFrame()
+    {
+        return mEndFrame;
     }
 }

@@ -1,0 +1,79 @@
+{
+  "assets": [
+    {
+      "type": "Bitmap",
+      "name": "BackArrow",
+      "file": "img/BackArrow.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "WaterBackground",
+      "file": "img/Water_Tile.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "SettingsBackButton",
+      "file": "img/BackB.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "SettingsBackButtonP",
+      "file": "img/BackBPressed.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "Title",
+      "file": "img/Title.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "PauseButton",
+      "file": "img/Pause.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "boundsMessage",
+      "file": "img/OutOfBoundsMessage.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "PlayButton",
+      "file": "img/AcceptButton.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "rotateButton",
+      "file": "img/rotateButton.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "AircraftCarrier",
+      "file": "img/AircraftCarrier.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "CargoShip",
+      "file": "img/CargoShip.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "CruiseShip",
+      "file": "img/CruiseShip.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "Destroyer",
+      "file": "img/Destroyer.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "Submarine",
+      "file": "img/Submarine.png"
+    },
+    {
+      "type": "Music",
+      "name": "RickRoll",
+      "file": "sound/RickRoll.mp3"
+    }
+  ]
+}

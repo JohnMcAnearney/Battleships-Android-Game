@@ -67,6 +67,11 @@
 
     },
     {
+      "type": "Bitmap",
+      "name": "NewGameButton",
+      "file": "img/NewGameB.png"
+    },
+    {
       "type" : "Music",
       "name" : "RickRoll",
       "file" : "sound/RickRoll.mp3"

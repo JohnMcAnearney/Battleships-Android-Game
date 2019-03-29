@@ -33,7 +33,7 @@ public class PauseScreen extends GameScreen
     private Paint mPaint;
 
     // Defining all the buttons and a list which will store all of the buttons
-    private PushButton mBackButton, mVolumeButton, mInstructionsButton, mSettingsButton;
+    private PushButton mBackButton, mVolumeButton, mInstructionsButton, mSettingsButton, mMainMenu;
     private List<PushButton> mButtonCollection = new ArrayList<>();
 
     // Defining variables related to audio
@@ -143,6 +143,9 @@ public class PauseScreen extends GameScreen
     // Method which creates all the push buttons
     private void createButtons()
     {
+        // Main Menu Button
+        mMainMenu = new PushButton(mDefaultLayerViewport.getWidth() / 2,mDefaultLayerViewport.getHeight()  / 2, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "NewGameButton", "NewGameButtonP", this);
+        mButtonCollection.add(mMainMenu);
         // Instruction Button
         mInstructionsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 5.5f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "InstructionsButton", "InstructionsButtonP", this);
         mButtonCollection.add(mInstructionsButton);
@@ -155,6 +158,7 @@ public class PauseScreen extends GameScreen
         // Volume Button
         mVolumeButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.05f, mDefaultLayerViewport.getHeight() * 0.1f, mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.1f, "VolumeOn", this);
         mButtonCollection.add(mVolumeButton);
+
     }
 
     /**
@@ -204,6 +208,12 @@ public class PauseScreen extends GameScreen
         else if(mVolumeButton.isPushTriggered())
         {
             performMuteButtonActions();
+        }
+        // If the main menu button is triggered, return to the main menu and delete game screen
+        else if(mMainMenu.isPushTriggered())
+        {
+            mGame.getScreenManager().removeAllScreens();
+            moveToNewGameScreen(new MainMenu(mGame));
         }
     }
 

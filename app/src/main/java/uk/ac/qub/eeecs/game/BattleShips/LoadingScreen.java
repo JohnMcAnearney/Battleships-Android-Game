@@ -62,14 +62,10 @@ public class LoadingScreen extends GameScreen
     @Override
     public void update(ElapsedTime elapsedTime)
     {
-        // Line of code which will update the animation
-        loadingAnimation.update(elapsedTime);
-
-        // Start to play the animation at a given location as the screen is loaded
-        loadingAnimation.playAnimation(elapsedTime, 100, 100, 460, 460);
+        // Method which plays the animation
+        playAnimation(elapsedTime, 0);
 
         // Method which delays the game loading allowing for the effects of loading assets
-        delayLoading();
 
         // Used to process any touch input within the screen
         Input input = mGame.getInput();
@@ -173,7 +169,6 @@ public class LoadingScreen extends GameScreen
         try
         {
             delay(4);
-            moveToNewGameScreen(new BoardSetupScreen(mGame));
         }
         catch(InterruptedException e)
         {
@@ -220,11 +215,21 @@ public class LoadingScreen extends GameScreen
     }
 
     // Method which will check if the animation has played through
-    private void hasAnimationPlayed()
+    private void playAnimation(ElapsedTime elapsedTime, int stripIndex)
     {
-        if(animationPlayed)
+        // Line of code which will update the animation
+        loadingAnimation.update(elapsedTime);
+
+        // Working out 1% of the screen
+        int onePercWidth = (mGame.getScreenWidth()/100);
+        int onePercHeight = (mGame.getScreenHeight()/100);
+        // Start to play the animation at a given location as the screen is loaded
+        loadingAnimation.playAnimation(elapsedTime, onePercWidth*81, onePercHeight*75, onePercWidth*93, onePercHeight*99);
+
+        // If statement which checks if the animation has stopped playing if it has, move to the game screen
+        if(loadingAnimation.getCurrentFrame() == loadingAnimation.getEndFrame())
         {
-            delayLoading();
+            moveToNewGameScreen(new BoardSetupScreen(mGame));
         }
     }
 }

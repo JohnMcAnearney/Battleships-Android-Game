@@ -99,7 +99,7 @@ public class BoardSetupScreen extends GameScreen {
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
         boundsMessage = assetManager.getBitmap("boundsMessage");
 
-        //Mantas Stadnik (40203133) loaded bitmaps which were used by my methods
+        //Mantas Stadnik (40203133) load bitmaps which were used by my methods
         boolean check1 = assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
         boolean check2 =assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
         boolean check3 =assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
@@ -770,9 +770,9 @@ public class BoardSetupScreen extends GameScreen {
         //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
         for (Ship ship : shipArray) {
             screenHeightOffset = screenHeightOffset + 0.08f;
-            ship.setmBound(Math.round(screenWidth * 0.015),
-                    Math.round(screenHeight * screenHeightOffset),
-                    Math.round(((bigBoxRightCoor - bigBoxLeftCoor) / 10f) * ship.getShipLength()) / 2.0f,
+            ship.setmBound(screenWidth * 0.015f,
+                    screenHeight * screenHeightOffset,
+                    ((bigBoxRightCoor - bigBoxLeftCoor) / 10f) * ship.getShipLength() / 2.0f,
                     ((bigBoxBottomCoor - bigBoxTopCoor) / 10f) / 2f); }
     }
 

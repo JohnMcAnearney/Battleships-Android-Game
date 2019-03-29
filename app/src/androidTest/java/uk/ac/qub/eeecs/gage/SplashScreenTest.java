@@ -5,6 +5,8 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.AndroidException;
 
+import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +19,9 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertEquals;
 
 import uk.ac.qub.eeecs.gage.Game;
+import uk.ac.qub.eeecs.gage.world.GameObject;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
+import uk.ac.qub.eeecs.game.BattleShips.MainMenu;
 import uk.ac.qub.eeecs.game.DemoGame;
 
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
@@ -32,7 +36,7 @@ public class SplashScreenTest
     private Game game;
     private GameScreen gameScreen;
     private AssetManager assetManager;
-    private Bitmap bitmap;
+    private Bitmap symbolBitmap;
 
     @Before
     public void setup()
@@ -61,25 +65,17 @@ public class SplashScreenTest
     {
         assertTrue(assetManager.loadAndAddFont("regularUnderworld", "fonts/underWorld.ttf"));
     }
+  @Test
+    public void testGoToMenuScreenMethod() {
+      SplashScreen splashScreen = new SplashScreen(game);
+      game.getScreenManager().addScreen(splashScreen);
 
+      MainMenu mainMenu = new MainMenu(game);
+      game.getScreenManager().addScreen(mainMenu);
+      splashScreen.goToMenuScreen();
 
-
-/*     @Test
-    public void testGoToMenuScreenMethod()
-    {
-        SplashScreen splashScreen = new SplashScreen(mGame);
-        mGame.getScreenManager().addScreen(splashScreen);
-
-        MainMenu mainMenu = new MainMenu(mGame);
-        mGame.getScreenManager().addScreen(mainMenu);
-
-        splashScreen.goToMenuScreen();
-
-        Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(),mainMenu.getName());
-    }
-
-
-*/
+      Assert.assertEquals(game.getScreenManager().getCurrentScreen().getName(), mainMenu.getName());
+  }
 }
 
 

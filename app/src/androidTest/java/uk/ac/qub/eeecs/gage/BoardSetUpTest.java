@@ -2,8 +2,8 @@ package uk.ac.qub.eeecs.gage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+//import android.support.test.InstrumentationRegistry;
+//import android.support.test.runner.AndroidJUnit4;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.assertFalse;
@@ -12,27 +12,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.io.FileIO;
+import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.game.BattleShips.Ship;
 import uk.ac.qub.eeecs.game.DemoGame;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
-@RunWith(AndroidJUnit4.class)
+@RunWith(MockitoJUnitRunner.class)
 public class BoardSetUpTest {
 
     private Game game;
     private GameScreen gameScreen;
     private AssetManager assetManager;
     private Context context;
+    private BoundingBox aBoundingBox;
     // this line causes an empty test suite
     //private @Mock Bitmap bitmap;
 
@@ -40,11 +38,11 @@ public class BoardSetUpTest {
     @Before
     public void setup()
     {
-        context = InstrumentationRegistry.getTargetContext();
-        game = new DemoGame();
-        game.mFileIO = new FileIO(context);
-        game.mAssetManager = new AssetManager(game);
-        assetManager = game.getAssetManager();
+//        context = InstrumentationRegistry.getTargetContext();
+//        game = new DemoGame();
+//        game.mFileIO = new FileIO(context);
+//        game.mAssetManager = new AssetManager(game);
+//        assetManager = game.getAssetManager();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +127,23 @@ public class BoardSetUpTest {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Tests Made by JoSh Macaroni (402696969)
+    //Tests Made by John McAnearney (40203900)
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    @Test
+    public void boardSetupTest(){
+//        float screenWidth = graphics2D.getSurfaceWidth();
+//        float screenHeight = graphics2D.getSurfaceHeight();
+//        float bigBoxLeftCoor = screenWidth/14f;
+//        float bigBoxTopCoor = screenHeight/5f;
+//        float bigBoxRightCoor = (screenWidth/14f)*6f;
+//        float bigBoxBottomCoor = (screenHeight/5f)*4.5f;
+//        BoundingBox boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
+//                (bigBoxBottomCoor + bigBoxTopCoor)/2,
+//                ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
+//                ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
+
+        BoundingBox boardBoundingBox = new BoundingBox();
+
+        assertEquals(aBoundingBox, boardBoundingBox);   //this is the code that works when run using mockito
+    }
 }

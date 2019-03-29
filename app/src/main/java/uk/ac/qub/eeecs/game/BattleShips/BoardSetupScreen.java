@@ -57,8 +57,8 @@ public class BoardSetupScreen extends GameScreen {
     private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
     private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
     private boolean smallboxCoordinatesCaptured = false, smallboxCoordinatesCaptured2 = false;  //if the smallBoxCoordinates array has been populated by capturing the co ordinates for both boards this will be set to true
-    private int screenWidth = 0;
-    private int screenHeight = 0;
+    private float screenWidth = 0;
+    private float screenHeight = 0;
     private BoundingBox boardBoundingBox;
     private final int NUMBER_ROWS = 10, NUMBER_COLUMNS = 10;
     private final int BOARD_TWO_SIZE = 100;

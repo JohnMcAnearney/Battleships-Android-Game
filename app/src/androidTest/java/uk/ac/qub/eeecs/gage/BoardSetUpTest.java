@@ -66,6 +66,7 @@ public class BoardSetUpTest {
     @Test
     public void createShipObjectAircraftCarrier()
     {
+        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
         Ship aircraftCarrier = new Ship("AircraftCarrier", 0.64f,0.7f,assetManager.getBitmap("AircraftCarrier"), 5);
         assertEquals("AircraftCarrier", aircraftCarrier.getShipType());
         assertEquals(0.64f, aircraftCarrier.getScaleRatioX());
@@ -77,6 +78,7 @@ public class BoardSetUpTest {
     @Test
     public void createShipObjectCargoShip()
     {
+        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
         Ship cargoShip = new Ship("CargoShip", 0.5f,0.4f,assetManager.getBitmap("CargoShip"), 4);
         assertEquals("CargoShip", cargoShip.getShipType());
         assertEquals(0.5f, cargoShip.getScaleRatioX());
@@ -87,7 +89,8 @@ public class BoardSetUpTest {
     @Test
     public void createShipObjectCruiseShip()
     {
-        Ship cruiseShip = new Ship("CruiseShip",0.3f ,5,assetManager.getBitmap("CruiseShip"), 4);
+        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        Ship cruiseShip = new Ship("CruiseShip",0.3f ,5f,assetManager.getBitmap("CruiseShip"), 4);
         assertEquals("CruiseShip", cruiseShip.getShipType());
         assertEquals(0.3f, cruiseShip.getScaleRatioX());
         assertEquals(5f, cruiseShip.getScaleratioY());
@@ -97,6 +100,7 @@ public class BoardSetUpTest {
     @Test
     public void createShipObjectSubmarine()
     {
+        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
         Ship submarine = new Ship("Submarine", 0.1f,0.2f,assetManager.getBitmap("Submarine"), 3);
         assertEquals("Submarine", submarine.getShipType());
         assertEquals(0.1f, submarine.getScaleRatioX());
@@ -107,6 +111,7 @@ public class BoardSetUpTest {
     @Test
     public void createShipObjectDestroyer()
     {
+        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
         Ship destroyer = new Ship("Destroyer", 0,0,assetManager.getBitmap("Destroyer"), 2);
         assertEquals("Destroyer", destroyer.getShipType());
         assertEquals(0f, destroyer.getScaleRatioX());

@@ -56,6 +56,13 @@ public class SplashScreenTest
 
     }
 
+    @Test
+    public void fonts_to_be_loaded()
+    {
+        assertTrue(assetManager.loadAndAddFont("regularUnderworld", "fonts/underWorld.ttf"));
+    }
+
+
 
 /*     @Test
     public void testGoToMenuScreenMethod()

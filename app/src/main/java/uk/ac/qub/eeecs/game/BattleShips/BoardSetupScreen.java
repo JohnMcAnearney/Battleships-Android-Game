@@ -232,8 +232,8 @@ public class BoardSetupScreen extends GameScreen {
         {
             smallBoxDetected = false;
             highlight.setARGB(75,232,0,0);
-           // highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           used for testing
-            //message = "detected" + numberofSmallBoxDetected;                                            //used for testing
+            highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           //used for testing
+            message = "detected" + numberofSmallBoxDetected;                                            //used for testing
             message = message;
 
         }

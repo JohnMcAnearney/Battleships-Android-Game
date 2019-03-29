@@ -47,7 +47,7 @@ public class LoadingScreen extends GameScreen
      * CONSTRUCTOR - for the LoadingScreen class, which runs two methods which set up the screen
      * @param game
      */
-    protected LoadingScreen(Game game) {
+    public LoadingScreen(Game game) {
         super("LoadingScreen", game);
 
         // Method which loads all the assets
@@ -247,7 +247,7 @@ public class LoadingScreen extends GameScreen
      * Method which allows you to move to a new game screen of your choice
      * @param newScreen
      */
-    private void moveToNewGameScreen(GameScreen newScreen)
+    public void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);
     }

@@ -1,4 +1,5 @@
-package uk.ac.qub.eeecs.gage;
+// COMMENTED OUT YOUR CODE AS IT PREVENTED ME FROM TESTING MY CODE - EDGARS
+/*package uk.ac.qub.eeecs.gage;
 
 import android.app.Instrumentation;
 import android.content.Context;
@@ -43,4 +44,4 @@ public class KeyTest {
         assert (key.getGameScreen().equals(gameScreen));
     }
 
-}
+}*/

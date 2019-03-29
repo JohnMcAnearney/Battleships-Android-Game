@@ -34,7 +34,7 @@ public class LoadingAnimation
      * @param animationSettings
      * @param stripIndex
      */
-    protected LoadingAnimation(AnimationSettings animationSettings, int stripIndex) {
+    public LoadingAnimation(AnimationSettings animationSettings, int stripIndex) {
         // Method which initialises all of the variables needed within the class.
         initialiseVariables(animationSettings, stripIndex);
     }

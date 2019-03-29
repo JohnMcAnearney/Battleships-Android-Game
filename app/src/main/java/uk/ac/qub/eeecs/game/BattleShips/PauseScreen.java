@@ -44,7 +44,7 @@ public class PauseScreen extends GameScreen
      * CONSTRUCTOR - for the PauseScreen class, which runs three methods which set up the screen
      * @param game
     */
-    protected PauseScreen(Game game){
+    public PauseScreen(Game game){
         super("PauseScreen", game);
 
         // Method which loads all the assets
@@ -287,7 +287,7 @@ public class PauseScreen extends GameScreen
      * Method which allows you to move to a new game screen of your choice
      * @param newScreen
      */
-    private void moveToNewGameScreen(GameScreen newScreen)
+    public void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);
     }

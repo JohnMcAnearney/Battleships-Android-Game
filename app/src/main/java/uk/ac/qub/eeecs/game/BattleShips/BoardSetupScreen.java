@@ -27,6 +27,7 @@ public class BoardSetupScreen extends GameScreen {
 
     /**
      * Class Authors: John McAnearney 40203900 and Mantas Stadnik 40203133
+     * John McA KEY: I used camelCase for all except FINAL variables where I_USED_THIS_SYNYAX
      */
 
     /////////////////////////////////////////// - GENERAL VARIABLES - /////////////////////////////////////////////////////////////////
@@ -73,7 +74,6 @@ public class BoardSetupScreen extends GameScreen {
     private Vector2 dragShipOffset = new Vector2(); //Vector to store the x and y coordinates of the ship's coordinates minus the touch location
     private boolean toRotateShip = false;  //boolean value used as a identifier to rotate the ship
     private boolean shipOutOfBound = false;
-
 
     ////////////////////////////////////////// - Animation - //////////////////////////////////////////////////////////////////
     private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimation
@@ -323,6 +323,12 @@ public class BoardSetupScreen extends GameScreen {
                 }
 
                 //draw each of the small boxes
+                /**
+                 * https://developer.android.com/reference/android/graphics/Rect
+                 * Used the above link in order to understand how rect's were actually used.
+                 * Specifically how they used the left, top, right and bottom parameters
+                 */
+
                 graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
                         (bigBoxLeftCoor + smallBoxWidth + moveConstLeft), (bigBoxTopCoor + smallBoxHeight), paint);
 
@@ -388,6 +394,12 @@ public class BoardSetupScreen extends GameScreen {
      * @param graphics2D
      */
     public void drawConstantImages(IGraphics2D graphics2D){
+
+        /**
+         * for the moving of the background I followed Philip's tutorials. https://www.youtube.com/watch?v=tsQYqFiZ26Q
+         * I watched this, got an understanding and then altered it to suit what I wanted. Phil also done a presentation in class
+         * but I can't find if he had sent any source code out or not
+         */
         Matrix bcgMatrix = new Matrix();
         //magnifies background image
         bcgMatrix.setScale(3.5f, 3.5f);
@@ -415,11 +427,8 @@ public class BoardSetupScreen extends GameScreen {
                     && selectedShip.mBound.y > smallBoxCoordinates[i][1] && selectedShip.mBound.y < smallBoxCoordinates[i][3]) {
                 //check if box is occupied
                 checkIfBoxOccupied(i);
-                //if check above is ok then snap to box
+                //if check above is ok then snap to box and mark the boxes
                 shipSnapToBox();
-                //shipReset();
-                //mark the ship in this position
-                markShipInBox(i);
             }
         }
     }
@@ -440,7 +449,6 @@ public class BoardSetupScreen extends GameScreen {
             shipOutOfBound =true;
             //if its out of bound, reset the ship
             shipReset();
-
         }
 
     }
@@ -462,6 +470,10 @@ public class BoardSetupScreen extends GameScreen {
      * @return returns the number of the closest box from the smallBoxCoordinates array
      */
     private int calculateClosestBox(){
+
+        /**
+         * this is basically all phil's code except with the applicable alterations I needed to suit our game
+         */
         //closest box is between smallBoxWidth/2 coor and ship coor
         //set to this becasuse the closest distance will, basically, always be less than this. Always less in this game.
         closestSlotDistanceSqrd = Float.MAX_VALUE;
@@ -522,22 +534,18 @@ public class BoardSetupScreen extends GameScreen {
                     case 2:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        markShipInBox(selectedShip.getShipLength());
                         break;
                     case 3:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        markShipInBox(selectedShip.getShipLength());
                         break;
                     case 4:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        markShipInBox(selectedShip.getShipLength());
                         break;
                     case 5:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        markShipInBox(selectedShip.getShipLength());
                         break;
                 }
             }
@@ -554,18 +562,22 @@ public class BoardSetupScreen extends GameScreen {
             case 2:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
+                markShipInBox(numberOfClosestBox);
                 break;
             case 3:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
+                markShipInBox(numberOfClosestBox);
                 break;
             case 4:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
+                markShipInBox(numberOfClosestBox);
                 break;
             case 5:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
+                markShipInBox(numberOfClosestBox);
                 break;
         }
     }
@@ -576,7 +588,7 @@ public class BoardSetupScreen extends GameScreen {
      */
     private void checkIfBoxOccupied(int currentBox){
         if(smallBoxCoordinates[currentBox][4] ==1 ){
-            //simple rest, if the box is occupied set it back to the given box
+            //simple reset, if the box is occupied set it back to the given box
             switch (selectedShip.getShipLength()) {
                 case 2:
                     selectedShip.mBound.x = smallBoxCoordinates[30][0];

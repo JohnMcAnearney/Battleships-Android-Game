@@ -1,58 +1,34 @@
 {
   "pushButtons": [
     {
-      "x": 0.2,
-      "y": 0.7,
-      "width": 0.2,
-      "height": 0.3,
-      "defaultBitmap": "SettingsBackButton",
-      "pushBitmap": "InputDemoIconSelectedP",
-      "triggeredGameScreen": "InputDemoScreen"
+      "x": 0.82,
+      "y": 0.6,
+      "width": 35.0,
+      "height": 35.0,
+      "defaultBitmap": "IncreaseMusic",
+      "buttonName":"Increase"
     },
     {
-      "x": 0.5,
-      "y": 0.7,
-      "width": 0.2,
-      "height": 0.3,
-      "defaultBitmap": "AssetDemoIcon",
-      "pushBitmap": "AssetDemoIconSelected",
-      "triggeredGameScreen": "AssetDemoScreen"
+      "x": 0.17,
+      "y": 0.6,
+      "width": 35.0,
+      "height": 35.0,
+      "defaultBitmap": "DecreaseMusic"
     },
     {
-      "x": 0.8,
-      "y": 0.7,
-      "width": 0.2,
-      "height": 0.3,
-      "defaultBitmap": "ScreenDemoIcon",
-      "pushBitmap": "ScreenDemoIconSelected",
-      "triggeredGameScreen": "GameScreenDemoScreen"
-    },
-    {
-      "x": 0.2,
+      "x": 0.82,
       "y": 0.3,
-      "width": 0.2,
-      "height": 0.3,
-      "defaultBitmap": "GameObjectDemoIcon",
-      "pushBitmap": "GameObjectDemoIconSelected",
-      "triggeredGameScreen": "GameObjectDemoScreen"
-    },
-    {
-      "x": 0.5,
+      "width": 35.0,
+      "height": 35.0,
+      "defaultBitmap": "IncreaseMusic"
+    },{
+      "x": 0.17,
       "y": 0.3,
-      "width": 0.2,
-      "height": 0.3,
-      "defaultBitmap": "ViewportDemoIcon",
-      "pushBitmap": "ViewportDemoIconSelected",
-      "triggeredGameScreen": "ViewportDemoScreen"
-    },
-    {
-      "x": 0.8,
-      "y": 0.3,
-      "width": 0.2,
-      "height": 0.3,
-      "defaultBitmap": "AnimationDemoIcon",
-      "pushBitmap": "AnimationDemoIconSelected",
-      "triggeredGameScreen": "AnimationDemoScreen"
+      "width": 35.0,
+      "height": 35.0,
+      "defaultBitmap": "DecreaseMusic"
     }
+
+
   ]
 }

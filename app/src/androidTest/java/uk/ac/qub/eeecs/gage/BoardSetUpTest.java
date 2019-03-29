@@ -1,9 +1,10 @@
 package uk.ac.qub.eeecs.gage;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertEquals;
@@ -11,77 +12,123 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-//import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
-import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
-import uk.ac.qub.eeecs.gage.util.BoundingBox;
+import uk.ac.qub.eeecs.gage.engine.io.FileIO;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.game.BattleShips.Ship;
+import uk.ac.qub.eeecs.game.DemoGame;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
-@RunWith()
+@RunWith(AndroidJUnit4.class)
 public class BoardSetUpTest {
 
-    @Mock private Game game;
-    @Mock private GameScreen gameScreen;
-    @Mock private AssetManager assetManager;
-   // @Mock private Bitmap bitmap;
-    @Mock private IGraphics2D graphics2D;
+    private Game game;
+    private GameScreen gameScreen;
+    private AssetManager assetManager;
+    private Context context;
+    // this line causes an empty test suite
+    //private @Mock Bitmap bitmap;
+
 
     @Before
     public void setup()
     {
-        when(gameScreen.getGame()).thenReturn(game);
-        when(game.getAssetManager()).thenReturn(assetManager);
-        when(assetManager.getBitmap(any(String.class))).thenReturn(bitmap);
-
+        context = InstrumentationRegistry.getTargetContext();
+        game = new DemoGame();
+        game.mFileIO = new FileIO(context);
+        game.mAssetManager = new AssetManager(game);
+        assetManager = game.getAssetManager();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Tests Made by Mantas Stadnik (40203133)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     @Test
     public void required_Bitmaps_Loaded()
     {
-//        assertTrue(assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png"));
-//        assertTrue(assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png"));
-//        assertTrue(assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png"));
-//        assertTrue(assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png"));
-//        assertTrue(assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png"));
-//        assertTrue(assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png"));
-//        assertTrue(assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png"));
+
+        assertTrue(assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png"));
+        assertTrue(assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png"));
+        assertTrue(assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png"));
+        assertTrue(assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png"));
+        assertTrue(assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png"));
+        assertTrue(assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png"));
+        assertTrue(assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png"));
     }
 
-
     @Test
-    public void createShipObjects()
+    public void createShipObjectAircraftCarrier()
     {
-        //Ship aircraftCarrier = new Ship("AircraftCarrier", 0,0,assetManager.getBitmap("AircraftCarrier"), 5);
-        //Ship cargoShip = new Ship("CargoShip", calculateShipRatioX("CargoShip",4),calculateShipRatioY("CargoShip"),assetManager.getBitmap("CargoShip"), 4);
-        //Ship cruiseShip = new Ship("CruiseShip", calculateShipRatioX("CruiseShip",4),calculateShipRatioY("CruiseShip"),assetManager.getBitmap("CruiseShip"), 4);
-       //Ship submarine = new Ship("Submarine", calculateShipRatioX("Submarine",3),calculateShipRatioY("Submarine"),assetManager.getBitmap("Submarine"), 3);
-        //Ship destroyer = new Ship("Destroyer", calculateShipRatioX("Destroyer",2),calculateShipRatioY("Destroyer"),assetManager.getBitmap("Destroyer"), 2);
+        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
+        Ship aircraftCarrier = new Ship("AircraftCarrier", 0.64f,0.7f,assetManager.getBitmap("AircraftCarrier"), 5);
+        assertEquals("AircraftCarrier", aircraftCarrier.getShipType());
+        assertEquals(0.64f, aircraftCarrier.getScaleRatioX());
+        assertEquals(0.7f, aircraftCarrier.getScaleratioY());
+        assertEquals(5, aircraftCarrier.getShipLength());
+    }
+
+
+    @Test
+    public void createShipObjectCargoShip()
+    {
+        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
+        Ship cargoShip = new Ship("CargoShip", 0.5f,0.4f,assetManager.getBitmap("CargoShip"), 4);
+        assertEquals("CargoShip", cargoShip.getShipType());
+        assertEquals(0.5f, cargoShip.getScaleRatioX());
+        assertEquals(0.4f, cargoShip.getScaleratioY());
+        assertEquals(4, cargoShip.getShipLength());
     }
 
     @Test
-    public void boardSetupTest(){
-//        float screenWidth = graphics2D.getSurfaceWidth();
-//        float screenHeight = graphics2D.getSurfaceHeight();
-//        float bigBoxLeftCoor = screenWidth/14f;
-//        float bigBoxTopCoor = screenHeight/5f;            //resetting the bounds to the first boxes' parameters as to ensure rest of methods work.
-//        float bigBoxRightCoor = (screenWidth/14f)*6f;     //this is done as we are only ever checking input and variation in the first board as the second board is
-//        float bigBoxBottomCoor = (screenHeight/5f)*4.5f;
-//        BoundingBox boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
-//                (bigBoxBottomCoor + bigBoxTopCoor)/2,
-//                ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
-//                ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
-
-        BoundingBox boardBoundingBox = new BoundingBox();
-
-        assertEquals(aBoundingBox, boardBoundingBox);
+    public void createShipObjectCruiseShip()
+    {
+        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        Ship cruiseShip = new Ship("CruiseShip",0.3f ,5f,assetManager.getBitmap("CruiseShip"), 4);
+        assertEquals("CruiseShip", cruiseShip.getShipType());
+        assertEquals(0.3f, cruiseShip.getScaleRatioX());
+        assertEquals(5f, cruiseShip.getScaleratioY());
+        assertEquals(4, cruiseShip.getShipLength());
     }
+
+    @Test
+    public void createShipObjectSubmarine()
+    {
+        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
+        Ship submarine = new Ship("Submarine", 0.1f,0.2f,assetManager.getBitmap("Submarine"), 3);
+        assertEquals("Submarine", submarine.getShipType());
+        assertEquals(0.1f, submarine.getScaleRatioX());
+        assertEquals(0.2f, submarine.getScaleratioY());
+        assertEquals(3, submarine.getShipLength());
+    }
+
+    @Test
+    public void createShipObjectDestroyer()
+    {
+        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        Ship destroyer = new Ship("Destroyer", 0,0,assetManager.getBitmap("Destroyer"), 2);
+        assertEquals("Destroyer", destroyer.getShipType());
+        assertEquals(0f, destroyer.getScaleRatioX());
+        assertEquals(0f, destroyer.getScaleratioY());
+        assertEquals(2, destroyer.getShipLength());
+    }
+
+
+    @Test
+    public void calculateShipRatioX()
+    {
+        assertTrue(assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png"));
+        int shipBitmapHeight = assetManager.getBitmap("AircraftCarrier").getWidth();
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Tests Made by JoSh Macaroni (402696969)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 }

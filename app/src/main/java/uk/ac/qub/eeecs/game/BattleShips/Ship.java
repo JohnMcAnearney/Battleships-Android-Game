@@ -144,6 +144,10 @@ public class Ship //extends Sprite
 
     public int getShipLength(){return shipLength;}
 
+    public float getScaleRatioX() { return scaleRatioX;}
+
+    public float getScaleratioY() {return scaleratioY;}
+
 
     //Setters
     //Sprint 4 - Implemented and improved on the Ship class' Setters (40201925)

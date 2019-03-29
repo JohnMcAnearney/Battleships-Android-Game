@@ -1,5 +1,5 @@
-// COMMENTED OUT YOUR CODE AS IT PREVENTED ME FROM TESTING MY CODE - EDGARS
-/*package uk.ac.qub.eeecs.gage;
+/* needs further improvement - does not run
+package uk.ac.qub.eeecs.gage;
 
 import android.app.Instrumentation;
 import android.content.Context;
@@ -18,8 +18,15 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.game.BattleShips.Key;
 import uk.ac.qub.eeecs.game.DemoGame;
 
+*/
+/**
+ * @author Hannah Cunningham (40201925)
+ *//*
+
+
 @RunWith(MockitoJUnitRunner.class)
-public class KeyTest {
+public class KeyTest
+{
     private Context context;
     private Game game;
     private GameScreen gameScreen;
@@ -39,9 +46,10 @@ public class KeyTest {
     @Test
     public void keyConstructor()
     {
-        Key key = new Key(10, 15, 20, 25, "a", gameScreen);
+        Key key = new Key(10, 15, 20, 25, 'a', gameScreen);
         assert (key.getGameScreen().equals("Key"));
         assert (key.getGameScreen().equals(gameScreen));
     }
 
-}*/
+}
+*/

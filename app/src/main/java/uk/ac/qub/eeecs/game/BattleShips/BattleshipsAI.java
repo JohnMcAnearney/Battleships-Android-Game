@@ -3,6 +3,10 @@ package uk.ac.qub.eeecs.game.BattleShips;
 import java.util.ArrayList;
 import java.util.Collections;
 public class BattleshipsAI {
+
+    //TODO: Change randomiseShotSequence() to work with integers instead of strings
+
+
     /*This class is used to allow the ai to decide where to hit next and store its shots so far so it can make a more educated shot
             This class contains 5 public methods:
                 -BattleshipsAI() which is the constructor
@@ -38,64 +42,76 @@ public class BattleshipsAI {
     //this 2 dimensional array is used to store the players board from the AI's point of view
         // ie - its used to store every hit and miss the ai has made
                 //Key: 0 - empty ; 1 - shot and miss ; 2 - shot and hit
-    private static int[][] board = new int[10][10]; // players board as seen by AI
-    private static int[][] pboard = new int [10][10]; // players board used to verify hits/misses
+    private static int[] enemyBoard = new int[100]; // players board as seen by AI
+    private static int[] pboard = new int [100]; // players board used to verify hits/misses
     //This array has been made public so that we can verify if the player has hit any of the AI's ships outside of this class
                 //Key: 0 - empty ; 1 - unhit ship ; 2 - hit ship
-    private static int[][] aiboard = new int [10][10]; //AI's board used for ship placement;
+    private static int[]aiboard = new int [100]; //AI's board used for ship placement;
 
     //The constructor allowing to set the difficulty and give the ai access to the players board
-    public BattleshipsAI(int diff, int[][] playerBoard){
+    public BattleshipsAI(int diff, int[]playerBoard){
         pboard = playerBoard;
         difficulty = diff;
+        if(difficulty < 2){
+            randomiseEasyShotSequence();
+        }else{
+            randomiseHardShotSequence();
+        }
+
     }
 
     /**
      *
-     * @param x the x coordinate to check
-     * @param y the y coordinate to check
+     * @param coord the coordinates to check
      * @return 0, 1 or 2. 0 means this spot is empty, 1 means there is a ship here which hasn't been hit yet. 2 means that this spot has been hit before
      */
-    public int checkAIBoard(int x, int y){
-        return aiboard[y][x];
+    public int checkAIBoard(int coord){
+        return aiboard[coord];
     }
 
     /**
      * This method is used to update the AI's board once the player makes their turn.
-     * @param x the x coordinate of the field to update
-     * @param y the y coordinate of the field to update
+     * @param coord the coordinates of the field to update
      */
-    public void updateAIBoard(int x, int y) { aiboard[y][x] = 2; }
-    
+    public void updateAIBoard(int coord) { aiboard[coord] = 2; }
+
 
     /**
-     * @return Returns a 2 digit string representing the x & y coordinates to be hit. If the difficulty hasnt been set to either 0, 1 or 2 this method will return "ERROR - incorrect difficulty".
+     * @return Returns a 2 digit string representing the x & y coordinates to be hit. If the difficulty hasnt been set to either 0, 1 or 2 this method will return -1.
      *
      */
-    public String nextShot()
+    public int nextShot()
     {
         switch (difficulty){
             case 0:
-                return randomShot();
+                return shotSequence.remove(0);
             case 1:
-                break;
+                //implement if to decide whether to use reactiveShot() or not
+                if(lastShotHit){
+                    return reactiveShot(shotSequence.indexOf(0));
+                }else {
+                    lastShot = randomShot();
+                    if(pboard[lastShot] == 1){
+                        firstReactiveShot = true;
+                        lastShotHit = true;
+                    }
+                    return lastShot;
+                }
             case 2:
                 break;
 
         }
-        return "ERROR - incorrect difficulty";
+        return -1;
     }
 
     /**
-     * Reset's the aiboard[][] array and places the AI's ships
+     * Resets the aiboard[] array and places the AI's ships
      */
     public void setupBoard(){
         //iterates through the aiboard array setting every field to 0 (i.e. empty)
-        for (int i = 0; i<boardLength; i++){
-            for (int j = 0; j<boardLength; j++){
-                aiboard[i][j] = 0;
+        for (int i = 0; i<100; i++){
+                aiboard[i] = 0;
             }
-        }
 
         //These next 5 for loops are used to place the ships in a preset position to allow for testing and playing of the game
 
@@ -112,19 +128,19 @@ public class BattleshipsAI {
 
          */
         for(int i = 0; i<5; i++){
-            aiboard[0][i] = 1;
+            aiboard[i] = 1;
         }
-        for(int i = 0; i<4; i++){
-            aiboard[1][i] = 1;
+        for(int i = 10; i<14; i++){
+            aiboard[i] = 1;
         }
-        for(int i = 0; i<3; i++){
-            aiboard[2][i] = 1;
+        for(int i = 20; i<23; i++){
+            aiboard[i] = 1;
         }
-        for(int i = 0; i<3; i++){
-            aiboard[3][i] = 1;
+        for(int i = 30; i<33; i++){
+            aiboard[i] = 1;
         }
-        for(int i = 0; i<2; i++){
-            aiboard[4][i] = 1;
+        for(int i = 40; i<42; i++){
+            aiboard[i] = 1;
         }
 
 
@@ -135,7 +151,7 @@ public class BattleshipsAI {
         placeShip(3);
         placeShip(2);  */
     }
-    private void placeShip(int length){ //DOESNT WORK, AT ALL
+    /*private void placeShip(int length){ //DOESNT WORK, AT ALL
         boolean horizontal = Math.random()<0.5;
         boolean fits = false; //Used to check if the ship fit
         int x, y; //used to find a location for the ship
@@ -157,7 +173,7 @@ public class BattleshipsAI {
             }
         }while(!fits);
     }
-
+*/
 
 
     //this method will be called by the easiest AI, just randomly picks a point which hasn't been picked this game with no strategy
@@ -167,37 +183,181 @@ public class BattleshipsAI {
      * @return 2 digit string made up from the X and Y coordinates of the format XY.
      */
 
-    private String randomShot(){
-        int x,y;
-        String shot = "";
-        do{
-            x = (int)Math.round(Math.random()*boardLength);
-            y = (int)Math.round(Math.random()*boardLength);}while(board[y][x]!=0);
-        //checking if we got a hit or miss;
-        if(pboard[y][x] == 1){
-            board[y][x] = 2;
-        }else{board[y][x] = 1;}
+    private int randomShot(){
+        int shot;
 
-        shot.concat(String.valueOf(x));
-        shot.concat(String.valueOf(y));
+        do{
+            shot = (int)Math.round(Math.random()*boardLength);
+            shot += 10*(int)Math.round(Math.random()*boardLength);}while(enemyBoard[shot]!=0);
+        //checking if we got a hit or miss;
+        if(pboard[shot] == 1){
+            enemyBoard[shot] = 2;
+        }else{enemyBoard[shot] = 1;}
+
         return shot;
     }
+
+    private boolean lastShotHit = false;    //I dont think this is neccessary here but will be needed to skip out this method call in the nextShot() method
+    private boolean firstReactiveShot = true;
+    private int lastShot, initialHit;
+    private int shotDirection = -1; //1-UP;2-RIGHT;3-DOWN;4-LEFT
+    private ArrayList<Integer> reactiveShotSequence = new ArrayList<Integer>(); //Arraylist used to determine which way to shoot.
+    private int reactiveShot(int nextShot){
+
+        //TODO - determine direction, test proposed shot
+        if(firstReactiveShot){
+            boolean foundNextShot = false;
+            int proposedShot;
+            reactiveShotSequence.add(initialHit -10); //try up
+            reactiveShotSequence.add(initialHit +1);    //right
+            reactiveShotSequence.add(initialHit +10);   //down
+            reactiveShotSequence.add(initialHit -1);    //left
+            do{
+                proposedShot = reactiveShotSequence.get(0);
+                //If we check all 4 directions and none are valid use the next random shot passed in & reset variables
+                if (reactiveShotSequence.isEmpty()){
+                    lastShotHit = false;
+                    firstReactiveShot = true;
+                    return nextShot;
+                }
+                //Checks if the shot matches all criteria
+                if(proposedShot < 0 || proposedShot > 99 || ((initialHit%10==0)&&((proposedShot+1)%10 == 0)) || (((initialHit+1)%10==0)&&(proposedShot%10 == 0)) || enemyBoard[proposedShot] > 0 ){
+                    reactiveShotSequence.remove(0);
+                }else{
+                    //if a valid shot is found remove it form the array, prepare for second part of the algorithm  and return the value
+                    firstReactiveShot = false;
+                    proposedShot = reactiveShotSequence.get(0);
+                    lastShot = proposedShot;
+                    reactiveShotSequence.remove(0);
+                    return proposedShot;
+                }
+            }while(!foundNextShot);
+        } else {
+            //here we have fired the first reactive shot and need to find the direction;
+            if(shotDirection == -1){
+                //switch to determine direction.
+            }
+        }
+
+/*        int proposedShot = -1;
+        //Assume last shot hit
+        if(firstReactiveShot) {
+            initialHit = lastShot;
+            boolean atEdge = false; // atEdge is used to evaluate whether the direction which is currently selected can/should be fired in
+            //This loop decides which direction to start firing in initially
+            do {
+                //this switch checks for edges
+                switch (currentDirection) {
+                    case 1:
+                        if(lastShot < 10){
+                            atEdge = true;
+                            currentDirection +=1;
+                        }
+                        break;
+                    case 2:
+                        if((lastShot + 1) % 10 == 0){
+                            atEdge = true;
+                            currentDirection +=1;
+                        }
+                        break;
+                    case 3:
+                        if(lastShot > 89){
+                            atEdge = true;
+                            currentDirection +=1;
+                        }
+                        break;
+                    case 4:
+                        if(lastShot % 10 == 0){
+                            shotSequence.remove(0);
+                            return nextShot;
+                        }
+                        break;
+                }
+                //this switch checks for previously missed shots
+                switch (currentDirection) {
+                    case 1:
+                        if(board[lastShot-10] > 0){
+                            atEdge = true;
+                            currentDirection +=1;
+                        }
+                        break;
+                    case 2:
+                        if(board[lastShot+1] > 0){
+                            atEdge = true;
+                            currentDirection +=1;
+                        }
+                        break;
+                    case 3:
+                        if(board[lastShot+10] > 0){
+                            atEdge = true;
+                            currentDirection +=1;
+                        }
+                        break;
+                    case 4:
+                        if(board[lastShot-1] > 0){
+                            shotSequence.remove(0);
+                            return nextShot;
+                        }
+                        break;
+                }
+            }while(atEdge);
+            //At this stage we have a clear shot in the selected direction
+            switch (currentDirection){
+                case 1:
+                    proposedShot = lastShot-10;
+                    break;
+                case 2:
+                    proposedShot = lastShot +1;
+                    break;
+                case 3:
+                    proposedShot = lastShot + 10;
+                    break;
+                case 4:
+                    proposedShot = lastShot -1;
+                    break;
+            }
+            if(board[proposedShot] == 0){
+                //Missed
+                firstReactiveShot = false;
+                return proposedShot;
+            }
+            shotSequence.remove(0);
+            return nextShot;
+        }else{
+            //Here we have already fired a shot before. Either we hit (and must try to keep firing that direction)
+                                                        //or we missed (and must check the opposite direction (if possible))
+        }
+        //Remember to reset curDir & firstReactiveShot at the end
+        shotSequence.remove(0);
+        return nextShot(); */
+
+
+    }
+
 
         //To keep the game random and to prevent a strategy to always beat the AI arising
         //the set of squares and the order in which they are hit will be randomised at the start of
         //each game
-    private ArrayList<String> shotSequence = new ArrayList<String>();
-
+    private ArrayList<Integer> shotSequence = new ArrayList<Integer>();
+    private void randomiseEasyShotSequence(){
+        for (int i = 0; i < 100; i++){
+            shotSequence.add(i);
+        }
+        Collections.shuffle(shotSequence);
+    }
         //This method randomly decides which of the two patterns to populates the shot sequence queue with and does that
-            //Does this by deciding whether the first square will be A1 or A2, then proceeds to add B2 or B1 respectively
-        //Still to come - shuffling the queue so that each game is different
+            //by deciding whether the first square will be A1 or A2, then proceeds to add B2 or B1 respectively
+        //After one of the two patterns has been decided upon the queue is then shuffled and the AI will make random shots
+            //in a lattice pattern to more efficiently hit every enemy ship
 
         /*  x - determines the first squares coordinate for each loop
             y - determines whether the corresponding square in the row below is before or after
-            j - integer used to iterate through the rows which is reset to the value of x at the start of each loop
+            j - integer used to iterate through the rows which is reset to the initial value of x at the start of each loop
             */
 
-        private void randomiseShotSequence(){
+
+        //TODO- Rework this to use int instead of string
+        private void randomiseHardShotSequence(){
             int x, y,j ;
             if (Math.random()<0.5){
                 x = 1;

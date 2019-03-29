@@ -168,8 +168,8 @@ public class BoardSetupScreen extends GameScreen {
             {
                 //TODO - MJ
                 prepareBoard();
-                //Check all ships have been placed
-                //place bitmaps in the correct positions
+                //^^Check all ships have been placed
+                //^^place bitmaps in the correct positions
                 //Create AI class
                 //Place AI ships
                 //Turn indicator

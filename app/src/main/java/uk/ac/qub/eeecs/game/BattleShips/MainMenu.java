@@ -179,19 +179,26 @@ public class MainMenu extends GameScreen
         // Push trigger if statement to check if a specific button has been pressed, if it is, create the appropriate screen
         if (mStartButton.isPushTriggered())
         {
-            mGame.getScreenManager().addScreen(new LoadingScreen(mGame));
+           changeScreen(new LoadingScreen(mGame));
         }
         else if (mInstructionsButton.isPushTriggered())
         {
-            mGame.getScreenManager().addScreen(new InstructionsScreen(mGame));
+            changeScreen(new InstructionsScreen(mGame));
         }
         else if (mSettingsButton.isPushTriggered())
         {
-            mGame.getScreenManager().addScreen(new SettingsScreen(mGame));
+           changeScreen(new SettingsScreen(mGame));
         }
         else if(mTitle.isPushTriggered())
         {
             // Add functionality - sound plays etc.
         }
     }
+
+    public void changeScreen(GameScreen newScreen)
+    {
+        mGame.getScreenManager().addScreen(newScreen);
+    }
+
+
 }

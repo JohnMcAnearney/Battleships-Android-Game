@@ -12,8 +12,11 @@ public class UpdateBarDisplay extends GameObject {
     private static final int WIDTH_FACTOR = 4;
     private static final int HEIGHT_FACTOR = 4;
 
+    private float minVal;
+    private float maxVal;
+    private float value;
 
-    private float minVal, maxVal, value;
+
     private GameObject[] barBits;
 
     public UpdateBarDisplay(int numberOfBits, float initialValue, float minValue, float maxValue, float startX, float startY, float scale, GameScreen gameScreen) {
@@ -59,13 +62,11 @@ public class UpdateBarDisplay extends GameObject {
 
     }
 
-
     //draw the bar;
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D){
         for(GameObject bit : barBits){
-            if(bit != null){
-                bit.draw(elapsedTime, graphics2D);
-            }
+             if(bit != null){
+                bit.draw(elapsedTime, graphics2D); }
         }
     }
     //getter for value
@@ -81,5 +82,39 @@ public class UpdateBarDisplay extends GameObject {
         }else{
             this.value = value;
         }
+    }
+
+    public void setMaxVal(float newMax){
+        if(newMax<=minVal){
+               this.maxVal= minVal+0.1f;
+               setValue(newMax);
+        }
+       else if(newMax<this.value){
+            this.maxVal=newMax;
+            setValue(newMax);
+        }else{
+            this.maxVal=newMax;
+        }
+    }
+    public void setMinVal(float newMin){
+        if(newMin>=maxVal) {
+            this.minVal = maxVal - 0.1f;
+            setValue(newMin);
+        }
+        else if(newMin>=this.value){
+            this.minVal=newMin;
+            setValue(newMin);
+        }else if(newMin<0){
+            this.minVal=0;
+        }else{
+            this.minVal=newMin;
+        }
+    }
+
+    public float getMaxVal(){
+        return maxVal;
+    }
+    public float getMinVal(){
+        return minVal;
     }
 }

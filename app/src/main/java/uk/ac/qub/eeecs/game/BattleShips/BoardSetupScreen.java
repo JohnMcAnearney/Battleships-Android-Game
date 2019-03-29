@@ -99,7 +99,7 @@ public class BoardSetupScreen extends GameScreen {
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
         boundsMessage = assetManager.getBitmap("boundsMessage");
 
-        //Mantas Stadnik (40203133) loaded bitmaps which were used by my methods
+        //Mantas Stadnik (40203133) load bitmaps which were used by my methods
         boolean check1 = assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
         boolean check2 =assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
         boolean check3 =assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");

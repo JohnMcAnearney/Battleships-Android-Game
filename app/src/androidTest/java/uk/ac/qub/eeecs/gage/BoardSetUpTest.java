@@ -205,6 +205,40 @@ public class BoardSetUpTest {
         assertTrue(boxContainsInput(0,200,0,300,55.5f,55.5f));
     }
 
+    //Method to set up 2d array with co-ordinates of boxes for testing the binary search methods
+    public float[][] setUp2DArrayWithCoors()
+    {
+        //Set up 2D array
+        //offsets for setting co-ordinates
+        int offsetLeftX = 0;
+        int offsetRightX = 5;
+        int offsetTopY = 0;
+        int offsetBottomY = 5;
+        //keep count of number of boxes stored
+        int numberOfBoxesStored = 0;
+        float[][] boxArray = new float[100][4];
+        //populate the 2D array store in order, left , top, right ,bottom co-ordinates
+        for(int i = 0; i < 10; i ++)
+        {
+            offsetLeftX = 0;
+            offsetRightX = 5;
+            for(int j = 0; j < 10; j++)
+            {
+                boxArray[numberOfBoxesStored][0] = offsetLeftX;
+                boxArray[numberOfBoxesStored][2] = offsetRightX;
+                boxArray[numberOfBoxesStored][3] = offsetBottomY;
+                boxArray[numberOfBoxesStored][1] = offsetTopY;
+                offsetLeftX += 5;
+                offsetRightX += 5;
+                numberOfBoxesStored++;
+            }
+            offsetTopY +=5;
+            offsetBottomY +=5;
+        }
+        return boxArray;
+    }
+
+
     private int binarySearchRows(float[][] array,int numberOfSmallBox, int lower,int higher, float x, float y)
     {
         //Check if the lower bound is less than or equal to higher bound
@@ -236,34 +270,34 @@ public class BoardSetUpTest {
     @Test
     public void binarySearchRowsTest()
     {
-        //Set up 2D array
-        //offsets for setting co-ordinates
-        int offsetLeftX = 0;
-        int offsetRightX = 5;
-        int offsetTopY = 0;
-        int offsetBottomY = 5;
-        int numberOfBoxesStored = 0;
-        float[][] boxArray = new float[100][4];
-        //populate the 2D array store in order, left , top, right ,bottom co-ordinates
-        for(int i = 0; i < 10; i ++)
-        {
-            offsetLeftX = 0;
-            offsetRightX = 5;
-            for(int j = 0; j < 10; j++)
-            {
-                boxArray[numberOfBoxesStored][0] = offsetLeftX;
-                boxArray[numberOfBoxesStored][2] = offsetRightX;
-                boxArray[numberOfBoxesStored][3] = offsetBottomY;
-                boxArray[numberOfBoxesStored][1] = offsetTopY;
-                offsetLeftX += 5;
-                offsetRightX += 5;
-                numberOfBoxesStored++;
-            }
-            offsetTopY +=5;
-            offsetBottomY +=5;
-        }
+        float[][] boxArray = setUp2DArrayWithCoors();
 
+        //knowing first box in array contains 0,0,5,5 co-ordinates, when calling binarySearchRows
+        //with input x 3 and input y 3, box 0 is expected to be returned
         assertEquals(0,binarySearchRows(boxArray,0,0,9,3,3));
+        //Binary search must return -1 when other rows are passed through
+        assertEquals(-1,binarySearchRows(boxArray,10,0,9,3,3));
+        assertEquals(-1,binarySearchRows(boxArray,20,0,9,3,3));
+        assertEquals(-1,binarySearchRows(boxArray,30,0,9,3,3));
+        assertEquals(-1,binarySearchRows(boxArray,40,0,9,3,3));
+        assertEquals(-1,binarySearchRows(boxArray,50,0,9,3,3));
+        assertEquals(-1,binarySearchRows(boxArray,60,0,9,3,3));
+        assertEquals(-1,binarySearchRows(boxArray,70,0,9,3,3));
+        assertEquals(-1,binarySearchRows(boxArray,80,0,9,3,3));
+        assertEquals(-1,binarySearchRows(boxArray,90,0,9,3,3));
+        //knowing first box in array contains 0,0,5,5 co-ordinates, when calling binarySearchRows
+        //with input x 1000 and input y 1000, -1 is expected to be returned indicating box was not found
+        //for all 10 rows
+        assertEquals(-1,binarySearchRows(boxArray,0,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,10,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,20,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,30,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,40,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,50,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,60,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,70,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,80,0,9,1000,1000));
+        assertEquals(-1,binarySearchRows(boxArray,90,0,9,1000,1000));
     }
 
 

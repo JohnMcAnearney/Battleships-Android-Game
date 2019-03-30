@@ -429,7 +429,7 @@ public class BoardSetupScreen extends GameScreen {
      * Compares the mBound of the selected ship and the boards bound, and returns appropriate answer.
      * If out of bounds, then reset the ship
      */
-    private void isShipOutOfBound(){
+    private boolean isShipOutOfBound(){
 
         //pretty self explanatory
         if(boardBoundingBox.contains(selectedShip.mBound.x,  selectedShip.mBound.y) &&
@@ -443,6 +443,7 @@ public class BoardSetupScreen extends GameScreen {
             shipReset();
         }
 
+        return shipOutOfBound;
     }
 
     /**

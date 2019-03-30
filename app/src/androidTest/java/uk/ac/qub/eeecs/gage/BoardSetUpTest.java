@@ -2,7 +2,6 @@ package uk.ac.qub.eeecs.gage;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.test.InstrumentationRegistry;
 //import android.support.test.InstrumentationRegistry;
 //import android.support.test.runner.AndroidJUnit4;
 
@@ -22,6 +21,7 @@ import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.io.FileIO;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
+import uk.ac.qub.eeecs.game.BattleShips.BoardSetupScreen;
 import uk.ac.qub.eeecs.game.BattleShips.Ship;
 import uk.ac.qub.eeecs.game.DemoGame;
 
@@ -31,8 +31,11 @@ public class BoardSetUpTest {
     private Game game;
     private GameScreen gameScreen;
     private AssetManager assetManager;
+    private BoardSetupScreen boardScreen;
     private Context context;
-    private BoundingBox aBoundingBox;
+    private boolean shipOutOfBound;
+    private BoundingBox boardBoundingBox ;
+    private Ship[] shipArray;   //setting up the ship array so that they can be tested globally
     // this line causes an empty test suite
     //private @Mock Bitmap bitmap;
 
@@ -40,11 +43,47 @@ public class BoardSetUpTest {
     @Before
     public void setup()
     {
-        context = InstrumentationRegistry.getTargetContext();
+        //context = InstrumentationRegistry.getTargetContext();
         game = new DemoGame();
         game.mFileIO = new FileIO(context);
         game.mAssetManager = new AssetManager(game);
         assetManager = game.getAssetManager();
+        boardScreen = new BoardSetupScreen(game);
+
+        //Firstly, Setting up each of the ships as they will be tested quite a bit
+        //load bitmaps
+        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
+        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
+        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
+        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        //Set up Ship objects
+        Ship aircraftCarrier = new Ship("AircraftCarrier", 0.5f,0.5f,assetManager.getBitmap("AircraftCarrier"), 5);
+        Ship cargoShip = new Ship("CargoShip", 0.5f,0.5f,assetManager.getBitmap("CargoShip"), 4);
+        Ship cruiseShip = new Ship("CruiseShip", 0.5f,0.5f,assetManager.getBitmap("CruiseShip"), 4);
+        Ship submarine = new Ship("Submarine", 0.5f,0.5f,assetManager.getBitmap("Submarine"), 3);
+        Ship destroyer = new Ship("Destroyer",  0.5f,0.5f,assetManager.getBitmap("Destroyer"), 2);
+        shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
+
+        int screenWidth = 1920;
+        int screenHeight = 1080;
+        float screenHeightOffset = 0.1f;
+        //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
+        for (Ship ship : shipArray) {
+            screenHeightOffset = screenHeightOffset + 0.08f;
+            ship.setmBound(screenWidth * 0.015f,
+                    screenHeight * screenHeightOffset,
+                    (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f); }
+
+        float bigBoxLeftCoor = screenWidth/14f;
+        float bigBoxTopCoor = screenHeight/5f;
+        float bigBoxRightCoor = (screenWidth/14f)*6f;
+        float bigBoxBottomCoor = (screenHeight/5f)*4.5f;
+        boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
+                (bigBoxBottomCoor + bigBoxTopCoor)/2,
+                ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
+                ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -319,7 +358,7 @@ public class BoardSetUpTest {
     //Tests Made by John McAnearney (40203900)
     ////////////////////////////////////////////////////////////////////////////////////////////////
     @Test
-    public void boardSetupTest(){
+    public void boardBoundSetupTest_ValidData(){
         float screenWidth = 1920;
         float screenHeight = 1080;
         float bigBoxLeftCoor = screenWidth/14f;
@@ -338,5 +377,63 @@ public class BoardSetUpTest {
         assertEquals(216, Math.round(bigBoxTopCoor));
         assertEquals(823, Math.round(bigBoxRightCoor));
         assertEquals(972, Math.round(bigBoxBottomCoor));
+    }
+
+    @Test
+    public void boardBoundSetupTest_InvalidData(){
+        float screenWidth = 1920;
+        float screenHeight = 1080;      //these are just arbitrary, wrong values
+        float bigBoxLeftCoor = 20;
+        float bigBoxTopCoor = 30;
+        float bigBoxRightCoor = (screenWidth/14f);
+        float bigBoxBottomCoor = (screenHeight/5f);
+        BoundingBox boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
+                (bigBoxBottomCoor + bigBoxTopCoor)/2,
+                ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
+                ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
+
+
+        assertNotNull(boardBoundingBox);    //asserts that an object was actually created
+        //some of the following tests failed due to rounding errors however, they have been fixed so as to all pass
+        assertEquals(137, Math.round(bigBoxLeftCoor));
+        assertEquals(216, Math.round(bigBoxTopCoor));
+        assertEquals(823, Math.round(bigBoxRightCoor));
+        assertEquals(972, Math.round(bigBoxBottomCoor));
+    }
+
+    private boolean isShipOutOfBound(int i){
+
+        //pretty self explanatory
+        if(boardBoundingBox.contains(shipArray[i].getmBound().x,  shipArray[i].getmBound().y) &&
+                boardBoundingBox.contains(shipArray[i].getmBound().x + (shipArray[i].getmBound().halfWidth * 2),
+                        shipArray[i].getmBound().y + (shipArray[i].getmBound().halfHeight * 2))){
+            shipOutOfBound = false;
+        }
+        else {
+            shipOutOfBound =true;
+        }
+
+        return shipOutOfBound;
+    }
+
+    @Test
+    public void isShipOutOfBoundTest_ValidData1(){
+        //firstly setting up the board bound
+//        float screenWidth = 1920;
+//        float screenHeight = 1080;
+//        float bigBoxLeftCoor = screenWidth/14f;
+//        float bigBoxTopCoor = screenHeight/5f;
+//        float bigBoxRightCoor = (screenWidth/14f)*6f;
+//        float bigBoxBottomCoor = (screenHeight/5f)*4.5f;
+//        BoundingBox boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
+//                (bigBoxBottomCoor + bigBoxTopCoor)/2,
+//                ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
+//                ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
+
+        shipArray[0].setmBound(300,600, (100 * shipArray[0].getShipLength()) / 2.0f,
+                ((100) / 10f) / 2f );
+
+        assertFalse(isShipOutOfBound(0));
+
     }
 }

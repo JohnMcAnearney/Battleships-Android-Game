@@ -57,8 +57,8 @@ public class BoardSetupScreen extends GameScreen {
     private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
     private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
     private boolean smallboxCoordinatesCaptured = false, smallboxCoordinatesCaptured2 = false;  //if the smallBoxCoordinates array has been populated by capturing the co ordinates for both boards this will be set to true
-    private int screenWidth = 0;
-    private int screenHeight = 0;
+    private float screenWidth = 0;
+    private float screenHeight = 0;
     private BoundingBox boardBoundingBox;
     private final int NUMBER_ROWS = 10, NUMBER_COLUMNS = 10;
     private final int BOARD_TWO_SIZE = 100;
@@ -79,27 +79,20 @@ public class BoardSetupScreen extends GameScreen {
     private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimation
     private static AnimationSettings animationSettings;        //Object holder for animationSettings
 
-
     ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
         assetManager = mGame.getAssetManager();  // create a global asset Manager
         /**
          * Load all of the required images
-         *
+         * Added JSON file for all your assets - Edgars(40203154)
          */
-        assetManager.loadAndAddBitmap("BackArrow", "img/BackArrow.png");
-        assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
-        assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
-        assetManager.loadAndAddBitmap("SettingsBackButtonP", "img/BackBPressed.png");
-        assetManager.loadAndAddBitmap("Title", "img/Title.png");
-        assetManager.loadAndAddBitmap("PauseButton", "img/Pause.png");
-        assetManager.loadAndAddBitmap("boundsMessage", "img/OutOfBoundsMessage.png");
+        mGame.getAssetManager().loadAssets("txt/assets/BoardSetupScreenAssets.JSON");
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
         boundsMessage = assetManager.getBitmap("boundsMessage");
 
-        //Mantas Stadnik (40203133) loaded bitmaps which were used by my methods
+        //Mantas Stadnik (40203133) load bitmaps which were used by my methods
         boolean check1 = assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
         boolean check2 =assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
         boolean check3 =assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
@@ -254,8 +247,8 @@ public class BoardSetupScreen extends GameScreen {
         {
             smallBoxDetected = false;
             highlight.setARGB(75,232,0,0);
-           // highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           used for testing
-            //message = "detected" + numberofSmallBoxDetected;                                            //used for testing
+            highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           //used for testing
+            message = "detected" + numberofSmallBoxDetected;                                            //used for testing
             message = message;
 
         }
@@ -335,20 +328,16 @@ public class BoardSetupScreen extends GameScreen {
 
                 }
 
-                //paint where the ship actually is. Basic visual evidence of where the ship has been placed.
-                if(smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 1){
-                    paint.setStyle(Paint.Style.FILL);
-                    paint.setColor(Color.YELLOW);
-                } else if (smallBoxCoordinates[numberOfSmallBoxesDrawn][4] == 0){
-                    paint.setStyle(Paint.Style.STROKE);
-                    paint.setColor(Color.WHITE);
-                }
+                //TODO
+                // add the grid reset here
+               // resetBoardPlacements();
 
                 //draw each of the small boxes
                 /**
                  * https://developer.android.com/reference/android/graphics/Rect
                  * Used the above link in order to understand how rect's were actually used.
                  * Specifically how they used the left, top, right and bottom parameters
+                 * no code was copied in this method.
                  */
 
                 graphics2D.drawRect((bigBoxLeftCoor + moveConstLeft), bigBoxTopCoor,      //same start position
@@ -452,6 +441,9 @@ public class BoardSetupScreen extends GameScreen {
                 //if check above is ok then snap to box and mark the boxes
                 shipSnapToBox();
             }
+//            else{
+//                smallBoxCoordinates[i][4] = 0;
+//            }
         }
     }
 
@@ -477,14 +469,25 @@ public class BoardSetupScreen extends GameScreen {
 
     /**
      * Simple method to mark the occupied boxes accordingly for the selected ships length
-     * @param currentBox - this the box that ship is currently occupying
      */
-    private void markShipInBox(int currentBox){
-        for (int x = 0; x < selectedShip.getShipLength(); x++) {
-            //mark each box as occupied, starting with the leftmost box the ship is in until the length of the ship
-            smallBoxCoordinates[currentBox][4] = 1;
-            currentBox++;
+    private void markShipInBox(){
+        if(selectedShip.isRotated){
+            for (int x = 0; x < selectedShip.getShipLength(); x++) {
+                //mark each box as occupied, starting with the leftmost box the ship is in until the length of the ship
+                smallBoxCoordinates[numberOfClosestBox][4] = 1;
+                numberOfClosestBox+=10;
+            }
+        } else {
+            for (int x = 0; x < selectedShip.getShipLength(); x++) {
+                //mark each box as occupied, starting with the leftmost box the ship is in until the length of the ship
+                //have to do -1 of shiplength because the it takes the (box its in + length of ship)
+                // e.g. length = 5 then total boxes would be 6 total, therefore must do length -1
+                smallBoxCoordinates[numberOfClosestBox][4] = 1;
+                numberOfClosestBox++;
+            }
         }
+
+        //if(selectedShip.getmBound())
     }
 
     /**
@@ -584,22 +587,22 @@ public class BoardSetupScreen extends GameScreen {
             case 2:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox(numberOfClosestBox);
+                markShipInBox();
                 break;
             case 3:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox(numberOfClosestBox);
+                markShipInBox();
                 break;
             case 4:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox(numberOfClosestBox);
+                markShipInBox();
                 break;
             case 5:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox(numberOfClosestBox);
+                markShipInBox();
                 break;
         }
     }

@@ -15,6 +15,11 @@ public class AudioManager {
     // Properties
     // /////////////////////////////////////////////////////////////////////////
 
+    //Added by AT 40207942
+    private static boolean sfxEnabled = true;
+    private static boolean musicEnabled = true;
+
+
     /**
      * Define the maximum, minimum and default music volume values.
      */
@@ -250,4 +255,23 @@ public class AudioManager {
 
         mSoundPool.release();
     }
+
+    //Methods added by AT 40207942
+
+
+
+    public static boolean getMusicEnabled(){
+        return musicEnabled;
+    }
+    public static void setMusicEnabled(boolean isMusicEnabled){
+        AudioManager.musicEnabled= isMusicEnabled;
+    }
+
+    public static boolean getEffectsEnabled(){
+        return sfxEnabled;
+    }
+    public static void setEffectEnabled(boolean isEffectEnabled){
+        AudioManager.sfxEnabled= isEffectEnabled;
+    }
+
 }

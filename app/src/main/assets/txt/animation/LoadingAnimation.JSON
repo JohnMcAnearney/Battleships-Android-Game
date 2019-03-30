@@ -7,8 +7,8 @@
     {
       "name" : "Loading",
       "startFrame" : 0,
-      "endFrame" : 24,
-      "totalPeriod" : 1.5,
+      "endFrame" : 23,
+      "totalPeriod" : 3,
       "loopAnimation" : false
     }
   ]

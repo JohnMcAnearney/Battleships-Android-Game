@@ -160,8 +160,9 @@ public class BoardSetupScreen extends GameScreen {
             else if(mPlayButton.isPushTriggered())
             {
                 //TODO - MJ
-                //Check all ships have been placed
-                //place bitmaps in the correct positions
+                prepareBoard();
+                //^^Check all ships have been placed
+                //^^place bitmaps in the correct positions
                 //Create AI class
                 //Place AI ships
                 //Turn indicator
@@ -188,6 +189,27 @@ public class BoardSetupScreen extends GameScreen {
         }
 
         message2 = "X CoOr: "+String.valueOf(x) + "\n" +"YcoOr:" + String.valueOf(y);
+    }
+
+    //Prepares the board to allow the player to play the game
+    private void prepareBoard() {
+        if(!checkAllShipsPlaced()){
+            //Display warning
+        } else {
+            //All the ships have been placed
+
+        }
+    }
+    //Iterates through the smallBoxCoordinate array to check if all the ships have been placed
+    private boolean checkAllShipsPlaced() {
+        int noOfShipSquares = 0;
+        for (int i =0; i<100; i++){
+            if(smallBoxCoordinates[i][4] == 1){
+                noOfShipSquares++;
+            }
+        }
+        if(noOfShipSquares == 17){return true;}
+        return false;
     }
 
     Paint textPaint = new Paint();

@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 
 
 public class PreferencesManager {
+    /*Created 100% by AT: 40207942*/
 
     private Activity activity;
 
@@ -15,17 +16,17 @@ public class PreferencesManager {
 
     public static final String MUSIC_SHAREDPREF_KEY = "MusicPreference";
     public static final String EFFECT_SHAREDPREF_KEY = "EffectPreference";
-
     public static final String MUTE_MUSIC_SHAREDPREF_KEY = "MuteMusicPreference";
     public static final String MUTE_EFFECT_SHAREDPREF_KEY = "MuteEffectPreference";
 
     private float mSharedPreferenceCurrentMusicVolume;
     private float mSharedPreferenceCurrentEffectVolume;
+    private boolean mSharedPreferencesIsMusicMuted;
 
 
     public PreferencesManager(Activity activity) {
         this.mPreferences= PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        this.mPreferences = activity.getSharedPreferences(activity.getPackageName()+"_preferences", Context.MODE_PRIVATE );
+       // this.mPreferences = activity.getSharedPreferences(activity.getPackageName()+"_preferences", Context.MODE_PRIVATE );
         this.mPreferencesEditor = this.mPreferences.edit();
         this.activity=activity;
     }
@@ -37,6 +38,15 @@ public class PreferencesManager {
     public  float loadCurrentEffectsVolume(float currentEffect){
         mSharedPreferenceCurrentEffectVolume=mPreferences.getFloat(EFFECT_SHAREDPREF_KEY, currentEffect);
         return  mSharedPreferenceCurrentEffectVolume;
+    }
+    public boolean loadMuteMusicStatus(boolean muteStatus){
+        mSharedPreferencesIsMusicMuted = mPreferences.getBoolean(MUTE_MUSIC_SHAREDPREF_KEY, muteStatus);
+        return mSharedPreferencesIsMusicMuted;
+    }
+
+    public void saveMuteMusicStatus(boolean muteStatus){
+        mPreferencesEditor.putBoolean(MUTE_MUSIC_SHAREDPREF_KEY, muteStatus);
+        mPreferencesEditor.commit();
     }
 
     public void saveCurrentMusicVolume(float currentMusic){

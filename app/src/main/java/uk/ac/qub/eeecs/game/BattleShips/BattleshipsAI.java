@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 public class BattleshipsAI {
 
-    //TODO: Change randomiseShotSequence() to work with integers instead of strings
-
-
     /*This class is used to allow the ai to decide where to hit next and store its shots so far so it can make a more educated shot
             This class contains 5 public methods:
                 -BattleshipsAI() which is the constructor
@@ -24,9 +21,6 @@ public class BattleshipsAI {
                         a ship it will randomly hit around it until it hits again and then randomly
                         shoot at either end of this 2 block ship until it misses twice, which means
                         that ship has been sunk
-
-                        --- Adjacent ships??
-
             - More efficient randomised sequence which uses the reactive response alongside scaning the board for ships
               as efficiently as possible without looking at far more in-depth analysis of common ship placements.
                      -- The more efficient pattern is shooting at every other space due to the fact
@@ -202,6 +196,7 @@ public class BattleshipsAI {
     private int lastShot, initialHit;
     private int shotDirection = -1; //1-UP;2-RIGHT;3-DOWN;4-LEFT
     private ArrayList<Integer> reactiveShotSequence = new ArrayList<Integer>(); //Arraylist used to determine which way to shoot.
+
     private int reactiveShot(int nextShot){
 
         //TODO - determine direction, test proposed shot
@@ -238,100 +233,7 @@ public class BattleshipsAI {
                 //switch to determine direction.
             }
         }
-
-/*        int proposedShot = -1;
-        //Assume last shot hit
-        if(firstReactiveShot) {
-            initialHit = lastShot;
-            boolean atEdge = false; // atEdge is used to evaluate whether the direction which is currently selected can/should be fired in
-            //This loop decides which direction to start firing in initially
-            do {
-                //this switch checks for edges
-                switch (currentDirection) {
-                    case 1:
-                        if(lastShot < 10){
-                            atEdge = true;
-                            currentDirection +=1;
-                        }
-                        break;
-                    case 2:
-                        if((lastShot + 1) % 10 == 0){
-                            atEdge = true;
-                            currentDirection +=1;
-                        }
-                        break;
-                    case 3:
-                        if(lastShot > 89){
-                            atEdge = true;
-                            currentDirection +=1;
-                        }
-                        break;
-                    case 4:
-                        if(lastShot % 10 == 0){
-                            shotSequence.remove(0);
-                            return nextShot;
-                        }
-                        break;
-                }
-                //this switch checks for previously missed shots
-                switch (currentDirection) {
-                    case 1:
-                        if(board[lastShot-10] > 0){
-                            atEdge = true;
-                            currentDirection +=1;
-                        }
-                        break;
-                    case 2:
-                        if(board[lastShot+1] > 0){
-                            atEdge = true;
-                            currentDirection +=1;
-                        }
-                        break;
-                    case 3:
-                        if(board[lastShot+10] > 0){
-                            atEdge = true;
-                            currentDirection +=1;
-                        }
-                        break;
-                    case 4:
-                        if(board[lastShot-1] > 0){
-                            shotSequence.remove(0);
-                            return nextShot;
-                        }
-                        break;
-                }
-            }while(atEdge);
-            //At this stage we have a clear shot in the selected direction
-            switch (currentDirection){
-                case 1:
-                    proposedShot = lastShot-10;
-                    break;
-                case 2:
-                    proposedShot = lastShot +1;
-                    break;
-                case 3:
-                    proposedShot = lastShot + 10;
-                    break;
-                case 4:
-                    proposedShot = lastShot -1;
-                    break;
-            }
-            if(board[proposedShot] == 0){
-                //Missed
-                firstReactiveShot = false;
-                return proposedShot;
-            }
-            shotSequence.remove(0);
-            return nextShot;
-        }else{
-            //Here we have already fired a shot before. Either we hit (and must try to keep firing that direction)
-                                                        //or we missed (and must check the opposite direction (if possible))
-        }
-        //Remember to reset curDir & firstReactiveShot at the end
-        shotSequence.remove(0);
-        return nextShot(); */
-
-
+        return nextShot;
     }
 
 
@@ -346,7 +248,7 @@ public class BattleshipsAI {
         Collections.shuffle(shotSequence);
     }
         //This method randomly decides which of the two patterns to populates the shot sequence queue with and does that
-            //by deciding whether the first square will be A1 or A2, then proceeds to add B2 or B1 respectively
+            //by deciding whether the first square will be 0 or 1, then proceeds to add 11 or 10 respectively
         //After one of the two patterns has been decided upon the queue is then shuffled and the AI will make random shots
             //in a lattice pattern to more efficiently hit every enemy ship
 
@@ -355,25 +257,23 @@ public class BattleshipsAI {
             j - integer used to iterate through the rows which is reset to the initial value of x at the start of each loop
             */
 
-
-        //TODO- Rework this to use int instead of string
         private void randomiseHardShotSequence(){
             int x, y,j ;
             if (Math.random()<0.5){
-                x = 1;
+                x = 0;
                 y = 1;
             }else {
-                x = 2;
+                x = 1;
                 y = -1;
             }
 
 
             for (int i = 0; i<boardLength;i+=2){
                 j = x;
-                while (j<=boardLength){
-                    shotSequence.add(String.valueOf(String.valueOf((char)(65+i)) + j));
+                while (j<boardLength){
+                    shotSequence.add(i*10 + j);
                     if(j+y<=boardLength)
-                        shotSequence.add(String.valueOf(String.valueOf((char)(65+i+1)) + (j + y )));
+                        shotSequence.add(((i+1)*10)+j+y);
                     j+=2;
                 }
             }

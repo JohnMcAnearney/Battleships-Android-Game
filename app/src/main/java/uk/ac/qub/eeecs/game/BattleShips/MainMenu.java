@@ -107,21 +107,28 @@ public class MainMenu extends GameScreen
     // Create the buttons and set their sound to true and also add each button to the mButtonCollection List.
     private void createButtons()
     {
-        mStartButton = new PushButton(mDefaultLayerViewport.getWidth() / 2,mDefaultLayerViewport.getHeight()  / 2, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "NewGameButton", "NewGameButtonP", this);
+        // Initialising the width and height of the layer viewport
+        float viewportWidth = mDefaultLayerViewport.getWidth();
+        float viewportHeight = mDefaultLayerViewport.getHeight();
+
+        // New Game Button
+        mStartButton = new PushButton(viewportWidth / 2,viewportHeight  / 2, viewportWidth / 4, viewportHeight / 8, "NewGameButton", "NewGameButtonP", this);
         mStartButton.setPlaySounds(true, true);
         mButtonCollection.add(mStartButton);
 
-        mInstructionsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 5.5f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "InstructionsButton", "InstructionsButtonP", this);
+        // Instructions Button
+        mInstructionsButton = new PushButton(viewportWidth / 2, viewportHeight / 5.5f, viewportWidth / 4, viewportHeight / 8, "InstructionsButton", "InstructionsButtonP", this);
         mInstructionsButton.setPlaySounds(true, true);
         mButtonCollection.add(mInstructionsButton);
 
-        mSettingsButton = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() / 3f, mDefaultLayerViewport.getWidth() / 4, mDefaultLayerViewport.getHeight() / 8, "SettingsButton", "SettingsButtonP", this);
+        // Setting Button
+        mSettingsButton = new PushButton(viewportWidth / 2, viewportHeight / 3f, viewportWidth / 4, viewportHeight / 8, "SettingsButton", "SettingsButtonP", this);
         mSettingsButton.setPlaySounds(true, true);
         mButtonCollection.add(mSettingsButton);
 
-        mTitle = new PushButton(mDefaultLayerViewport.getWidth() / 2, mDefaultLayerViewport.getHeight() /1.3f , mDefaultLayerViewport.getWidth() / 2f, mDefaultLayerViewport.getHeight()/ 3f, "Title", this);
+        // Title Button
+        mTitle = new PushButton(viewportWidth / 2, viewportHeight /1.3f , viewportWidth / 2f, viewportHeight / 3f, "Title", this);
         mButtonCollection.add(mTitle);
-        // Why is this a button? I think this is a mistake but it could be used for an easter egg
     }
 
     // Method which loads all the assets for the screen
@@ -179,19 +186,26 @@ public class MainMenu extends GameScreen
         // Push trigger if statement to check if a specific button has been pressed, if it is, create the appropriate screen
         if (mStartButton.isPushTriggered())
         {
-            mGame.getScreenManager().addScreen(new LoadingScreen(mGame));
+           changeScreen(new LoadingScreen(mGame));
         }
         else if (mInstructionsButton.isPushTriggered())
         {
-            mGame.getScreenManager().addScreen(new InstructionsScreen(mGame));
+            changeScreen(new InstructionsScreen(mGame));
         }
         else if (mSettingsButton.isPushTriggered())
         {
-            mGame.getScreenManager().addScreen(new SettingsScreen(mGame));
+           changeScreen(new SettingsScreen(mGame));
         }
         else if(mTitle.isPushTriggered())
         {
             // Add functionality - sound plays etc.
         }
     }
+
+    public void changeScreen(GameScreen newScreen)
+    {
+        mGame.getScreenManager().addScreen(newScreen);
+    }
+
+
 }

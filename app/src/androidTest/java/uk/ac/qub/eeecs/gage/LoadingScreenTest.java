@@ -4,32 +4,30 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.mockito.Mock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.ScreenManager;
 import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
 import uk.ac.qub.eeecs.gage.engine.io.FileIO;
-import uk.ac.qub.eeecs.game.BattleShips.InstructionsScreen;
-import uk.ac.qub.eeecs.game.BattleShips.PauseScreen;
-import uk.ac.qub.eeecs.game.BattleShips.SettingsScreen;
+import uk.ac.qub.eeecs.game.BattleShips.BoardSetupScreen;
+import uk.ac.qub.eeecs.game.BattleShips.LoadingScreen;
 import uk.ac.qub.eeecs.game.DemoGame;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /*
-* Author: Edgars(402030154)
-* A test class which will test if the transition to new screens occurs correctly
-*/
+ * Author: Edgars(402030154)
+ * A test class which will test if the transition to new screens occurs correctly
+ */
 @RunWith(AndroidJUnit4.class)
-public class PauseScreenTest
-{
+public class LoadingScreenTest {
     Context mContext;
     @Mock
     DemoGame mGame;
@@ -37,8 +35,7 @@ public class PauseScreenTest
 
     // Initialising the setup method for the test, which will run @Before
     @Before
-    public void setup()
-    {
+    public void setup() {
         // Initialising the game context
         mContext = InstrumentationRegistry.getTargetContext();
 
@@ -63,58 +60,21 @@ public class PauseScreenTest
 
         // Initialising the elapsed time variable
         mElapsedTime = new ElapsedTime();
-
-
-        // Initialising the FileIO
-        FileIO fileIO = new FileIO(mContext);
-        mGame.mFileIO = fileIO;
     }
 
-    // A test which initialises a pause screen and a InstructionsScreen and sees if the moveToNewGameScreen() method works correctly
-    @Test
-    public void changeScreenToInstructionScreen()
-    {
-       PauseScreen pauseScreen = new PauseScreen(mGame);
-       mGame.getScreenManager().addScreen(pauseScreen);
-
-       InstructionsScreen instructionsScreen = new InstructionsScreen(mGame);
-       mGame.getScreenManager().addScreen(instructionsScreen);
-
-       pauseScreen.moveToNewGameScreen(instructionsScreen);
-
-       Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(), instructionsScreen.getName());
-    }
-
-    // A test which initialises a pause screen and a SettingsScreen and sees if the moveToNewGameScreen() method works correctly
-    @Test
-    public void changeScreenToSettingsScreen()
-    {
-        PauseScreen pauseScreen = new PauseScreen(mGame);
-        mGame.getScreenManager().addScreen(pauseScreen);
-
-        SettingsScreen settingsScreen = new SettingsScreen(mGame);
-        mGame.getScreenManager().addScreen(settingsScreen);
-
-        pauseScreen.moveToNewGameScreen(settingsScreen);
-
-        Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(), settingsScreen.getName());
-    }
-
-    /*
-    *This test is currently not working
-    // A test which initialises a pause screen and a BoardSetup screen and sees if the returnToPreviousGameScreen() method works correctly
-    @Test
-    public void returnToGameScreen()
-    {
-        PauseScreen pauseScreen = new PauseScreen(mGame);
-        mGame.getScreenManager().addScreen(pauseScreen);
-
+    // Test which sees if the transition to board setup screen occurs - NEED TO COME BACK TO
+    /*@Test
+    public void changeScreenToBoardSetupScreen() {
         BoardSetupScreen boardSetupScreen = new BoardSetupScreen(mGame);
         mGame.getScreenManager().addScreen(boardSetupScreen);
 
-        pauseScreen.returnToPreviousGameScreen();
+        LoadingScreen loadingScreen = new LoadingScreen(mGame);
+        mGame.getScreenManager().addScreen(loadingScreen);
+
+        loadingScreen.moveToNewGameScreen(boardSetupScreen);
 
         Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(), boardSetupScreen.getName());
-    }
-    */
+    }*/
 }
+
+

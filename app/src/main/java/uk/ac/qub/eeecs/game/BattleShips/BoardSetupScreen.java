@@ -79,22 +79,15 @@ public class BoardSetupScreen extends GameScreen {
     private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimation
     private static AnimationSettings animationSettings;        //Object holder for animationSettings
 
-
     ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
         assetManager = mGame.getAssetManager();  // create a global asset Manager
         /**
          * Load all of the required images
-         *
+         * Added JSON file for all your assets - Edgars(40203154)
          */
-        assetManager.loadAndAddBitmap("BackArrow", "img/BackArrow.png");
-        assetManager.loadAndAddBitmap("WaterBackground", "img/Water_Tile.png");
-        assetManager.loadAndAddBitmap("SettingsBackButton", "img/BackB.png");
-        assetManager.loadAndAddBitmap("SettingsBackButtonP", "img/BackBPressed.png");
-        assetManager.loadAndAddBitmap("Title", "img/Title.png");
-        assetManager.loadAndAddBitmap("PauseButton", "img/Pause.png");
-        assetManager.loadAndAddBitmap("boundsMessage", "img/OutOfBoundsMessage.png");
+        mGame.getAssetManager().loadAssets("txt/assets/BoardSetupScreenAssets.JSON");
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
         boundsMessage = assetManager.getBitmap("boundsMessage");
@@ -232,8 +225,8 @@ public class BoardSetupScreen extends GameScreen {
         {
             smallBoxDetected = false;
             highlight.setARGB(75,232,0,0);
-           // highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           used for testing
-            //message = "detected" + numberofSmallBoxDetected;                                            //used for testing
+            highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           //used for testing
+            message = "detected" + numberofSmallBoxDetected;                                            //used for testing
             message = message;
 
         }

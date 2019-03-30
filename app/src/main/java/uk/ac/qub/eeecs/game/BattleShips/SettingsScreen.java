@@ -186,11 +186,18 @@ public class   SettingsScreen extends GameScreen {
             mAllButtons.add(mMuteMusicButton);
         }
 
+        if(mPreferencesManager.loadMuteEffectStatus(mAudioManager.getEffectsEnabled())){
+            mMuteEffectButton= new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.3f,
+                    mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f, "UnmuteButton", this);
+            mAllButtons.add(mMuteEffectButton);
 
+        }else{
+            mMuteEffectButton= new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.3f,
+                    mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f, "MuteButton", this);
+            mAllButtons.add(mMuteEffectButton);
 
-        mMuteEffectButton= new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.3f,
-                mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f, "UnmuteButton", this);
-        mAllButtons.add(mMuteEffectButton);
+        }
+
 
     }
 
@@ -294,16 +301,20 @@ public class   SettingsScreen extends GameScreen {
             playBackgroundMusic();
         }
     }
-    
+
     /**
      * Method to mute sfx
      */
     public void preformMuteEffectButtonActions(){
-        mAudioManager.setEffectEnabled(!mAudioManager.getEffectsEnabled());
-        if(!mAudioManager.getEffectsEnabled()){
+        boolean isEffectsMuted = mPreferencesManager.loadMuteEffectStatus(mAudioManager.getEffectsEnabled());
+        if(isEffectsMuted==true){
+            mAudioManager.setEffectEnabled(false);
+            mPreferencesManager.saveMuteEffectStatus(mAudioManager.getEffectsEnabled());
             mMuteEffectButton.setBitmap(mGame.getAssetManager().getBitmap("MuteButton"));
-        }else{
+        } else{
             mMuteEffectButton.setBitmap(mGame.getAssetManager().getBitmap("UnmuteButton"));
+            mAudioManager.setEffectEnabled(true);
+            mPreferencesManager.saveMuteEffectStatus(mAudioManager.getEffectsEnabled());
         }
     }
 

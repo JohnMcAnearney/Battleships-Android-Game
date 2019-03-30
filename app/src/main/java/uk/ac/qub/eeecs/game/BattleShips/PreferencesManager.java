@@ -14,14 +14,15 @@ public class PreferencesManager {
     private SharedPreferences mPreferences ;
     private SharedPreferences.Editor mPreferencesEditor;
 
-    public static final String MUSIC_SHAREDPREF_KEY = "MusicPreference";
-    public static final String EFFECT_SHAREDPREF_KEY = "EffectPreference";
-    public static final String MUTE_MUSIC_SHAREDPREF_KEY = "MuteMusicPreference";
-    public static final String MUTE_EFFECT_SHAREDPREF_KEY = "MuteEffectPreference";
+    private static final String MUSIC_SHAREDPREF_KEY = "MusicPreference";
+    private static final String EFFECT_SHAREDPREF_KEY = "EffectPreference";
+    private static final String MUTE_MUSIC_SHAREDPREF_KEY = "MuteMusicPreference";
+    private static final String MUTE_EFFECT_SHAREDPREF_KEY = "MuteEffectPreference";
 
     private float mSharedPreferenceCurrentMusicVolume;
     private float mSharedPreferenceCurrentEffectVolume;
     private boolean mSharedPreferencesIsMusicMuted;
+    private boolean mSharedPreferencesIsEffectMuted;
 
 
     public PreferencesManager(Activity activity) {
@@ -42,6 +43,15 @@ public class PreferencesManager {
     public boolean loadMuteMusicStatus(boolean muteStatus){
         mSharedPreferencesIsMusicMuted = mPreferences.getBoolean(MUTE_MUSIC_SHAREDPREF_KEY, muteStatus);
         return mSharedPreferencesIsMusicMuted;
+    }
+    public boolean loadMuteEffectStatus(boolean muteStatus){
+        mSharedPreferencesIsEffectMuted = mPreferences.getBoolean(MUTE_EFFECT_SHAREDPREF_KEY, muteStatus);
+        return mSharedPreferencesIsEffectMuted;
+    }
+
+    public void saveMuteEffectStatus(boolean muteStatus){
+        mPreferencesEditor.putBoolean(MUTE_EFFECT_SHAREDPREF_KEY, muteStatus);
+        mPreferencesEditor.commit();
     }
 
     public void saveMuteMusicStatus(boolean muteStatus){

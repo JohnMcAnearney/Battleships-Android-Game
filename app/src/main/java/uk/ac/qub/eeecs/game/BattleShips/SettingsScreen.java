@@ -28,25 +28,23 @@ public class   SettingsScreen extends GameScreen {
     /*Created 100% by AT: 40207942*/
 
     /**
-     * Define the properties for the settings screen
-     *
+     * Define the properties for the settings screen;
      */
     //Properties for background;
     private Bitmap mSettingsBackground;
     private int mScreenWidth, mScreenHeight;
     private Rect mRect;
-
     //Properties relating to the shared preferences and preference manager;
-    private Activity mActivity = mGame.getActivity();
+    private Activity mActivity;
     private PreferencesManager mPreferencesManager;
 
     //Properties relating to the buttons and list of buttons
     private PushButton mBackButton, mIncreaseMusicButton, mDecreaseMusicButton, mIncreaseEffectButton, mDecreaseEffectButton, mMuteMusicButton, mMuteEffectButton, mMusicText, mEffectsText;
-    private List<PushButton> mAllButtons = new ArrayList<>();
+    private List<PushButton> mAllButtons;
 
     //Properties relating to the update display bar and audio
     private UpdateBarDisplay mMusicBarDisplay, mEffectsBarDisplay;
-    private AudioManager mAudioManager = getGame().getAudioManager();
+    private AudioManager mAudioManager;
     private Music mMusicOnScreen;
     private Sound mEffectsButtonSound;
 
@@ -56,7 +54,10 @@ public class   SettingsScreen extends GameScreen {
      */
     public SettingsScreen(Game game) {
         super("SettingsScreen", game);
+        mActivity= mGame.getActivity();
+        mAllButtons= new ArrayList<>();
         mPreferencesManager = new PreferencesManager(mActivity);
+        mAudioManager = mGame.getAudioManager();
         mScreenHeight=0;
         mScreenWidth=0;
         mMusicOnScreen=mGame.getAssetManager().getMusic("RickRoll");
@@ -111,7 +112,6 @@ public class   SettingsScreen extends GameScreen {
             updateRect();
         }
     }
-
 
     /**
      * Updates rectangle based of screen size of device
@@ -278,9 +278,7 @@ public class   SettingsScreen extends GameScreen {
             mPreferencesManager.saveCurrentEffectVolume(mAudioManager.getSfxVolume());
         }
     }
-
-
-
+    
     /**
      * Method checks if music is playing when button triggered
      * Then stops the music and changes the bitmap image to the mute one

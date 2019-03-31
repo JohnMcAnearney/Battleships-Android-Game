@@ -44,7 +44,10 @@ public class PreferencesManager {
      */
     public PreferencesManager(Context context) {
         //this.activity=activity;
+
         this.mPreferences= PreferenceManager.getDefaultSharedPreferences(context);
+        //this.mPreferences = activity.getSharedPreferences(activity.getPackageName()+"_preferences", Context.MODE_PRIVATE );
+
         this.mPreferencesEditor = this.mPreferences.edit();
 
     }

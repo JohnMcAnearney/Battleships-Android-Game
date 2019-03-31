@@ -6,7 +6,9 @@
       "width": 35.0,
       "height": 35.0,
       "defaultBitmap": "IncreaseMusic",
-      "volumeValue":0.1
+      "volumeValue":0.1,
+      "isMusicButton": true
+      //"isTextButton": false
 
     },
     {
@@ -15,7 +17,9 @@
       "width": 35.0,
       "height": 35.0,
       "defaultBitmap": "DecreaseMusic",
-      "volumeValue":-0.1
+      "volumeValue":-0.1,
+      "isMusicButton": true
+     // "isTextButton": false
 
     },
     {
@@ -24,14 +28,37 @@
       "width": 35.0,
       "height": 35.0,
       "defaultBitmap": "IncreaseMusic",
-      "volumeValue":0.1
+      "volumeValue":0.1,
+      "isMusicButton": false
+      //"isTextButton": false
     },{
       "x": 0.17,
       "y": 0.3,
       "width": 35.0,
       "height": 35.0,
       "defaultBitmap": "DecreaseMusic",
-      "volumeValue":-0.1
+      "volumeValue":-0.1,
+      "isMusicButton": false
+     // "isTextButton": false
+
+    },{
+      "x": 0.5,
+      "y": 2.25,
+      "width": 120.0,
+      "height": 50.0,
+      "defaultBitmap": "EffectText",
+      "volumeValue":0,
+      "isMusicButton": false
+      //"isTextButton": true
+    },{
+      "x": 0.5,
+      "y": 2.25,
+      "width": 420.0,
+      "height": 250.0,
+      "defaultBitmap": "MusicText",
+      "volumeValue":0,
+      "isMusicButton": false
+      //"isTextButton": true
     }
 
 

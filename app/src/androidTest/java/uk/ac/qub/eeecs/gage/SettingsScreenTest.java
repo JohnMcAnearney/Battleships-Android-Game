@@ -48,7 +48,7 @@ public class SettingsScreenTest {
         activity=game.getActivity();
         mPreferencesManager = new PreferencesManager(activity);
 
-    }/*
+    }
     @Test
     public void preformEffectsButtonActions_increaseVolume_effectsEnabled_volumeShouldIncreaseByOne(){
         mAudioManager.setMusicEnabled(true);
@@ -58,7 +58,8 @@ public class SettingsScreenTest {
         mSettingsScreen.preformEffectsButtonActions(0.1f);
         assertEquals(0.3f, mAudioManager.getMusicVolume());
     }
-*/
+
+
 /*
     @Test
     public void changeScreen_changeToMainMenu(){

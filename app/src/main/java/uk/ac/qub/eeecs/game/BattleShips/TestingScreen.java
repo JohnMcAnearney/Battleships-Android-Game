@@ -22,4 +22,3 @@ public class TestingScreen extends GameScreen {
         @Override
         public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {}
 }
-

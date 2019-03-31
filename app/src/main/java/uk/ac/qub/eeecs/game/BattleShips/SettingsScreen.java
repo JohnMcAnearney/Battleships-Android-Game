@@ -8,8 +8,16 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.preference.PreferenceManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
@@ -41,6 +49,8 @@ public class   SettingsScreen extends GameScreen {
     //Properties relating to the buttons and list of buttons
     private PushButton mBackButton, mIncreaseMusicButton, mDecreaseMusicButton, mIncreaseEffectButton, mDecreaseEffectButton, mMuteMusicButton, mMuteEffectButton, mMusicText, mEffectsText;
     private List<PushButton> mAllButtons;
+    //private Map<PushButton, Float> mButtonVolumeValue = new HashMap<>();
+
 
     //Properties relating to the update display bar and audio
     private UpdateBarDisplay mMusicBarDisplay, mEffectsBarDisplay;
@@ -131,8 +141,6 @@ public class   SettingsScreen extends GameScreen {
         mEffectsBarDisplay = new UpdateBarDisplay(numberOfBits,mPreferencesManager.loadCurrentEffectsVolume(mAudioManager.getSfxVolume()), 0f,1f,mDefaultLayerViewport.getWidth()+600.0f, mDefaultLayerViewport.getHeight()/2+600, scaleOfBar, this );
     }
 
-
-
     /**
      * Method to create all buttons on screen and add them to the array list
      */
@@ -201,8 +209,6 @@ public class   SettingsScreen extends GameScreen {
 
     }
 
-
-
     /**
      * Method to check if music is playing on screen and plays it if not
      */
@@ -239,7 +245,7 @@ public class   SettingsScreen extends GameScreen {
      * @param volumeValue
      */
 
-    public void preformMusicButtonActions(float volumeValue){
+    public void preformMusicButtonActions( float volumeValue){
         if(mPreferencesManager.loadMuteMusicStatus(mAudioManager.getMusicEnabled())) {
             //Gets the current volume of music
             float currentMusic = mPreferencesManager.loadCurrentMusicVolume(mAudioManager.getMusicVolume());
@@ -278,7 +284,7 @@ public class   SettingsScreen extends GameScreen {
             mPreferencesManager.saveCurrentEffectVolume(mAudioManager.getSfxVolume());
         }
     }
-    
+
     /**
      * Method checks if music is playing when button triggered
      * Then stops the music and changes the bitmap image to the mute one
@@ -320,6 +326,11 @@ public class   SettingsScreen extends GameScreen {
      * Method checks if button actions pressed and preform specific action
      */
     public void pressedButtonsActions(){
+       /* for (PushButton button : mAllButtons) {
+            if(button.isPushTriggered()) {
+                preformMusicButtonActions(mButtonVolumeValue.get());
+            }
+        }*/
         if(mIncreaseMusicButton.isPushTriggered()){
             preformMusicButtonActions(0.1f);
         }

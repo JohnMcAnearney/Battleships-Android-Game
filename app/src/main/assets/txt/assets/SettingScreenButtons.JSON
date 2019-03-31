@@ -6,27 +6,32 @@
       "width": 35.0,
       "height": 35.0,
       "defaultBitmap": "IncreaseMusic",
-      "buttonName":"Increase"
+      "volumeValue":0.1
+
     },
     {
       "x": 0.17,
       "y": 0.6,
       "width": 35.0,
       "height": 35.0,
-      "defaultBitmap": "DecreaseMusic"
+      "defaultBitmap": "DecreaseMusic",
+      "volumeValue":-0.1
+
     },
     {
       "x": 0.82,
       "y": 0.3,
       "width": 35.0,
       "height": 35.0,
-      "defaultBitmap": "IncreaseMusic"
+      "defaultBitmap": "IncreaseMusic",
+      "volumeValue":0.1
     },{
       "x": 0.17,
       "y": 0.3,
       "width": 35.0,
       "height": 35.0,
-      "defaultBitmap": "DecreaseMusic"
+      "defaultBitmap": "DecreaseMusic",
+      "volumeValue":-0.1
     }
 
 

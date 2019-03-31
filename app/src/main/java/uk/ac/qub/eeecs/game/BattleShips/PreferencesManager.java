@@ -40,12 +40,13 @@ public class PreferencesManager {
 
     //CONSTRUCTOR
     /**
-     * @param activity
+     * @param
      */
-    public PreferencesManager(Activity activity) {
-        this.mPreferences= PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+    public PreferencesManager(Context context) {
+        //this.activity=activity;
+        this.mPreferences= PreferenceManager.getDefaultSharedPreferences(context);
         this.mPreferencesEditor = this.mPreferences.edit();
-        this.activity=activity;
+
     }
 
     //METHODS//

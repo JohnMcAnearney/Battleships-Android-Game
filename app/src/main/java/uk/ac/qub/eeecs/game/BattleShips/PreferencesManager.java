@@ -25,10 +25,12 @@ public class PreferencesManager {
     private SharedPreferences mPreferences ;
     private SharedPreferences.Editor mPreferencesEditor;
     //final variables for storing specific values in shared preferences of the game
+
     private static final String MUSIC_SHAREDPREF_KEY = "MusicPreference";
     private static final String EFFECT_SHAREDPREF_KEY = "EffectPreference";
     private static final String MUTE_MUSIC_SHAREDPREF_KEY = "MuteMusicPreference";
     private static final String MUTE_EFFECT_SHAREDPREF_KEY = "MuteEffectPreference";
+
     //For the music values in shared preferences.
     private float mSharedPreferenceCurrentMusicVolume;
     private float mSharedPreferenceCurrentEffectVolume;
@@ -71,7 +73,7 @@ public class PreferencesManager {
      */
     public  float loadCurrentEffectsVolume(float currentEffect){
         mSharedPreferenceCurrentEffectVolume=mPreferences.getFloat(EFFECT_SHAREDPREF_KEY, currentEffect);
-        return  mSharedPreferenceCurrentEffectVolume;
+        return mSharedPreferenceCurrentEffectVolume;
     }
 
 

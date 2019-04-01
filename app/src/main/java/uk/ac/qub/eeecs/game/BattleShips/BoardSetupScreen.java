@@ -441,9 +441,6 @@ public class BoardSetupScreen extends GameScreen {
                 //if check above is ok then snap to box and mark the boxes
                 shipSnapToBox();
             }
-//            else{
-//                smallBoxCoordinates[i][4] = 0;
-//            }
         }
     }
 
@@ -487,8 +484,6 @@ public class BoardSetupScreen extends GameScreen {
                 numberOfClosestBox++;
             }
         }
-
-        //if(selectedShip.getmBound())
     }
 
     /**
@@ -511,7 +506,7 @@ public class BoardSetupScreen extends GameScreen {
                 continue;
             }
             else{
-                //this is (x2-x2)^2 + (y2-y1)^2, using equation between two points
+                //this is (x2-x1)^2 + (y2-y1)^2, using equation between two points
                 float distanceSqrd =
                         ((smallBoxCoordinates[x][0] - selectedShip.mBound.x) * (smallBoxCoordinates[x][0] - selectedShip.mBound.x)
                                 + (smallBoxCoordinates[x][1] - selectedShip.mBound.y) * (smallBoxCoordinates[x][1] - selectedShip.mBound.y));

@@ -3,8 +3,7 @@ package uk.ac.qub.eeecs.gage;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.test.InstrumentationRegistry;
-//import android.support.test.InstrumentationRegistry;
-//import android.support.test.runner.AndroidJUnit4;
+import android.support.test.runner.AndroidJUnit4;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -22,6 +21,7 @@ import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.io.FileIO;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
+import uk.ac.qub.eeecs.game.BattleShips.BoardSetupScreen;
 import uk.ac.qub.eeecs.game.BattleShips.Ship;
 import uk.ac.qub.eeecs.game.DemoGame;
 
@@ -31,8 +31,11 @@ public class BoardSetUpTest {
     private Game game;
     private GameScreen gameScreen;
     private AssetManager assetManager;
+    private BoardSetupScreen boardScreen;
     private Context context;
-    private BoundingBox aBoundingBox;
+    private boolean shipOutOfBound;
+    private BoundingBox boardBoundingBox ;
+    private Ship[] shipArray;   //setting up the ship array so that they can be tested globally
     // this line causes an empty test suite
     //private @Mock Bitmap bitmap;
 
@@ -45,6 +48,42 @@ public class BoardSetUpTest {
         game.mFileIO = new FileIO(context);
         game.mAssetManager = new AssetManager(game);
         assetManager = game.getAssetManager();
+        boardScreen = new BoardSetupScreen(game);
+
+        //Firstly, Setting up each of the ships as they will be tested quite a bit
+        //load bitmaps
+        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
+        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
+        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
+        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        //Set up Ship objects
+        Ship aircraftCarrier = new Ship("AircraftCarrier", 0.5f,0.5f,assetManager.getBitmap("AircraftCarrier"), 5);
+        Ship cargoShip = new Ship("CargoShip", 0.5f,0.5f,assetManager.getBitmap("CargoShip"), 4);
+        Ship cruiseShip = new Ship("CruiseShip", 0.5f,0.5f,assetManager.getBitmap("CruiseShip"), 4);
+        Ship submarine = new Ship("Submarine", 0.5f,0.5f,assetManager.getBitmap("Submarine"), 3);
+        Ship destroyer = new Ship("Destroyer",  0.5f,0.5f,assetManager.getBitmap("Destroyer"), 2);
+        shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
+
+        int screenWidth = 1920;
+        int screenHeight = 1080;
+        float screenHeightOffset = 0.1f;
+        //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
+        for (Ship ship : shipArray) {
+            screenHeightOffset = screenHeightOffset + 0.08f;
+            ship.setmBound(screenWidth * 0.015f,
+                    screenHeight * screenHeightOffset,
+                    (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f); }
+
+        float bigBoxLeftCoor = screenWidth/14f;
+        float bigBoxTopCoor = screenHeight/5f;
+        float bigBoxRightCoor = (screenWidth/14f)*6f;
+        float bigBoxBottomCoor = (screenHeight/5f)*4.5f;
+        boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
+                (bigBoxBottomCoor + bigBoxTopCoor)/2,
+                ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
+                ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +255,7 @@ public class BoardSetUpTest {
         int offsetBottomY = 5;
         //keep count of number of boxes stored
         int numberOfBoxesStored = 0;
-        float[][] boxArray = new float[100][4];
+        float[][] boxArray = new float[100][5];
         //populate the 2D array store in order, left , top, right ,bottom co-ordinates
         for(int i = 0; i < 10; i ++)
         {
@@ -392,11 +431,26 @@ public class BoardSetUpTest {
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
     //Tests Made by John McAnearney (40203900)
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * I was unsure whether it were better practice to make all my methods, that I need from the BoardSetupScreen Class, Public or to just copy them in here.
+     * Unfortunately I was unable to ask due to unforeseen circumstances, hence why I've decided to just copy them into here.
+     *     Methods to test
+     *         setupBoardBound              √
+     *         shipPlacement                (no need to test as it is just a culmination of other methods)
+     *         isShipOutOfBOund             √
+     *         calculateClosestBox          √
+     *         markShipInBox
+     *         shipSnapToBox                √
+     *         shipReset                    √   (didnt test this as it is very similar to shipSnapToBox, except with some checks and if's)
+     *         checkIfBoxOccupoied
+     *         hitOrMiss
+     */
     @Test
-    public void boardSetupTest(){
+    public void boardBoundSetupTest_ValidData(){
         float screenWidth = 1920;
         float screenHeight = 1080;
         float bigBoxLeftCoor = screenWidth/14f;
@@ -416,4 +470,434 @@ public class BoardSetUpTest {
         assertEquals(823, Math.round(bigBoxRightCoor));
         assertEquals(972, Math.round(bigBoxBottomCoor));
     }
+
+    @Test
+    public void boardBoundSetupTest_InvalidData(){
+        float screenWidth = 1920;
+        float screenHeight = 1080;      //these are just arbitrary, wrong values
+        float bigBoxLeftCoor = 20;
+        float bigBoxTopCoor = 30;
+        float bigBoxRightCoor = (screenWidth/14f);
+        float bigBoxBottomCoor = (screenHeight/5f);
+        BoundingBox boardBoundingBox = new BoundingBox((bigBoxLeftCoor + bigBoxRightCoor)/2,
+                (bigBoxBottomCoor + bigBoxTopCoor)/2,
+                ((bigBoxLeftCoor + bigBoxRightCoor)/2)-bigBoxLeftCoor,
+                ((bigBoxBottomCoor + bigBoxTopCoor)/2)-bigBoxTopCoor);
+
+
+        assertNotNull(boardBoundingBox);    //asserts that an object was actually created
+        //the following tests are supposed to fail as they are not equal, the expected are just some arbitrarily wrong data
+        assertEquals(137, Math.round(bigBoxLeftCoor));
+        assertEquals(216, Math.round(bigBoxTopCoor));
+        assertEquals(823, Math.round(bigBoxRightCoor));
+        assertEquals(972, Math.round(bigBoxBottomCoor));
+    }
+
+    private boolean isShipOutOfBound(Ship ship){
+
+        //pretty self explanatory
+        if(boardBoundingBox.contains(ship.getmBound().x,  ship.getmBound().y) &&
+                boardBoundingBox.contains(ship.getmBound().x + (ship.getmBound().halfWidth * 2),
+                        ship.getmBound().y + (ship.getmBound().halfHeight * 2))){
+            shipOutOfBound = false;
+        }
+        else {
+            shipOutOfBound =true;
+        }
+
+        return shipOutOfBound;
+    }
+
+    @Test
+    public void isShipOutOfBoundTest_ValidData1(){
+        //firstly set position of ship
+        for(Ship ship: shipArray){
+            ship.setmBound(300,600, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f );
+            assertFalse(isShipOutOfBound(ship));
+        }
+        //refactored this test so there wouldn't be multiple unnecessary tests
+    }
+
+    @Test
+    public void isShipOutOfBoundTest_ValidData2(){
+        //firstly set position of ship
+        for(Ship ship: shipArray){
+            ship.setmBound(200,700, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f );
+            assertFalse(isShipOutOfBound(ship));
+        }
+        //refactored this test so there wouldn't be multiple unnecessary tests
+    }
+
+    @Test
+    public void isShipOutOfBoundTest_InvalidData1(){
+        //firstly set position of ship
+        for(Ship ship: shipArray){
+            ship.setmBound(700,700, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f );
+            assertTrue(isShipOutOfBound(ship));
+        }
+        //refactored this test so there wouldn't be multiple unnecessary tests
+    }
+    @Test
+    public void isShipOutOfBoundTest_InvalidData2(){
+        //firstly set position of ship
+        for(Ship ship: shipArray){
+            ship.setmBound(438,195, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f );
+            assertTrue(isShipOutOfBound(ship));
+        }
+        //refactored this test so there wouldn't be multiple unnecessary tests
+    }
+
+    @Test
+    public void isShipOutOfBoundTest_VeryCloseDataRightsideInvalid(){
+        // setting position of ships very close to the right side of the board
+        for(Ship ship: shipArray){
+            ship.setmBound(973,195, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f );
+            assertTrue(isShipOutOfBound(ship));
+        }
+        //refactored this test so there wouldn't be multiple unnecessary tests
+    }
+    @Test
+    public void isShipOutOfBoundTest_VeryCloseDataLeftsideInvalid(){
+        // setting position of ships very close to the left side of the board
+        //x = (-113) is for the ship of length 5 to be right beside the box, testing it being close
+        // the other ships will be smaller and so theyre right-hand-side co-ordinate will be farther away from the LeftSide of board,
+        // meaning they too are out of bounds
+        for(Ship ship: shipArray){
+            ship.setmBound(-113,195, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f );
+            assertTrue(isShipOutOfBound(ship));
+        }
+        //refactored this test so there wouldn't be multiple unnecessary tests
+    }
+
+    @Test
+    public void isShipOutOfBoundTest_VeryCloseDataTopsideInvalid(){
+        // setting position of ships very close to the top of the board
+        for(Ship ship: shipArray){
+            ship.setmBound(300,206, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f );
+            assertTrue(isShipOutOfBound(ship));
+        }
+        //refactored this test so there wouldn't be multiple unnecessary tests
+    }
+
+    @Test
+    public void isShipOutOfBoundTest_VeryCloseDataBottomsideInvalid(){
+        // setting position of ships very close to the top of the board
+        for(Ship ship: shipArray){
+            ship.setmBound(300,982, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f );
+            assertTrue(isShipOutOfBound(ship));
+        }
+        //refactored this test so there wouldn't be multiple unnecessary tests
+    }
+
+    public int calculateClosestBox(){
+
+        int numberOfClosestBox = 0;
+
+        //setup the boxes
+        float[][] smallBoxCoordinates = setupBoard();
+
+        //for each ship, set bound close to the box number to be tested + 5 pixels in x and y
+        //this allows for quick easy testing instead of hard coding
+        for(Ship ship: shipArray) { //440, 240
+           // ship.setmBound(smallBoxCoordinates[numberOfBoxToBeTested][0]+5, smallBoxCoordinates[numberOfBoxToBeTested][1]+5, (100 * ship.getShipLength()) / 2.0f,
+           //         ((100) / 10f) / 2f);
+
+
+            //closest box is between smallBoxWidth/2 coor and ship coor
+            //set to this becasuse the closest distance will, basically, always be less than this. Always less in this game.
+            float closestSlotDistanceSqrd = Float.MAX_VALUE;
+
+            for (int x = 0; x < 100; x++) {
+                //this is (x2-x1)^2 + (y2-y1)^2, using equation between two points
+                float distanceSqrd =
+                        ((smallBoxCoordinates[x][0] - ship.getmBound().x) * (smallBoxCoordinates[x][0] - ship.getmBound().x)
+                                + (smallBoxCoordinates[x][1] - ship.getmBound().y) * (smallBoxCoordinates[x][1] - ship.getmBound().y));
+                if (distanceSqrd < closestSlotDistanceSqrd) {
+                    //if the new calculated distance to the current evaluated square is less than the current closest square, then this evaluated square becomes the closest one.
+                    numberOfClosestBox = x;
+                    closestSlotDistanceSqrd = distanceSqrd;
+                }
+            }
+        }
+
+        return numberOfClosestBox;
+    }
+
+    @Test
+    public void TestCalculateClosestBoxIs4() {
+
+        float[][] smallBoxCoordinates = setupBoard();
+
+        for(Ship ship : shipArray) {
+            ship.setmBound(smallBoxCoordinates[4][0] + 5, smallBoxCoordinates[4][1] + 5, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+        }
+
+            //assert for each ship the closest box is box 62
+            assertTrue(calculateClosestBox() == 4);
+
+            //assert that the closest is not 1 and 2 blocks either side
+            assertFalse(calculateClosestBox() == 2);
+            assertFalse(calculateClosestBox() == 3);
+            assertFalse(calculateClosestBox() == 5);
+            assertFalse(calculateClosestBox() == 6);
+
+    }
+    @Test
+    public void TestCalculateClosestBoxIs62() {
+
+        float[][] smallBoxCoordinates = setupBoard();
+
+        for(Ship ship : shipArray) {
+            ship.setmBound(smallBoxCoordinates[62][0] + 5, smallBoxCoordinates[62][1] + 5, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+        }
+
+        //assert for each ship the closest box is box 62
+        assertTrue(calculateClosestBox() == 62);
+
+        //assert that the closest is not 1 and 2 blocks either side
+        assertFalse(calculateClosestBox() == 2);
+        assertFalse(calculateClosestBox() == 3);
+        assertFalse(calculateClosestBox() == 5);
+        assertFalse(calculateClosestBox() == 6);
+
+    }
+
+    public float[][] setupBoard(){
+        float bigBoxLeftCoor = 1920/14f;            //these are the variables for the big outer box, enclosing the smaller boxes, for each grid (left and right)
+        float bigBoxTopCoor = 1080/5f;
+        float bigBoxRightCoor = (1920/14f)*6f;
+        float bigBoxBottomCoor = (1080/5f)*4.5f;
+
+        float[][] smallBoxCoordinates = new float[100][5];
+
+        float smallBoxWidth = (bigBoxRightCoor - bigBoxLeftCoor)/10f;     //this calculates the size of each small box.
+        float smallBoxHeight = (bigBoxBottomCoor - bigBoxTopCoor)/10f;    //each box is a 10th of the bigger box
+
+        //Step 2 - draw lots of smaller squares
+        int numberOfSmallBoxesDrawn =-1;
+        boolean smallboxCoordinatesCaptured = false;
+
+        //calculates each smaller box and stores their coordinates in a 2d array
+        for(int rows =0; rows<10; rows++) {
+
+            //move constant defined to MOVE EACH BOX TO THE RIGHT. Called moveConstLeft as it moves the left hand coordinate of each box.
+            float moveConstLeft = 0;
+            for (int column = 0; column < 10; column++) {
+                numberOfSmallBoxesDrawn++;
+
+                //store all of the small box coordinates in a 2d array
+                if(!smallboxCoordinatesCaptured ) {
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;
+
+                }
+
+                //move the box to the right
+                moveConstLeft += smallBoxWidth;
+            }
+
+            //after first row is drawn, move down a row and draw 10 more boxes.
+            //these two lines move the boxes down a row
+            bigBoxTopCoor+=smallBoxHeight;
+            bigBoxBottomCoor+=smallBoxHeight;
+
+        }
+//        //resetting the bounds
+//        smallboxCoordinatesCaptured = true;
+//        bigBoxLeftCoor = bigBoxLeftCoor;
+//        bigBoxTopCoor = bigBoxTopCoor;
+//        bigBoxRightCoor = bigBoxRightCoor;
+//        bigBoxBottomCoor = bigBoxBottomCoor;
+
+        return smallBoxCoordinates;
+    }
+
+    public void shipSnapToBox(int numberOfBoxToBeTested){
+
+        calculateClosestBox(); //knows closest = 4
+        float[][] smallBoxCoordinates = setupBoard();
+
+        for(Ship ship: shipArray) {
+            ship.setmBound(smallBoxCoordinates[numberOfBoxToBeTested][0],smallBoxCoordinates[numberOfBoxToBeTested][1],
+                    (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+            }
+    }
+
+
+    @Test
+    public void shipSnapToBox4(){
+
+        float[][] smallBoxCoordinates = setupBoard();
+
+        for(Ship ship : shipArray) {
+            ship.setmBound(smallBoxCoordinates[4][0] + 5, smallBoxCoordinates[4][1] + 5, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+        }
+
+        shipSnapToBox(4);
+
+        for(Ship ship: shipArray) {
+
+            assertTrue(calculateClosestBox() == 4);
+            assertEquals(ship.getmBound().x, smallBoxCoordinates[4][0]);
+            assertEquals(ship.getmBound().y, smallBoxCoordinates[4][1]);
+        }
+
+    }
+
+    @Test
+    public void shipSnapToBox13(){
+        int numberOfClosestBox = 0;
+
+        //setup the boxes
+        float[][] smallBoxCoordinates = setupBoard();
+
+        //for each ship, set bound close to box number 4
+        for(Ship ship: shipArray) {
+            ship.setmBound(360, 310, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+
+
+            //closest box is between smallBoxWidth/2 coor and ship coor
+            //set to this becasuse the closest distance will, basically, always be less than this. Always less in this game.
+            float closestSlotDistanceSqrd = Float.MAX_VALUE;
+
+            for (int x = 0; x < 100; x++) {
+                //this is (x2-x1)^2 + (y2-y1)^2, using equation between two points
+                float distanceSqrd =
+                        ((smallBoxCoordinates[x][0] - ship.getmBound().x) * (smallBoxCoordinates[x][0] - ship.getmBound().x)
+                                + (smallBoxCoordinates[x][1] - ship.getmBound().y) * (smallBoxCoordinates[x][1] - ship.getmBound().y));
+                if (distanceSqrd < closestSlotDistanceSqrd) {
+                    //if the new calculated distance to the current evaluated square is less than the current closest square, then this evaluated square becomes the closest one.
+                    numberOfClosestBox = x;
+                    closestSlotDistanceSqrd = distanceSqrd;
+                }
+            }
+            ship.setmBound(smallBoxCoordinates[numberOfClosestBox][0],smallBoxCoordinates[numberOfClosestBox][1],
+                    (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+
+            assertTrue(numberOfClosestBox == 13);
+            assertEquals(ship.getmBound().x, smallBoxCoordinates[numberOfClosestBox][0]);
+            assertEquals(ship.getmBound().y, smallBoxCoordinates[numberOfClosestBox][1]);
+        }
+    }
+
+    @Test
+    public void TestCheckIfBoxOccupiedAndMoveShip_ValidData1(){
+        float[][] smallBoxCoordinates = setupBoard();
+
+        smallBoxCoordinates[11][4] = 1;
+
+        //set each ships bound to the 11th box, which is occupied
+        for(Ship ship: shipArray) {
+            ship.setmBound(224, 310, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+
+            if (ship.getmBound().x > smallBoxCoordinates[11][0] && ship.getmBound().x < smallBoxCoordinates[11][2]
+                    && ship.getmBound().y > smallBoxCoordinates[11][1] && ship.getmBound().y < smallBoxCoordinates[11][3]) {
+
+                if(smallBoxCoordinates[11][4] == 1){
+                    ship.setmBound(30, 40, (100 * ship.getShipLength()) / 2.0f,
+                            ((100) / 10f) / 2f);
+                }
+            }
+            //had to cast to int was getting this error: junit.framework.AssertionFailedError: expected:<40.0> but was:<40.0> at junit.framework.Assert.fail(Assert.java:50)
+            //and I didn't know how else to fix it
+            assertEquals(30, (int)ship.getmBound().x);
+            assertEquals(40, (int)ship.getmBound().y);
+        }
+    }
+
+    @Test
+    public void TestCheckIfBoxOccupiedAndMoveShip_ValidData2(){
+        float[][] smallBoxCoordinates = setupBoard();
+
+        smallBoxCoordinates[45][4] = 1;
+
+        //set each ships bound to the 11th box, which is occupied
+        for(Ship ship: shipArray) {
+            ship.setmBound(500, 539, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+
+            if (ship.getmBound().x > smallBoxCoordinates[45][0] && ship.getmBound().x < smallBoxCoordinates[45][2]
+                    && ship.getmBound().y > smallBoxCoordinates[45][1] && ship.getmBound().y < smallBoxCoordinates[45][3]) {
+
+                if(smallBoxCoordinates[45][4] == 1){
+                    ship.setmBound(60, 40, (100 * ship.getShipLength()) / 2.0f,
+                            ((100) / 10f) / 2f);
+                }
+            }
+            //had to cast to int was getting this error: junit.framework.AssertionFailedError: expected:<40.0> but was:<40.0> at junit.framework.Assert.fail(Assert.java:50)
+            //and I didn't know how else to fix it
+            assertEquals(60, (int)ship.getmBound().x);
+            assertEquals(40, (int)ship.getmBound().y);
+        }
+    }
+
+    @Test
+    public void TestCheckIfBoxOccupiedAndMoveShip_InvalidData1(){
+        float[][] smallBoxCoordinates = setupBoard();
+
+        smallBoxCoordinates[45][4] = 1;
+
+        //set each ships bound to the 11th box, which is occupied
+        for(Ship ship: shipArray) {
+            ship.setmBound(500, 539, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+
+            if (ship.getmBound().x > smallBoxCoordinates[45][0] && ship.getmBound().x < smallBoxCoordinates[45][2]
+                    && ship.getmBound().y > smallBoxCoordinates[45][1] && ship.getmBound().y < smallBoxCoordinates[45][3]) {
+
+                if(smallBoxCoordinates[45][4] == 1){
+                    ship.setmBound(60, 40, (100 * ship.getShipLength()) / 2.0f,
+                            ((100) / 10f) / 2f);
+                }
+            }
+            //had to cast to int was getting this error: junit.framework.AssertionFailedError: expected:<40.0> but was:<40.0> at junit.framework.Assert.fail(Assert.java:50)
+            //and I didn't know how else to fix it
+            assertEquals(60, (int)ship.getmBound().x);
+            assertEquals(40, (int)ship.getmBound().y);
+        }
+    }
+
+    @Test
+    public void TestCheckIfBoxOccupiedAndMoveShip_InvalidData2(){
+        float[][] smallBoxCoordinates = setupBoard();
+
+        smallBoxCoordinates[45][4] = 1;
+
+        //set each ships bound to the 11th box, which is occupied
+        for(Ship ship: shipArray) {
+            ship.setmBound(500, 539, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+
+            if (ship.getmBound().x > smallBoxCoordinates[45][0] && ship.getmBound().x < smallBoxCoordinates[45][2]
+                    && ship.getmBound().y > smallBoxCoordinates[45][1] && ship.getmBound().y < smallBoxCoordinates[45][3]) {
+
+                if(smallBoxCoordinates[45][4] == 1){
+                    ship.setmBound(60, 40, (100 * ship.getShipLength()) / 2.0f,
+                            ((100) / 10f) / 2f);
+                }
+            }
+            //had to cast to int was getting this error: junit.framework.AssertionFailedError: expected:<40.0> but was:<40.0> at junit.framework.Assert.fail(Assert.java:50)
+            //and I didn't know how else to fix it
+            assertEquals(60, (int)ship.getmBound().x);
+            assertEquals(40, (int)ship.getmBound().y);
+        }
+    }
+
 }

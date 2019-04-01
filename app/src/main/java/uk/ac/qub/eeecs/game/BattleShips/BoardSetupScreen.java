@@ -160,8 +160,9 @@ public class BoardSetupScreen extends GameScreen {
             else if(mPlayButton.isPushTriggered())
             {
                 //TODO - MJ
-                //Check all ships have been placed
-                //place bitmaps in the correct positions
+                prepareBoard();
+                //^^Check all ships have been placed
+                //^^place bitmaps in the correct positions
                 //Create AI class
                 //Place AI ships
                 //Turn indicator
@@ -188,6 +189,27 @@ public class BoardSetupScreen extends GameScreen {
         }
 
         message2 = "X CoOr: "+String.valueOf(x) + "\n" +"YcoOr:" + String.valueOf(y);
+    }
+
+    //Prepares the board to allow the player to play the game
+    private void prepareBoard() {
+        if(!checkAllShipsPlaced()){
+            //Display warning
+        } else {
+            //All the ships have been placed
+
+        }
+    }
+    //Iterates through the smallBoxCoordinate array to check if all the ships have been placed
+    private boolean checkAllShipsPlaced() {
+        int noOfShipSquares = 0;
+        for (int i =0; i<100; i++){
+            if(smallBoxCoordinates[i][4] == 1){
+                noOfShipSquares++;
+            }
+        }
+        if(noOfShipSquares == 17){return true;}
+        return false;
     }
 
     Paint textPaint = new Paint();
@@ -419,9 +441,6 @@ public class BoardSetupScreen extends GameScreen {
                 //if check above is ok then snap to box and mark the boxes
                 shipSnapToBox();
             }
-//            else{
-//                smallBoxCoordinates[i][4] = 0;
-//            }
         }
     }
 
@@ -429,7 +448,7 @@ public class BoardSetupScreen extends GameScreen {
      * Compares the mBound of the selected ship and the boards bound, and returns appropriate answer.
      * If out of bounds, then reset the ship
      */
-    private void isShipOutOfBound(){
+    private boolean isShipOutOfBound(){
 
         //pretty self explanatory
         if(boardBoundingBox.contains(selectedShip.mBound.x,  selectedShip.mBound.y) &&
@@ -443,6 +462,7 @@ public class BoardSetupScreen extends GameScreen {
             shipReset();
         }
 
+        return shipOutOfBound;
     }
 
     /**
@@ -464,8 +484,6 @@ public class BoardSetupScreen extends GameScreen {
                 numberOfClosestBox++;
             }
         }
-
-        //if(selectedShip.getmBound())
     }
 
     /**
@@ -488,7 +506,7 @@ public class BoardSetupScreen extends GameScreen {
                 continue;
             }
             else{
-                //this is (x2-x2)^2 + (y2-y1)^2, using equation between two points
+                //this is (x2-x1)^2 + (y2-y1)^2, using equation between two points
                 float distanceSqrd =
                         ((smallBoxCoordinates[x][0] - selectedShip.mBound.x) * (smallBoxCoordinates[x][0] - selectedShip.mBound.x)
                                 + (smallBoxCoordinates[x][1] - selectedShip.mBound.y) * (smallBoxCoordinates[x][1] - selectedShip.mBound.y));

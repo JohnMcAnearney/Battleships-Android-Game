@@ -782,13 +782,13 @@ public class BoardSetupScreen extends GameScreen {
     /**
      * Highlight the small box passed in as a parameter used for testing
      * @param numberofSmallBox
-     * @param p
+     * @param paint
      * @param iGraphics2D
      */
-    private void highlightBoxGiven(int numberofSmallBox,Paint p, IGraphics2D iGraphics2D)
+    private void highlightBoxGiven(int numberofSmallBox,Paint paint, IGraphics2D iGraphics2D)
     {
         iGraphics2D.drawRect(smallBoxCoordinates[numberofSmallBox][0], smallBoxCoordinates[numberofSmallBox][1],
-                smallBoxCoordinates[numberofSmallBox][2],smallBoxCoordinates[numberofSmallBox][3], p);
+                smallBoxCoordinates[numberofSmallBox][2],smallBoxCoordinates[numberofSmallBox][3], paint);
     }
 
     /**
@@ -798,7 +798,7 @@ public class BoardSetupScreen extends GameScreen {
      */
     private void detectionIfUserSelectedSmallBox(ElapsedTime elapsedTime)
     {
-        if(bigBoxRightCoor == 0){ //if board co-ordinates have not been set do nothing}
+        if(bigBoxRightCoor == 0){ //if board co-ordinates have not been set, do nothing
         }
         else {
             //if user input x co-ordinate is in the first box x region check if the user has clicked
@@ -815,7 +815,7 @@ public class BoardSetupScreen extends GameScreen {
             //on one of the boxes in the second board
              if (x > bigBoxRightCoor){
                  //carry out a binary search for a box on the second board setting the return int to numberOfSmallBoxDetected
-                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 100, 199, x, y);
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 100, 200, x, y);
                 //if a box that a user has clicked on is found set smallBoxDetected flag to true
             if (numberofSmallBoxDetected >= 0)
                 smallBoxDetected = true;
@@ -901,7 +901,7 @@ public class BoardSetupScreen extends GameScreen {
         //this is used to ensure when the user has not clicked onto a small box, the loop
         //is broken
         //if lower bound is less than or equal to higher bound find a mid value
-        if(lower <=higher) {
+        if(lower < higher) {
             int mid =  (lower + higher) / 2;
 
             //if the mid small box contains the user's input x and y values the box
@@ -915,6 +915,8 @@ public class BoardSetupScreen extends GameScreen {
             //proceed to calling a binary search on the current row
             if(y > array[mid][1] && y < array[mid][3])
             {
+                //numberOfSmallBox is the number of first box in the row. 0 = row 1, 10 = row 2,
+                // 20 = row 3 and so on
                 return binarySearchRows(array,mid-(mid%10),0,10, x,y );
             }
 

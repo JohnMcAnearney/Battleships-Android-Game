@@ -93,13 +93,13 @@ public class BoardSetupScreen extends GameScreen {
         boundsMessage = assetManager.getBitmap("boundsMessage");
 
         //Mantas Stadnik (40203133) load bitmaps which were used by my methods
-        boolean check1 = assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
-        boolean check2 =assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
-        boolean check3 =assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
-        boolean check4 =assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
-        boolean check5 =assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
-        boolean check6 =assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
-        boolean check7 =assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
+        assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
+        assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
+        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
+        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
+        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
         /**
          * Creating animationSettings object which will load the JSON file and the image sprite sheet
          * to be used for an explosion animation
@@ -122,15 +122,27 @@ public class BoardSetupScreen extends GameScreen {
         for(TouchEvent touchEvent: touchEvents) {
             y = touchEvent.y;
             x = touchEvent.x;
+
+            //Check if user touched down on the screen
+            if(touchEvent.type == touchEvent.TOUCH_DOWN &&
+                    gameShipPlacementState == GameShipPlacementState.SHIP_SELECT) {
+            shipSelect(touchEvent);
+            }
+            // When user lifts their finger off the screen drop the bitmap, and change the game state
+            if (touchEvent.type == TouchEvent.TOUCH_UP
+                    && touchEvent.pointer == shipToDragPointerIndexOfInput
+                    && gameShipPlacementState == GameShipPlacementState.SHIP_DRAG) {
+                // Call ship placement after the user has placed the ship object.
+                shipPlacement();
+                //Set the gamestate to ship select since the user is no longer pressing onto the screen
+                gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
+            }
         }
 
+        //If game is in shipDrag state, call method shipDrag
+        if(gameShipPlacementState == GameShipPlacementState.SHIP_DRAG)
+            shipDrag(input);
 
-        //Determine if the used is selecting ship or dragging ship
-        switch(gameShipPlacementState)
-        {
-            case SHIP_SELECT: shipSelect(input); break;
-            case SHIP_DRAG: shipDrag(input);break;
-        }
 
         // If statement to detect if a touch event has happened
         if (touchEvents.size() > 0) {
@@ -646,7 +658,8 @@ public class BoardSetupScreen extends GameScreen {
 
             //////////////////////////////////////////////////////////////////////////////////////////
             //                                      - Mantas Stadnik -                              //
-            //Play explosion Animation                                                              //
+            //Play explosion Animation, since game loop has not been developed as of 01/04/2019
+            // this is one way of demonstrating the animation I have developed
               explosionAnimation.play(elapsedTime, smallBoxCoordinates[numberofSmallBoxDetected][0],//
                     smallBoxCoordinates[numberofSmallBoxDetected][1],                               //
                     smallBoxCoordinates[numberofSmallBoxDetected][2],                               //
@@ -844,19 +857,14 @@ public class BoardSetupScreen extends GameScreen {
 
     /**
      * Checks if an user has clicked on the screen, if so, check if the user has clicked onto a ship
-     * @param input
+     * @param touchEvent
      */
-    private void shipSelect(Input input)
+    private void shipSelect(TouchEvent touchEvent)
     {
         //Check if the user has pressed on the screen
-        List<TouchEvent> touchEvents = input.getTouchEvents();
-        for(TouchEvent touchEvent: touchEvents)
-        {
-            if(touchEvent.type == touchEvent.TOUCH_DOWN)
-            {
-                // Check if the touch was on any of the ships bounding box if yes change game state, store the pointer index and the ship
                 for(Ship ship: shipArray)
                 {
+                    // Check if the touch was on any of the ships bounding box if yes change game state, store the pointer index and the ship
                     if(boxContainsInput(ship.mBound.x, ship.mBound.x +ship.mBound.getWidth(),ship.mBound.y, ship.mBound.y + ship.mBound.getHeight(),touchEvent.x,touchEvent.y))
                     {
                         // Set x and y coordinates dragShipOffset vector, so when user drags the ship, the ship will be dragged from the point of touch
@@ -866,8 +874,6 @@ public class BoardSetupScreen extends GameScreen {
                         gameShipPlacementState = GameShipPlacementState.SHIP_DRAG;
                     }
                 }
-            }
-        }
     }
 
     /**
@@ -882,18 +888,6 @@ public class BoardSetupScreen extends GameScreen {
             selectedShip.mBound.x = input.getTouchX(shipToDragPointerIndexOfInput) + dragShipOffset.x;
             selectedShip.mBound.y = input.getTouchY(shipToDragPointerIndexOfInput) + dragShipOffset.y;
         }
-
-        // When user lifts their finger off the screen drop the bitmap, and change the game state
-        List<TouchEvent> touchEvents = input.getTouchEvents();
-        for (TouchEvent touchEvent : touchEvents)
-            if (touchEvent.type == TouchEvent.TOUCH_UP
-                    && touchEvent.pointer == shipToDragPointerIndexOfInput) {
-                // Call ship placement after the user has placed the ship object.
-                shipPlacement();
-                //Set the gamestate to ship select since the user is no longer pressing onto the screen
-                gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
-            }
-
     }
 
     /**

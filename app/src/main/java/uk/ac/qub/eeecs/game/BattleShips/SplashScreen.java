@@ -1,5 +1,5 @@
 /*
-*@reference from Ragnorak Screens
+*@reference package uk.ac.qub.eeecs.ragnarok.screens;
  */
 package uk.ac.qub.eeecs.game.BattleShips;
 
@@ -13,7 +13,7 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.world.ScreenViewport;
 import uk.ac.qub.eeecs.gage.world.LayerViewport;
-import uk.ac.qub.eeecs.game.MenuScreen;
+import uk.ac.qub.eeecs.game.BattleShips.MainMenu;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,7 +23,6 @@ import java.util.List;
 
 /**
  * This is a developed splash screen class
- * which is linked up to the main game interface
  * @author Hannah Cunningham (40201925)
  */
 
@@ -45,24 +44,20 @@ public class SplashScreen extends GameScreen
 
 
     //Constructor for this class
-    public SplashScreen(Game game) {
+    public SplashScreen(Game game)
+    {
         super("SplashScreen", game);
         this.game = game;
 
         //this method will load the class' assets
         loadAssets();
-
         mScreenViewport = new ScreenViewport(0, 0, game.getScreenWidth(),
                 game.getScreenHeight());
-
         mLayerViewport = new LayerViewport(mScreenViewport.width / 2, mScreenViewport.height / 2,
                 mScreenViewport.width / 2, mScreenViewport.height / 2);
 
         //the timeToCreate variable is set to return the current time in milliseconds
         timeToCreate = System.currentTimeMillis();
-
-
-
 
         assetManager = mGame.getAssetManager();
         createBackground();
@@ -77,16 +72,16 @@ public class SplashScreen extends GameScreen
     {
         AssetManager assetManager = mGame.getAssetManager();
         mGame.getAssetManager().loadAssets("txt/assets/SplashScreenAssets.JSON");
-        backgroundBitmap = assetManager.getBitmap("SplashBackground");
+        backgroundBitmap = assetManager.getBitmap("splashBackground");
         symbolBitmap = assetManager.getBitmap("symbol");
         regularUnderworld = assetManager.getFont("regularUnderworld");
         paint = new Paint();
-
     }
 
     //the below method will create a new background for the game screen and is referenced from: https://stackoverflow.com/questions/30425789/convert-immutable-bitmap-file-to-mutable-bitmap
     //this particular method will convert an immutable bitmap file, such as the "splashBackground" image to scale, to a mutable bitmap
-    public void createBackground() {
+    private void createBackground()
+    {
         assetManager.loadAndAddBitmap("splashBackground", "img/splashBackground.png");
         backgroundBitmap = Bitmap.createScaledBitmap(assetManager.getBitmap("splashBackground"),
                 mScreenViewport.width, mScreenViewport.height, false);
@@ -96,7 +91,7 @@ public class SplashScreen extends GameScreen
     }
 
     //this method will load and draw the symbol bitmap from gameObject
-    public void createSymbol()
+    private void createSymbol()
     {
         assetManager.loadAndAddBitmap("symbol", "img/symbol.png");
         symbolBitmap = Bitmap.createScaledBitmap(assetManager.getBitmap("symbol"), 400, 400, false);
@@ -104,14 +99,14 @@ public class SplashScreen extends GameScreen
     }
 
     //this method will draw the desired font type
-    public void createFont()
+    private void createFont()
     {
         assetManager.loadAndAddFont("regularUnderworld", "fonts/underworld.ttf");
         regularUnderworld = assetManager.getFont("regularUnderworld");
     }
 
     //this method will store the desired text and colour styles
-    public void createPaint()
+    private void createPaint()
     {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.WHITE);
@@ -124,7 +119,7 @@ public class SplashScreen extends GameScreen
     /*this method will create a canvas which initially represents a blank rectangular area on the game screen of a
       given width and height which will capture and draw the background "splashBackground" image
      */
-    public void createCanvas()
+    private void createCanvas()
     {
         canvas = new Canvas(background.getBitmap());
         canvasTextX = game.getScreenWidth() * 0.26f;
@@ -138,7 +133,7 @@ public class SplashScreen extends GameScreen
     }
 
     //this method will display the title "Battleships" on the canvas created
-    public void writeTitleOnBackground()
+    private void writeTitleOnBackground()
     {
         canvas.drawText("Battleships", canvasTextX, canvasTextY, paint);
     }
@@ -159,31 +154,31 @@ public class SplashScreen extends GameScreen
             alphaCount ++;
         }
 
-        //the below method will get the current time and check for a timeout
+        //the below method will get the current time and check for a timeout to return to the main menu
         currentTime = System.currentTimeMillis();
         if(currentTime - timeToCreate >= SPLASH_TIMEOUT)
         {
-            goToMenuScreen();
+            goToMainMenu();
         }
 
 
-        //the below method will process any touch events occurring since the last update
+        //the below method will process any touch events occurring since the last update and if so, return to main menu
         Input input = mGame.getInput();
         List<TouchEvent> touchEvents = input.getTouchEvents();
         if (touchEvents.size() > 0)
         {
-            goToMenuScreen();
+            goToMainMenu();
         }
     }
+
     /**
      * the method below will remove the current game screen
      * and then change to the menu screen
      */
-    public void goToMenuScreen()
+    public void goToMainMenu()
     {
-
         mGame.getScreenManager().removeScreen(this.getName());
-        mGame.getScreenManager().addScreen(new MenuScreen(mGame));
+        mGame.getScreenManager().addScreen(new MainMenu(mGame));
     }
 
     /**
@@ -207,6 +202,7 @@ public class SplashScreen extends GameScreen
         return background;
     }
     public void setBackgroundObject(GameObject backgroundObject) { this.background = backgroundObject; }
+
     public Bitmap getBackground()
     {
         return backgroundBitmap;
@@ -215,6 +211,7 @@ public class SplashScreen extends GameScreen
     {
         this.backgroundBitmap = backgroundBitmap;
     }
+
     public Canvas getCanvas()
     {
         return canvas;
@@ -223,14 +220,13 @@ public class SplashScreen extends GameScreen
     {
         this.canvas = canvas;
     }
+
     public Paint getPaint()
     {
         return paint;
     }
-    public void setPaint(Paint paint)
-    {
-        this.paint = paint;
-    }
+    public void setPaint(Paint paint) { this.paint = paint; }
+
     public Bitmap getSymbolBitmap()
     {
         return symbolBitmap;
@@ -239,7 +235,4 @@ public class SplashScreen extends GameScreen
     {
         this.symbolBitmap = symbolBitmap;
     }
-    public long getCurrentTime(){ return currentTime;}
-    public void setCurrentTime(long currentTime) {this.currentTime = currentTime;}
-
 }

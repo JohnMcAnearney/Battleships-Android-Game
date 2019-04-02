@@ -85,7 +85,7 @@ public class AudioManager {
 
         // Request control of the volume
         if(mGame.getActivity() != null)
-        mGame.getActivity().setVolumeControlStream(
+          mGame.getActivity().setVolumeControlStream(
                 android.media.AudioManager.STREAM_MUSIC);
     }
 
@@ -257,8 +257,6 @@ public class AudioManager {
     }
 
     //Methods added by AT 40207942
-
-
 
     public static boolean getMusicEnabled(){
         return musicEnabled;

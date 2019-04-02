@@ -31,83 +31,112 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
-public class    SettingsScreen extends GameScreen {
+public class SettingsScreen extends GameScreen {
 
     /*Created 100% by AT: 40207942*/
+    /*References: QUBBATTLE, TRIBALHUNTER, AVANT, LECTURE CODE
 
     /**
      * Define the properties for the settings screen;
      */
     //Properties for background;
+    private AssetManager mAssetManager;
     private Bitmap mSettingsBackground;
     private int mScreenWidth, mScreenHeight;
     private Rect mRect;
+
     //Properties relating to the shared preferences and preference manager;
     private Activity mActivity;
+    private Context mContext;
     private PreferencesManager mPreferencesManager;
 
     //Properties relating to the buttons and list of buttons
     private PushButton mBackButton, mMuteMusicButton, mMuteEffectButton, mMusicText, mEffectsText;
+    private List<PushButton> mAllButtons;
+    private List<PushButton>mMusicControlButtons;
+    private List<PushButton>mEffectControlButtons;
 
-    private List<PushButton> mAllButtons= new ArrayList<>();
-    private List<PushButton>mMusicControlButtons= new ArrayList<>();
-    private List<PushButton>mEffectControlButtons= new ArrayList<>();
-
-    private Map<PushButton, Float> mMusicButtonVolumeControls = new HashMap<>();
-    private Map<PushButton, Float> mEffectButtonVolumeControls = new HashMap<>();
+    //Hash maps created to get information from the JSON file
+    private Map<PushButton, Float> mMusicButtonVolumeControls;
+    private Map<PushButton, Float> mEffectButtonVolumeControls;
 
     //Properties relating to the update display bar and audio
     private UpdateBarDisplay mMusicBarDisplay, mEffectsBarDisplay;
+
+    //Properties relating the the audio settings
     private AudioManager mAudioManager;
-    private Music mMusicOnScreen;
+    private Music mBackgroundMusic;
     private Sound mEffectsButtonSound;
 
+    //Final strings for the shared preference keys
+    private static final String MUSIC_SHAREDPREF_KEY = "MusicPreference";
+    private static final String EFFECT_SHAREDPREF_KEY = "EffectPreference";
+    private static final String MUTE_MUSIC_SHAREDPREF_KEY = "MuteMusicPreference";
+    private static final String MUTE_EFFECT_SHAREDPREF_KEY = "MuteEffectPreference";
+
+
     /**
-     * Constructor
-     * @param game
+     * @param mGame
      */
-    public SettingsScreen(Game game) {
-        super("SettingsScreen", game);
-        mActivity= mGame.getActivity();
-        mPreferencesManager = new PreferencesManager(mActivity);
-        mAudioManager = mGame.getAudioManager();
-        mScreenHeight=0;
-        mScreenWidth=0;
-        mMusicOnScreen=mGame.getAssetManager().getMusic("RickRoll");
-        mEffectsButtonSound = mGame.getAssetManager().getSound("ButtonsEffect");
-        //Call the methods
+    public SettingsScreen(Game mGame) {
+        super("SettingsScreen", mGame);
+        //Setting the properties
+         mActivity= mGame.getActivity();
+         mContext= mGame.getActivity().getApplicationContext();
+         mPreferencesManager = new PreferencesManager(mGame);
+         mAssetManager = mGame.getAssetManager();
+
+         mScreenHeight=0;
+         mScreenWidth=0;
+
+         mAllButtons= new ArrayList<>();
+         mMusicControlButtons= new ArrayList<>();
+         mEffectControlButtons= new ArrayList<>();
+         mMusicButtonVolumeControls = new HashMap<>();
+         mEffectButtonVolumeControls = new HashMap<>();
+
+         mAudioManager = mGame.getAudioManager();
+
+
+
+        //Call the methods that happen at the beginning
         loadAssets();
-        playBackgroundMusic();
+        playBackgroundMusic(mBackgroundMusic);
         createBarDisplayVolume();
-        createButton();
+        createButtons();
         }
 
     /**
     * Method to load all of the game assets
     * */
     public void loadAssets(){
-        AssetManager assetManager = mGame.getAssetManager();
-        mGame.getAssetManager().loadAssets("txt/assets/SettingsScreenAssets.JSON");
-        mSettingsBackground = assetManager.getBitmap("SettingBackground");
+        mAssetManager.loadAssets("txt/assets/SettingsScreenAssets.JSON");
+        //Setting assets
+        mSettingsBackground = mAssetManager.getBitmap("SettingBackground");
+        mBackgroundMusic=mAssetManager.getMusic("RickRoll");
+        mEffectsButtonSound = mAssetManager.getSound("ButtonsEffect");
     }
+
 
     /**
      * method to draw the instances
      * @param elapsedTime Elapsed time information for the frame
      * @param graphics2D  Graphics instance used to draw the screen
      */
-
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
-        //Background
+
+        //Drawing the background
         getWidthAndHeightOfScreen(graphics2D);
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mSettingsBackground, null, mRect, null);
 
+        //Drawing all of the buttons
         for(PushButton buttons: mAllButtons){
             buttons.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
         }
-        //Display Bars
+
+        //Drawing the two display bars
         mMusicBarDisplay.draw(elapsedTime, graphics2D);
         mEffectsBarDisplay.draw(elapsedTime, graphics2D);
     }
@@ -139,17 +168,17 @@ public class    SettingsScreen extends GameScreen {
         //numberOfBits and scale added for ease of change
         int numberOfBits=10;
         int scaleOfBar = 26;
-        mMusicBarDisplay = new UpdateBarDisplay(numberOfBits, mPreferencesManager.loadCurrentMusicVolume(mAudioManager.getMusicVolume()), 0f, 1f, mDefaultLayerViewport.getWidth()+600.0f, (mDefaultLayerViewport.getHeight()/0.75f), scaleOfBar, this );
-        mEffectsBarDisplay = new UpdateBarDisplay(numberOfBits,mPreferencesManager.loadCurrentEffectsVolume(mAudioManager.getSfxVolume()), 0f,1f,mDefaultLayerViewport.getWidth()+600.0f, mDefaultLayerViewport.getHeight()/2+600, scaleOfBar, this );
+        mMusicBarDisplay = new UpdateBarDisplay(numberOfBits, mPreferencesManager.loadCurrentMusicVolume(MUSIC_SHAREDPREF_KEY, mAudioManager.getMusicVolume()), 0f, 1f, mDefaultLayerViewport.getWidth()+600.0f, (mDefaultLayerViewport.getHeight()/0.75f), scaleOfBar, this );
+        mEffectsBarDisplay = new UpdateBarDisplay(numberOfBits,mPreferencesManager.loadCurrentEffectsVolume(EFFECT_SHAREDPREF_KEY, mAudioManager.getSfxVolume()), 0f,1f,mDefaultLayerViewport.getWidth()+600.0f, mDefaultLayerViewport.getHeight()/2+600, scaleOfBar, this );
     }
 
     /**
      * Method to construst the audio buttons
      * Reference: Lecture code sent from Phillip Hanna whihc I have developed by 40207942 to suit audio needs
      * @param buttonsToConstructJSONFile
-     * @param buttons
+     * @param mAllButtons
      */
-    private void constructAudioButtons(String buttonsToConstructJSONFile, List<PushButton> buttons) {
+    private void constructAudioButtons(String buttonsToConstructJSONFile, List<PushButton> mAllButtons) {
         String loadedJSON;
         try {
             loadedJSON = mGame.getFileIO().loadJSON(buttonsToConstructJSONFile);
@@ -172,9 +201,6 @@ public class    SettingsScreen extends GameScreen {
                 PushButton button = new PushButton(x * mDefaultLayerViewport.getWidth(), y * mDefaultLayerViewport.getHeight(),
                             width, height,
                             defaultBitmap, this);
-
-                button.setPlaySounds(true, true);
-                mAllButtons.add(button);
                 //Developed the code to split the buttons into two types, music buttons and effects buttons.
                 if(isMusicButton==true){
                     //Adds the music buttons to specific list and hash map
@@ -185,6 +211,8 @@ public class    SettingsScreen extends GameScreen {
                     mEffectControlButtons.add(button);
                     mEffectButtonVolumeControls.put(button, volumeValue);
                 }
+                button.setPlaySounds(true, true);
+                mAllButtons.add(button);
             }
         } catch (JSONException | IllegalArgumentException e) {
             throw new RuntimeException(
@@ -195,10 +223,12 @@ public class    SettingsScreen extends GameScreen {
     /**
      * Method to create all buttons on screen and add them to the array list
      */
-    public void createButton() {
+    public void createButtons() {
 
+        //Calls the method to create the audio control buttons
         constructAudioButtons("txt/assets/SettingScreenButtons.JSON", mAllButtons);
 
+        //Creates the buttons, sets the sound to true and adds it to the list of all the buttons
         //Back Button
         mBackButton = new PushButton(
                 mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.10f,
@@ -216,9 +246,9 @@ public class    SettingsScreen extends GameScreen {
         mAllButtons.add(mMusicText);
 
 
-        //Mute Buttons
+        // Music Mute Buttons
         //Checks if the music is previously muted in the shared preferences and displays the appropiate bitmap to screen.
-        if (mPreferencesManager.loadMuteMusicStatus(mAudioManager.getMusicEnabled())) {
+        if (mPreferencesManager.loadMuteMusicStatus(MUTE_MUSIC_SHAREDPREF_KEY,mAudioManager.getMusicEnabled())) {
             mMuteMusicButton = new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.6f,
                     mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f, "UnmuteButton", this);
             mAllButtons.add(mMuteMusicButton);
@@ -228,29 +258,31 @@ public class    SettingsScreen extends GameScreen {
             mAllButtons.add(mMuteMusicButton);
         }
 
-        if(mPreferencesManager.loadMuteEffectStatus(mAudioManager.getEffectsEnabled())){
+        // Effect Mute Buttons
+        //Checks if the effect is previously muted in the shared preferences and displays the appropiate bitmap to screen.
+        if(mPreferencesManager.loadMuteEffectStatus(MUTE_EFFECT_SHAREDPREF_KEY, mAudioManager.getEffectsEnabled())){
             mMuteEffectButton= new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.3f,
                     mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f, "UnmuteButton", this);
             mAllButtons.add(mMuteEffectButton);
-
         }else{
             mMuteEffectButton= new PushButton(mDefaultLayerViewport.getWidth() * 0.95f, mDefaultLayerViewport.getHeight() * 0.3f,
                     mDefaultLayerViewport.getWidth() * 0.075f, mDefaultLayerViewport.getHeight() * 0.10f, "MuteButton", this);
             mAllButtons.add(mMuteEffectButton);
-
         }
-
-
     }
 
     /**
      * Method to check if music is playing on screen and plays it if not
      */
-    public void playBackgroundMusic() {
-        if(mPreferencesManager.loadMuteMusicStatus(mAudioManager.getMusicEnabled()==true)) {
-            mAudioManager.setMusicVolume(mPreferencesManager.loadCurrentMusicVolume(mAudioManager.getMusicVolume()));
-            mAudioManager.playMusic(
-                    getGame().getAssetManager().getMusic("RickRoll"));
+    public void playBackgroundMusic(Music musicToPlay) {
+        //Checks if music is muted in shared preferences
+        if(mPreferencesManager.loadMuteMusicStatus(MUTE_MUSIC_SHAREDPREF_KEY, mAudioManager.getMusicEnabled()==true)) {
+            //Checks if the music is already playing
+            if(!mAudioManager.isMusicPlaying()) {
+                //Sets the music to volume in shared preferences and plays it
+                mAudioManager.setMusicVolume(mPreferencesManager.loadCurrentMusicVolume(MUSIC_SHAREDPREF_KEY, mAudioManager.getMusicVolume()));
+                mAudioManager.playMusic(musicToPlay);
+            }
         }
     }
 
@@ -266,8 +298,8 @@ public class    SettingsScreen extends GameScreen {
         if(touchEvents.size()>0){
             for(PushButton button: mAllButtons) {
                 button.update(elapsedTime);
-            }
                 pressedButtonsActions();
+            }
         }
     }
 
@@ -280,9 +312,10 @@ public class    SettingsScreen extends GameScreen {
      */
 
     public void preformMusicButtonActions( float volumeValue){
-        if(mPreferencesManager.loadMuteMusicStatus(mAudioManager.getMusicEnabled())) {
+        //NOTE: The musics sound can only be changed when not muted.
+        if(mPreferencesManager.loadMuteMusicStatus(MUTE_MUSIC_SHAREDPREF_KEY, mAudioManager.getMusicEnabled())) {
             //Gets the current volume of music
-            float currentMusic = mPreferencesManager.loadCurrentMusicVolume(mAudioManager.getMusicVolume());
+            float currentMusic = mPreferencesManager.loadCurrentMusicVolume(MUSIC_SHAREDPREF_KEY, mAudioManager.getMusicVolume());
             //Increases/Decrease by the volumeValue
             mAudioManager.setMusicVolume(currentMusic + volumeValue);
             //Updates the music display bar
@@ -290,9 +323,9 @@ public class    SettingsScreen extends GameScreen {
             mMusicBarDisplay.update();
             //Stops the music at old volume and plays it again at new volume.
             mAudioManager.stopMusic();
-            mAudioManager.playMusic(mMusicOnScreen);
+            mAudioManager.playMusic(mBackgroundMusic);
             //Saves the new volume of the screen on the shared preferences;
-            mPreferencesManager.saveCurrentMusicVolume(mAudioManager.getMusicVolume());
+            mPreferencesManager.saveCurrentMusicVolume(MUSIC_SHAREDPREF_KEY, mAudioManager.getMusicVolume());
         }
     }
 
@@ -304,18 +337,19 @@ public class    SettingsScreen extends GameScreen {
      * @param volumeValue
      */
     public void preformEffectsButtonActions(float volumeValue){
-        if(mPreferencesManager.loadMuteEffectStatus(mAudioManager.getEffectsEnabled())) {
+        //NOTE: The effects sound can only be changed when not muted.
+        if(mPreferencesManager.loadMuteEffectStatus(MUTE_EFFECT_SHAREDPREF_KEY, mAudioManager.getEffectsEnabled())) {
             //Gets the current volume of effects
-            float currentEffect = mPreferencesManager.loadCurrentEffectsVolume(mAudioManager.getSfxVolume());
+            float currentEffect = mPreferencesManager.loadCurrentEffectsVolume(EFFECT_SHAREDPREF_KEY,mAudioManager.getSfxVolume());
             //Increases/Decrease by the volumeValue.
             mAudioManager.setSfxVolume(currentEffect+volumeValue);
+            //Saves the new volume of the effects on the shared preferences;
+            mPreferencesManager.saveCurrentEffectVolume(EFFECT_SHAREDPREF_KEY, mAudioManager.getSfxVolume());
             //Update the effects display bar
             mEffectsBarDisplay.setValue(mAudioManager.getSfxVolume());
             mEffectsBarDisplay.update();
             //Plays sound to demonstrate its working
             mAudioManager.play(mEffectsButtonSound);
-            //Saves the new volume of the effects on the shared preferences;
-            mPreferencesManager.saveCurrentEffectVolume(mAudioManager.getSfxVolume());
         }
     }
 
@@ -326,17 +360,17 @@ public class    SettingsScreen extends GameScreen {
      * */
 
     public void preformMuteMusicButtonActions(){
-        boolean isMusicMuted = mPreferencesManager.loadMuteMusicStatus(mAudioManager.getMusicEnabled());
+        boolean isMusicMuted = mPreferencesManager.loadMuteMusicStatus(MUTE_MUSIC_SHAREDPREF_KEY,mAudioManager.getMusicEnabled());
         if(isMusicMuted==true){
             mAudioManager.setMusicEnabled(false);
-            mPreferencesManager.saveMuteMusicStatus(mAudioManager.getMusicEnabled());
+            mPreferencesManager.saveMuteMusicStatus(MUTE_MUSIC_SHAREDPREF_KEY, mAudioManager.getMusicEnabled());
             mMuteMusicButton.setBitmap(mGame.getAssetManager().getBitmap("MuteButton"));
             mAudioManager.stopMusic();
         }else {
             mMuteMusicButton.setBitmap(mGame.getAssetManager().getBitmap("UnmuteButton"));
             mAudioManager.setMusicEnabled(true);
-            mPreferencesManager.saveMuteMusicStatus(mAudioManager.getMusicEnabled());
-            playBackgroundMusic();
+            mPreferencesManager.saveMuteMusicStatus(MUTE_MUSIC_SHAREDPREF_KEY, mAudioManager.getMusicEnabled());
+            playBackgroundMusic(mBackgroundMusic);
         }
     }
 
@@ -344,15 +378,15 @@ public class    SettingsScreen extends GameScreen {
      * Method to mute sfx
      */
     public void preformMuteEffectButtonActions(){
-        boolean isEffectsMuted = mPreferencesManager.loadMuteEffectStatus(mAudioManager.getEffectsEnabled());
+        boolean isEffectsMuted = mPreferencesManager.loadMuteEffectStatus(MUTE_EFFECT_SHAREDPREF_KEY,mAudioManager.getEffectsEnabled());
         if(isEffectsMuted==true){
             mAudioManager.setEffectEnabled(false);
-            mPreferencesManager.saveMuteEffectStatus(mAudioManager.getEffectsEnabled());
+            mPreferencesManager.saveMuteEffectStatus(MUTE_EFFECT_SHAREDPREF_KEY, mAudioManager.getEffectsEnabled());
             mMuteEffectButton.setBitmap(mGame.getAssetManager().getBitmap("MuteButton"));
         } else{
             mMuteEffectButton.setBitmap(mGame.getAssetManager().getBitmap("UnmuteButton"));
             mAudioManager.setEffectEnabled(true);
-            mPreferencesManager.saveMuteEffectStatus(mAudioManager.getEffectsEnabled());
+            mPreferencesManager.saveMuteEffectStatus(MUTE_EFFECT_SHAREDPREF_KEY, mAudioManager.getEffectsEnabled());
         }
     }
 
@@ -360,13 +394,17 @@ public class    SettingsScreen extends GameScreen {
      * Method checks if button actions pressed and preform specific action
      */
     public void pressedButtonsActions(){
+
+        //For loop that runs through the music control buttons and checks if  triggered
        for (PushButton button : mMusicControlButtons) {
             if(button.isPushTriggered()) {
+                //passes the hash of the button with the volume value to the preform music control actions if triggered.
                 preformMusicButtonActions(mMusicButtonVolumeControls.get(button));
             }
         }
         for (PushButton button : mEffectControlButtons) {
             if(button.isPushTriggered()) {
+                //passes the hash of the button with the volume value to the preform effect control actions if triggered.
                 preformEffectsButtonActions(mEffectButtonVolumeControls.get(button));
             }
         }
@@ -381,11 +419,16 @@ public class    SettingsScreen extends GameScreen {
             // to the pause screen and if it's accessed through the main menu it returns to the main menu - Edgars
             mGame.getScreenManager().removeScreen(this);
         }
+        //If text buttons pushed sound effect plays;
         if(mEffectsText.isPushTriggered()){
-           mAudioManager.play(mEffectsButtonSound);
+           if(mPreferencesManager.loadMuteEffectStatus(MUTE_EFFECT_SHAREDPREF_KEY,mAudioManager.getEffectsEnabled())){
+               mAudioManager.play(mEffectsButtonSound);
+           }
         }
         if(mMusicText.isPushTriggered()){
-            mAudioManager.play(mEffectsButtonSound);
+            if(mPreferencesManager.loadMuteEffectStatus(MUTE_EFFECT_SHAREDPREF_KEY, mAudioManager.getMusicEnabled())) {
+                mAudioManager.play(mEffectsButtonSound);
+            }
         }
     }
 

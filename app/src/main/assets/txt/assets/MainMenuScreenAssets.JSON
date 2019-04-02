@@ -49,6 +49,14 @@
       "type": "Sound",
       "name": "ButtonsEffect",
       "file": "sound/ButtonEffectSound.wav"
+    }, {
+      "type": "Sound",
+      "name": "ButtonsEffect",
+      "file": "sound/ButtonEffectSound.wav"
+    }, {
+      "type": "Music",
+      "name": "RickRoll",
+      "file": "sound/Pirates Of The Caribbean Theme Song.mp3"
     }
     ]
 }

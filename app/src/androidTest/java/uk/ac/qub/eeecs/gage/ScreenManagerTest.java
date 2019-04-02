@@ -1,5 +1,5 @@
 package uk.ac.qub.eeecs.gage;
-//@referenced Avant
+//@referenced package uk.ac.qub.eeecs.gage.Avant
 
 import org.junit.Before;
 import org.junit.Test;

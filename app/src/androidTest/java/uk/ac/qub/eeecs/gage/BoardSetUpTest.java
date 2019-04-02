@@ -913,7 +913,7 @@ public class BoardSetUpTest {
             assertEquals(ship.getmBound().y, smallBoxCoordinates[99][1]);
         }
     }
-    
+
     public boolean checkIfBoxOccupied_ValidData(int boxToBeTested){
 
         boolean occupied = false;

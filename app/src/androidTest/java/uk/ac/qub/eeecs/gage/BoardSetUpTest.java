@@ -339,7 +339,7 @@ public class BoardSetUpTest {
         assertEquals(-1,binarySearchRows(boxArray,90,0,10,1000,1000));
 
         //check if binarySearch is able to search all of the boxes in all rows with inputs contained
-        //in one of the boxes in each row and successfully return the right box
+        //in one of the boxes in each row and successfully return the expected box
         assertEquals(1,binarySearchRows(boxArray,0,0,10,6,2));
         assertEquals(11,binarySearchRows(boxArray,10,0,10,7,7));
         assertEquals(22,binarySearchRows(boxArray,20,0,10,14,11));
@@ -350,6 +350,83 @@ public class BoardSetUpTest {
         assertEquals(77,binarySearchRows(boxArray,70,0,10,36,37));
         assertEquals(88,binarySearchRows(boxArray,80,0,10,43,42));
         assertEquals(99,binarySearchRows(boxArray,90,0,10,49,49));
+
+    }
+
+    private int binarySearchBox(float[][] array,int lower, int higher, float x, float y)
+    {
+        //Check if the lower bound is less than or equal to higher bound
+        //this is used to ensure when the user has not clicked onto a small box, the loop
+        //is broken
+        //if lower bound is less than or equal to higher bound find a mid value
+        if(lower <higher) {
+            int mid =  (lower + higher) / 2;
+
+            //if the mid small box contains the user's input x and y values the box
+            // have been found return the number of the small box
+            if(boxContainsInput(array[mid][0],array[mid][2], array[mid][1], array[mid][3],x,y))
+            {
+                return mid;
+            }
+
+            //check if the user's input y value is in the current row, if yes the row has been found
+            //proceed to calling a binary search on the current row
+            if(y > array[mid][1] && y < array[mid][3])
+            {
+                return mid-(mid%10);
+            }
+
+            //check if the user's input y value is below the current row, if yes recursive call
+            //current method with lower boundary being the current row + 1
+            if(y > array[mid][1] && y > array[mid][3])
+                return binarySearchBox(array,mid+1,higher,x,y);
+
+            //check if the user's input y value is below the current row, if yes recursive call
+            //current method with higher boundary being the current row -1
+            if(y<array[mid][1] && y < array[mid][3])
+                return binarySearchBox(array,lower,mid-1,x,y);
+        }
+        return -1;
+    }
+
+    @Test
+    public void binarySearchBoxTest()
+    {
+        //As the method in binarySearchBox, binarySearchRow has been tested thoroughly
+        //more tests involving the method is not needed therefore an alteration to method
+        //binarySearchBox has been made to return numberOfSmallBox only
+
+        //Set up 2D array as it is required to test the method
+        float[][] boxArray = setUp2DArrayWithCoors();
+        //Test performed in every row, ensuring the first box of the row is returned respectively
+        assertEquals(0,binarySearchBox(boxArray,0,100,49,4));
+        assertEquals(10,binarySearchBox(boxArray,0,100,44,9));
+        assertEquals(20,binarySearchBox(boxArray,0,100,38,13));
+        assertEquals(30,binarySearchBox(boxArray,0,100,33,18));
+        assertEquals(40,binarySearchBox(boxArray,0,100,27,22));
+        assertEquals(50,binarySearchBox(boxArray,0,100,22,27));
+        assertEquals(60,binarySearchBox(boxArray,0,100,16,31));
+        assertEquals(70,binarySearchBox(boxArray,0,100,11,36));
+        assertEquals(80,binarySearchBox(boxArray,0,100,9,44));
+        assertEquals(90,binarySearchBox(boxArray,0,100,1,49));
+
+        //Test y co-ordinates which are out of the box's bounds, box y bounds are 0 to 50
+        assertEquals(-1,binarySearchBox(boxArray,0,100,2,60));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,6,70));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,11,80));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,16,50.5f));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,24,100));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,29,55));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,33,51));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,37,59.5f));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,44,300));
+        assertEquals(-1,binarySearchBox(boxArray,0,100,47,500));
+
+    }
+
+    @Test
+    public void detectionIfUserSelectedSmallBox()
+    {
 
     }
 

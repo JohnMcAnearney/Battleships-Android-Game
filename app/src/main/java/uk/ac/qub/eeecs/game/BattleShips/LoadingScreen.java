@@ -47,7 +47,8 @@ public class LoadingScreen extends GameScreen
      * CONSTRUCTOR - for the LoadingScreen class, which runs two methods which set up the screen
      * @param game
      */
-    public LoadingScreen(Game game) {
+    public LoadingScreen(Game game)
+    {
         super("LoadingScreen", game);
 
         // Method which loads all the assets

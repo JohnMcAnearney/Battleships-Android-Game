@@ -1,0 +1,44 @@
+{
+  "assets": [
+    {
+      "type" : "Bitmap",
+      "name" : "YesButton",
+      "file" : "img/YesButton.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "YesButtonP",
+      "file" : "img/YesButtonP.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "NoButton",
+      "file" : "img/NoButton.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "NoButtonP",
+      "file" : "img/NoButtonP.png"
+
+    },
+    {
+      "type" : "Bitmap",
+      "name" : "MainMenuCheckerTitle",
+      "file" : "img/MainMenuCheckerTitle.png"
+
+    },
+    {
+      "type" : "Music",
+      "name" : "RickRoll",
+      "file" : "sound/Pirates Of The Caribbean Theme Song.mp3"
+    },
+    {
+      "type" : "Sound",
+      "name" : "YesButtonSound",
+      "file" : "sound/ButtonEffectSound.wav"
+    }
+  ]
+}

@@ -8,9 +8,9 @@ import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 
 /* Author : Edgars (40203154)
-* This is a custom animation class which will take an Image Strip/Spritesheet and animate it, allowing for the
-* animation to then be used in the LoadingScreen class to allow for a loading animation to be drawn to the
-* screen
+* This is a custom animation class which will take an Image Strip/Spritesheet and animate it,
+* allowing for the animation to then be used in the LoadingScreen class to allow for a loading
+* animation to be drawn to the screen
 */
 public class LoadingAnimation
 {
@@ -34,7 +34,8 @@ public class LoadingAnimation
      * @param animationSettings
      * @param stripIndex
      */
-    public LoadingAnimation(AnimationSettings animationSettings, int stripIndex) {
+    public LoadingAnimation(AnimationSettings animationSettings, int stripIndex)
+    {
         // Method which initialises all of the variables needed within the class.
         initialiseVariables(animationSettings, stripIndex);
     }
@@ -71,10 +72,7 @@ public class LoadingAnimation
             buildRectangle();
 
             // Calculating a source rectangle for a single frame of the image strip
-            mSourceRect.left = 0;
-            mSourceRect.right = mFrameWidth;
-            mSourceRect.top = 0;
-            mSourceRect.bottom = mFrameHeight;
+            buildSourceRectangle();
 
             // Calculating the location of the current frame within the image strip
             int rowIndex = mCurrentFrame / mNumOfRows;
@@ -125,13 +123,13 @@ public class LoadingAnimation
         mPlaying = false;
     }
 
-    // Getter to get the current frame
+    // Getter for the current frame
     protected int getCurrentFrame()
     {
         return mCurrentFrame;
     }
 
-    // Getter to get the end frame
+    // Getter for the end frame
     protected int getEndFrame()
     {
         return mEndFrame;
@@ -207,5 +205,14 @@ public class LoadingAnimation
         mScreenRect.right = (int)right;
         mScreenRect.top = (int)y;
         mScreenRect.bottom = (int)bottom;
+    }
+
+    // Method which builds the source rectangle
+    private void buildSourceRectangle()
+    {
+        mSourceRect.left = 0;
+        mSourceRect.right = mFrameWidth;
+        mSourceRect.top = 0;
+        mSourceRect.bottom = mFrameHeight;
     }
 }

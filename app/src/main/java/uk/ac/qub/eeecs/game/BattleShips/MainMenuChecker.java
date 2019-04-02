@@ -13,6 +13,7 @@ import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
 import uk.ac.qub.eeecs.gage.engine.audio.Music;
+import uk.ac.qub.eeecs.gage.engine.audio.Sound;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
@@ -20,32 +21,33 @@ import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 /* Author : Edgars (40203154)
- * This is a pause screen class which will be accessible through the game screen, by clicking
- * a pause button; allowing the player to change their settings, return to main menu and give them
- * a quick launch option to mute the music
+ * This is a Main Menu checker class, which will appear if the user selects to return to the main
+ * menu from the pause screen. This screen will prompt the user with the consequences if they do
+ * decide to return to the main menu and plays a sound if they do.
  */
-public class PauseScreen extends GameScreen
+public class MainMenuChecker extends GameScreen
 {
-    // Defining variables to be used for the pause screen background
-    private Bitmap mPauseBackground, mPause;
+    // Defining variables to be used for the main menu checker background
+    private Bitmap mMainMenuCheckerBackground, mMainMenuCheckerTitle;
     private int mScreenWidth, mScreenHeight;
     private Rect mRect;
     private Paint mPaint;
 
     // Defining all the buttons and a list which will store all of the buttons
-    private PushButton mBackButton, mVolumeButton, mInstructionsButton, mSettingsButton, mMainMenu;
+    private PushButton mYesButton, mNoButton;
     private List<PushButton> mButtonCollection = new ArrayList<>();
 
     // Defining variables related to audio
     private AudioManager mAudioManager = getGame().getAudioManager();
     private Music mBackgroundMusic;
+    private Sound mYesButtonSound;
 
     /**
-     * CONSTRUCTOR - for the PauseScreen class, which runs three methods which set up the screen
+     * CONSTRUCTOR - for the MainMenuChecker class, which runs three methods which set up the screen
      * @param game
-    */
-    public PauseScreen(Game game){
-        super("PauseScreen", game);
+     */
+    public MainMenuChecker(Game game) {
+        super("MainMenuChecker", game);
 
         // Method which loads all the assets
         loadAssets();
@@ -58,17 +60,19 @@ public class PauseScreen extends GameScreen
     }
 
     /**
-     * Update method for the PauseScreen class
+     * Update method for the MainMenuChecker class
      * @param elapsedTime
      */
     @Override
     public void update(ElapsedTime elapsedTime)
     {
+
         // Used to process any touch input within the screen
         Input input = mGame.getInput();
 
         // A list which stores the history of touch inputs to allow for appropriate processing
         List<TouchEvent> touchEvents = input.getTouchEvents();
+
         // If statement to process the possible inputs
         if (touchEvents.size() > 0)
         {
@@ -81,21 +85,21 @@ public class PauseScreen extends GameScreen
     }
 
     /**
-     * Draw method for the PauseScreen class
+     * Draw method for the MainMenuChecker class
      * @param elapsedTime
      * @param graphics2D
      */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
-        // Drawing the screen background
+        // Method which draws all the bitmaps within the screen
         drawBitmaps(graphics2D);
 
         // Drawing the buttons
         drawButtons(elapsedTime, graphics2D);
     }
 
-    // ----METHODS----
+    //----METHODS----
 
     // Method which loads all the assets
     private void loadAssets()
@@ -104,44 +108,26 @@ public class PauseScreen extends GameScreen
         AssetManager assetManager = mGame.getAssetManager();
 
         // Loading in the JSON file
-        mGame.getAssetManager().loadAssets("txt/assets/PauseScreenAssets.JSON");
+        mGame.getAssetManager().loadAssets("txt/assets/MainMenuCheckerAssets.JSON");
 
-        // Initialising the Pause Background with an appropriate bitmap
-        mPauseBackground = assetManager.getBitmap("BattleshipBackground");
+        // Initialising the Loading Background with an appropriate bitmap
+        mMainMenuCheckerBackground = assetManager.getBitmap("BattleshipBackground");
 
-        // Initialising the Pause Title with an appropriate bitmap
-        mPause = assetManager.getBitmap("Paused");
+        // Initialising the Loading Title with appropriate bitmap
+        mMainMenuCheckerTitle = assetManager.getBitmap("MainMenuCheckerTitle");
 
         // Initialising the Background Music with music file
         mBackgroundMusic = mGame.getAssetManager().getMusic("RickRoll");
 
-        // Initialising a blank paint
-        mPaint = new Paint();
+        // Initialising the Yes Button sound
+        mYesButtonSound = assetManager.getSound("YesButtonSound");
 
         // Initialising the Screen Width and Height
         mScreenWidth = 0;
         mScreenHeight = 0;
-    }
 
-    /**
-     * Method which draws all the appropriate bitmaps within the screen
-     * @param graphics2D
-     */
-    private void drawBitmaps(IGraphics2D graphics2D)
-    {
-        // Drawing the background image
-        getWidthAndHeightOfScreen(graphics2D);
-        graphics2D.clear(Color.WHITE);
-        graphics2D.drawBitmap(mPauseBackground,null, mRect,null);
-
-        // Working out variables which will hold, 1% of the device screen width and height to allow for easy usage
-        int onePercentOfScreenHeight, onePercentOfScreenWidth;
-        onePercentOfScreenHeight = graphics2D.getSurfaceHeight()/100;
-        onePercentOfScreenWidth = graphics2D.getSurfaceWidth()/100;
-
-        // Drawing the loading title bitmap
-        Rect titleRectangle = new Rect(onePercentOfScreenWidth*30, onePercentOfScreenHeight, onePercentOfScreenWidth*75, onePercentOfScreenHeight*35);
-        graphics2D.drawBitmap(mPause, null, titleRectangle, mPaint);
+        // Initialising a blank paint
+        mPaint = new Paint();
     }
 
     // Method which creates all the push buttons
@@ -151,32 +137,15 @@ public class PauseScreen extends GameScreen
         float viewportWidth = mDefaultLayerViewport.getWidth();
         float viewportHeight = mDefaultLayerViewport.getHeight();
 
-        // Main Menu Button
-        mMainMenu = new PushButton(viewportWidth / 2,viewportHeight  / 2, viewportWidth / 4.2f, viewportHeight / 9,
-                "MainMenuButton", "MainMenuButtonP", this);
-        mButtonCollection.add(mMainMenu);
+        // Yes Button
+        mYesButton = new PushButton(viewportWidth / 2,viewportHeight  / 2, viewportWidth / 4.2f, viewportHeight / 9,
+                "YesButton", "YesButtonP", this);
+        mButtonCollection.add(mYesButton);
 
-        // Instruction Button
-        mInstructionsButton = new PushButton(viewportWidth / 2, viewportHeight / 5.5f, viewportWidth / 4, viewportHeight / 8,
-                "InstructionsButton", "InstructionsButtonP", this);
-        mButtonCollection.add(mInstructionsButton);
-
-        // Settings Button
-        mSettingsButton = new PushButton(viewportWidth / 2, viewportHeight / 3f, viewportWidth / 4, viewportHeight / 8,
-                "SettingsButton", "SettingsButtonP", this);
-        mButtonCollection.add(mSettingsButton);
-
-        // Back Button
-        mBackButton = new PushButton(viewportWidth * 0.95f, viewportHeight * 0.1f, viewportWidth * 0.075f, viewportHeight * 0.1f,
-                "SettingsBackButton", "SettingsBackButtonP", this);
-
-        mButtonCollection.add(mBackButton);
-
-        // Volume Button
-        mVolumeButton = new PushButton(viewportWidth * 0.05f, viewportHeight * 0.1f, viewportWidth * 0.075f, viewportHeight * 0.1f,
-                "VolumeOn", this);
-        mButtonCollection.add(mVolumeButton);
-
+        // No Button
+        mNoButton = new PushButton(viewportWidth / 2, viewportHeight / 3f, viewportWidth / 4.2f, viewportHeight / 9,
+                "NoButton", "NoButtonP", this);
+        mButtonCollection.add(mNoButton);
     }
 
     /**
@@ -209,30 +178,20 @@ public class PauseScreen extends GameScreen
     // Method which executes the actions of all the push buttons
     private void performPushButtonActions()
     {
-        // If back button is pressed, remove the current screen to return to the main menu
-        if (mBackButton.isPushTriggered())
+        // If the yes button is triggered, remove all current screens and move to the main menu
+        if (mYesButton.isPushTriggered())
+        {
+            // Method which will play the yes button sound
+            playButtonSound(mYesButtonSound);
+
+            // Removing all current screens and adding a new MainMenu screen
+            mGame.getScreenManager().removeAllScreens();
+            moveToNewGameScreen(new MainMenu(mGame));
+        }
+        // If the no button is triggered, return to the pause screen
+        else if (mNoButton.isPushTriggered())
         {
             returnToPreviousGameScreen();
-        }
-        // If instructions button is triggered, add a new screen to the instruction screen.
-        else if (mInstructionsButton.isPushTriggered())
-        {
-            moveToNewGameScreen(new InstructionsScreen(mGame));
-        }
-        // If settings button is triggered, add a new screen to the settings screen.
-        else if (mSettingsButton.isPushTriggered())
-        {
-            moveToNewGameScreen(new SettingsScreen(mGame));
-        }
-        // If volume button is triggered, mute sound and change bitmap
-        else if(mVolumeButton.isPushTriggered())
-        {
-            performMuteButtonActions();
-        }
-        // If the main menu button is triggered, go to the main menu checker
-        else if(mMainMenu.isPushTriggered())
-        {
-            moveToNewGameScreen(new MainMenuChecker(mGame));
         }
     }
 
@@ -252,26 +211,7 @@ public class PauseScreen extends GameScreen
     // Method which creates a new rectangle size of the screen
     private void updateRect()
     {
-        mRect = new Rect(0,0, mScreenWidth, mScreenHeight);
-    }
-
-    /*
-     * Method which performs the mute button actions - Method taken from Aileen(40207942),
-     * adjusted method slightly to suit my class
-     */
-    private void performMuteButtonActions(){
-
-        if(mAudioManager.getMusicEnabled() == true)
-        {
-            mAudioManager.setMusicEnabled(false);
-            mVolumeButton.setBitmap(mGame.getAssetManager().getBitmap("VolumeOff"));
-            mAudioManager.stopMusic();
-        }
-        else {
-            mAudioManager.setMusicEnabled(true);
-            mVolumeButton.setBitmap(mGame.getAssetManager().getBitmap("VolumeOn"));
-            playBackgroundMusicIfNotPlaying();
-        }
+        mRect = new Rect(0,0,mScreenWidth,mScreenHeight);
     }
 
     /*
@@ -280,12 +220,31 @@ public class PauseScreen extends GameScreen
      */
     private void playBackgroundMusicIfNotPlaying()
     {
-        if(mAudioManager.getMusicEnabled() == true)
+        if(!mAudioManager.isMusicPlaying())
         {
-            if (!mAudioManager.isMusicPlaying()) {
-                mAudioManager.playMusic(mBackgroundMusic);
-            }
+            mAudioManager.playMusic(mBackgroundMusic);
         }
+    }
+
+    /**
+     * Method which draws all the appropriate bitmaps within the screen
+     * @param graphics2D
+     */
+    private void drawBitmaps(IGraphics2D graphics2D)
+    {
+        // Drawing the background image
+        getWidthAndHeightOfScreen(graphics2D);
+        graphics2D.clear(Color.WHITE);
+        graphics2D.drawBitmap(mMainMenuCheckerBackground,null, mRect,null);
+
+        // Working out variables which will hold, 1% of the device screen width and height to allow for easy usage
+        int onePercentOfScreenHeight, onePercentOfScreenWidth;
+        onePercentOfScreenHeight = graphics2D.getSurfaceHeight()/100;
+        onePercentOfScreenWidth = graphics2D.getSurfaceWidth()/100;
+
+        // Drawing the loading title bitmap
+        Rect titleRectangle = new Rect(onePercentOfScreenWidth, onePercentOfScreenHeight, onePercentOfScreenWidth*100, onePercentOfScreenHeight*35);
+        graphics2D.drawBitmap(mMainMenuCheckerTitle, null, titleRectangle, mPaint);
     }
 
     /**
@@ -302,5 +261,18 @@ public class PauseScreen extends GameScreen
     {
         mGame.getScreenManager().removeScreen(this);
     }
-}
 
+    /**
+     * Method which takes in a sound file and then plays the button sound
+     * @param sound
+     */
+    public Sound playButtonSound(Sound sound)
+    {
+        if (mAudioManager.getEffectsEnabled())
+        {
+            mAudioManager.play(sound);
+        }
+
+        return sound;
+    }
+}

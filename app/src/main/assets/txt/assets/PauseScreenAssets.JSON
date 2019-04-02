@@ -68,15 +68,18 @@
     },
     {
       "type": "Bitmap",
-      "name": "NewGameButton",
-      "file": "img/NewGameB.png"
+      "name": "MainMenuButton",
+      "file": "img/MainMenuButton.png"
+    },
+    {
+      "type": "Bitmap",
+      "name": "MainMenuButtonP",
+      "file": "img/MainMenuButtonP.png"
     },
     {
       "type" : "Music",
       "name" : "RickRoll",
       "file" : "sound/Pirates Of The Caribbean Theme Song.mp3"
-
-
     }
   ]
 }

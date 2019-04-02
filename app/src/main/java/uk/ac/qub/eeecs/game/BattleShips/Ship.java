@@ -30,7 +30,7 @@ public class Ship //extends Sprite
     private float scaleratioY;
     private Vector2 targetPosition = new Vector2();
     private Vector2 screenCentre = new Vector2();
-    protected BoundingBox mBound = new BoundingBox();
+    public BoundingBox mBound = new BoundingBox();
     private boolean selected, afterDrag;
     public Bitmap bitmap;
     private Paint paint;

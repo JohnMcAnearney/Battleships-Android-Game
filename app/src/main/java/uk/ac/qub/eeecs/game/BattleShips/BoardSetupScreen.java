@@ -341,10 +341,6 @@ public class BoardSetupScreen extends GameScreen {
 
                 }
 
-                //TODO
-                // add the grid reset here
-               // resetBoardPlacements();
-
                 //draw each of the small boxes
                 /**
                  * https://developer.android.com/reference/android/graphics/Rect
@@ -564,24 +560,8 @@ public class BoardSetupScreen extends GameScreen {
             }
             //otherwise just snap to the closest box
             else {
-                switch (selectedShip.getShipLength()) {
-                    case 2:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        break;
-                    case 3:
-                        selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                        selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        break;
-                    case 4:
-                        selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                        selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        break;
-                    case 5:
-                        selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                        selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        break;
-                }
             }
 
         }
@@ -592,28 +572,10 @@ public class BoardSetupScreen extends GameScreen {
         calculateClosestBox();
         //same as ship reset but doesnt check out of bounds
         //needed these two separated as there was a strange glitch where it would mark the ship where it wasn't present and I couldn't figure it out.
-        switch (selectedShip.getShipLength()) {
-            case 2:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
                 markShipInBox();
-                break;
-            case 3:
-                selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox();
-                break;
-            case 4:
-                selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox();
-                break;
-            case 5:
-                selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox();
-                break;
-        }
+
     }
 
     /**

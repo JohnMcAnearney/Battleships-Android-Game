@@ -32,5 +32,8 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockito_version"
     androidTestImplementation "org.mockito:mockito-android:$mockito_version"
 
-
+    //added code to integrate mockito in our Android Test Classes
+    //Added by Hannah Cunningham(40201925)
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.25.1'
 }

@@ -219,14 +219,17 @@ public class MainMenu extends GameScreen
         mGame.getScreenManager().addScreen(newScreen);
     }
     //40207942
-    public void playSoundEffect(){
+    //Have made method return sound so to allow testing
+    public Sound playSoundEffect(){
         if(mGame.getAudioManager().getEffectsEnabled()){
            mGame.getAudioManager().play(mButtonSound);
         }
+        return mButtonSound;
     }
     //40207942
+    //Note: Would include shared preferences but have not so to be able to test the screen
     public void playBackgroundMusic(Music musicToPlay) {
-        if(mAudioManager.getEffectsEnabled()) {
+        if(mAudioManager.getMusicEnabled()==true) {
             if(!mGame.getAudioManager().isMusicPlaying()) {
                 mAudioManager.setMusicVolume(mAudioManager.getMusicVolume());
                 mAudioManager.playMusic(musicToPlay);

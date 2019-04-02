@@ -56,8 +56,8 @@ public class ScreenManagerTest
     public void getCurrentScreen_Test()
     {
         ScreenManager manager = new ScreenManager(game);
-        manager.addScreen(mainMenu);
         manager.addScreen(gameScreen);
+        manager.addScreen(mainMenu);
         assertEquals(mainMenu, manager.getCurrentScreen());
     }
 
@@ -66,8 +66,8 @@ public class ScreenManagerTest
     public void getScreen_Test()
     {
         ScreenManager manager = new ScreenManager(game);
-        manager.addScreen(mainMenu);
         manager.addScreen(gameScreen);
+        manager.addScreen(mainMenu);
         assertEquals(mainMenu, manager.getScreen(mainMenuName));
     }
 
@@ -76,8 +76,8 @@ public class ScreenManagerTest
     public void removeScreen_Test()
     {
         ScreenManager manager = new ScreenManager(game);
-        manager.addScreen(mainMenu);
         manager.addScreen(gameScreen);
+        manager.addScreen(mainMenu);
         assertTrue(manager.removeScreen(mainMenuName));
     }
 
@@ -86,8 +86,8 @@ public class ScreenManagerTest
     public void removeScreen_NotFound_Test()
     {
         ScreenManager manager = new ScreenManager(game);
-        manager.addScreen(mainMenu);
         manager.addScreen(gameScreen);
+        manager.addScreen(mainMenu);
         manager.removeScreen(mainMenuName);
         assertFalse(manager.removeScreen(mainMenuName));
     }

@@ -1,5 +1,6 @@
 package uk.ac.qub.eeecs.game.BattleShips;
 //based on lecture example
+
 import java.util.ArrayList;
 import java.util.List;
 import android.graphics.Bitmap;
@@ -20,27 +21,29 @@ import uk.ac.qub.eeecs.gage.Game;
  * @author Hannah Cunningham (40201925)
  */
 
-
 public class DemoScreen extends GameScreen
 {
     //Variables used to define the demo screen class
-    String mKeyLabels = "1234567890abcdefghijklmnopqrstuvwxyz";
-    ArrayList<Key> mKeys = new ArrayList<>();
-    StringBuffer mName = new StringBuffer();
+    private String mKeyLabels = "1234567890abcdefghijklmnopqrstuvwxyz";
+    private ArrayList<Key> mKeys = new ArrayList<>();
+    private StringBuffer mName = new StringBuffer();
     private Rect rect;
     private int screenWidth, screenHeight = 0;
 
 
     //Constructor
-    public DemoScreen(Game game) {
+    public DemoScreen(Game game)
+    {
         super("MainMenu", game);
         getGame().getAssetManager().loadAndAddBitmap("key", "img/key.png");
         createAndPositionKeys();
     }
 
-    //the below method creates and positions the keys with a
-    // row length of 10 with assigned magic numbers for spacing etc
-    private void createAndPositionKeys() {
+    /*the below method creates and positions the keys with a
+    *row length of 10 with assigned magic numbers for spacing etc
+    */
+    private void createAndPositionKeys()
+    {
         final int rowLength = 10;
         final float topLeftKeyX = 60.0f, topLeftKeyY = 180.0f;
         final float keyWidth = 35.0f, keyHeight = 35.0f;
@@ -48,12 +51,14 @@ public class DemoScreen extends GameScreen
 
         float keyX = topLeftKeyX, keyY = topLeftKeyY;
         for (int keyIdx = 0; keyIdx < mKeyLabels.length();
-             keyIdx++) {
+             keyIdx++)
+        {
             Key key = new Key(keyX, keyY, keyWidth, keyHeight, mKeyLabels.charAt(keyIdx), this);
             key.setmLinkedStringBuffer(mName);
             mKeys.add(key);
 
-            if (keyIdx > 0 && (keyIdx + 1) % rowLength == 0) {
+            if (keyIdx > 0 && (keyIdx + 1) % rowLength == 0)
+            {
                 keyY -= keyHeight + keyYSpacing;
                 keyX = topLeftKeyX;
             } else keyX += keyWidth + keyXSpacing;
@@ -91,14 +96,15 @@ public class DemoScreen extends GameScreen
             for (Key key : mKeys)
                 key.update(elapsedTime);
         }
-
     }
+
     private Paint textPaint = new Paint();
 
     //this method will override the draw method in the gameScreen class to desired
     //specifications for each key in the key class,
     @Override
-    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
+    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
+    {
         graphics2D.clear(Color.BLUE);
         for(Key key : mKeys)
             key.draw(elapsedTime, graphics2D, mDefaultLayerViewport, mDefaultScreenViewport);
@@ -108,9 +114,4 @@ public class DemoScreen extends GameScreen
 
         graphics2D.drawText(mName.toString(), 100.0f, 100.0f, textPaint);
     }
-
-
-
-
-
-    }
+}

@@ -17,9 +17,12 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class PreferenceManagerTest {
+    /*Created 100% by AT: 40207942*/
+
     private Context context;
     private DemoGame mGame;
     private PreferencesManager mPreferencesManager;
+    //defining final strings to be the keys for the shared prefereneces;
     private static final String MUSIC_SHAREDPREF_KEY_TEST = "MusicPreferenceTest";
     private static final String EFFECT_SHAREDPREF_KEY_TEST= "EffectPreferenceTest";
     private static final String MUTE_MUSIC_SHAREDPREF_KEY_TEST = "MuteMusicPreferenceTest";
@@ -157,5 +160,4 @@ public class PreferenceManagerTest {
         float checkValue = mPreferencesManager.loadCurrentEffectsVolume(MUSIC_SHAREDPREF_KEY_TEST, 0.0f);
         assertEquals(0.0f,checkValue);
     }
-
 }

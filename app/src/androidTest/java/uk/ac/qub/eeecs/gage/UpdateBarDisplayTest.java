@@ -21,6 +21,10 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class UpdateBarDisplayTest {
+    /*Created 100% by AT: 40207942*/
+    //References: QUBBATTLE
+
+
     private Context mContext;
     private DemoGame mGame;
     //Using the testing screen to test bar instead of settings as settings screen includes share preferences.
@@ -31,7 +35,9 @@ public class UpdateBarDisplayTest {
         mContext = InstrumentationRegistry.getTargetContext();
         setupGameManager();
     }
-
+    /**
+     * Sets up the gane manager and creates testing screen
+     */
     private void setupGameManager() {
         mGame = new DemoGame();
         mGame.mFileIO = new FileIO(mContext);
@@ -41,11 +47,8 @@ public class UpdateBarDisplayTest {
         mGame.mScreenManager=new ScreenManager(mGame);
         mTestingScreen =  new TestingScreen(mGame);
 
-
-        assetManager.loadAndAddBitmap("BitImageDefault", "img/BlankBitPlain.png");
-        assetManager.loadAndAddBitmap("BitImageColour", "img/BlankBitHigh.png");
     }
-
+    //TESTS TO CHECK INITIAL VALUES CORRECT
     @Test
     public void updateBarDisplay_normalValue_returnsCorrectValue() {
        UpdateBarDisplay updateBarDisplay = new UpdateBarDisplay(10,0.25f, 0f, 1f, 25f, 30f, 10,  mTestingScreen);
@@ -71,6 +74,7 @@ public class UpdateBarDisplayTest {
         assertEquals(0f, updateBarDisplay.getValue());
     }
 
+    //TESTS TO SET THE VOLUME VALUES
     @Test
     public void updateBarDisplay_setValueWithinLimit_increase() {
         UpdateBarDisplay updateBarDisplay = new UpdateBarDisplay(10,0.75f, 0f, 1f, 25f, 30f, 10, mTestingScreen);
@@ -106,7 +110,7 @@ public class UpdateBarDisplayTest {
         updateBarDisplay.setValue(-5f);
         assertEquals(0f, updateBarDisplay.getValue());
     }
-
+    //TESTS TO CHECK SETTING MAX VOLUME VALUE WORKS CORRECTLY
     @Test
     public void updateBarDisplay_setMaxValue_increase() {
         UpdateBarDisplay updateBarDisplay = new UpdateBarDisplay(10,0.75f, 0f, 1f, 25f, 30f, 10, mTestingScreen);
@@ -121,6 +125,7 @@ public class UpdateBarDisplayTest {
         assertEquals(0.5f, updateBarDisplay.getMaxVal());
     }
 
+    //TESTS TO CHECK SETTING MIN VOLUME VALUE WORKS CORRECTLY
     @Test
     public void updateBarDisplay_setMinValue_increase() {
         UpdateBarDisplay updateBarDisplay = new UpdateBarDisplay(10,0.75f, 0f, 1f, 25f, 30f, 10, mTestingScreen);
@@ -133,7 +138,7 @@ public class UpdateBarDisplayTest {
         updateBarDisplay.setMinVal(-2f);
         assertEquals(0f, updateBarDisplay.getMinVal());
     }
-
+    //MORE COMPLEX TESTS
     @Test
     public void updateBarDisplay_setMaxValueLessInitialValue_decrease_expectValueToBeSetToNewMax() {
         UpdateBarDisplay updateBarDisplay = new UpdateBarDisplay(10,0.8f, 0f, 1f, 25f, 30f, 10, mTestingScreen);
@@ -158,7 +163,7 @@ public class UpdateBarDisplayTest {
         assertEquals(1.0f, updateBarDisplay.getValue());
     }
     @Test
-    public void updateBarDisplay_setMinValueGreaterThanMaxValue_increasse_expectValueToBeSetToMaxMinusOne() {
+    public void updateBarDisplay_setMinValueGreaterThanMaxValue_increase_expectValueToBeSetToMaxMinusOne() {
         UpdateBarDisplay updateBarDisplay = new UpdateBarDisplay(10,0.8f, 0f, 1f, 25f, 30f, 10, mTestingScreen);
         updateBarDisplay.setMinVal(1.5f);
         assertEquals(0.9f, updateBarDisplay.getMinVal());
@@ -166,7 +171,7 @@ public class UpdateBarDisplayTest {
     }
 
     @Test
-    public void updateBarDisplay_setMinLessThanZero_decreasse_expectValueToBeSetToZero() {
+    public void updateBarDisplay_setMinLessThanZero_decrease_expectValueToBeSetToZero() {
         UpdateBarDisplay updateBarDisplay = new UpdateBarDisplay(10,0.8f, 1f, 2f, 25f, 30f, 10, mTestingScreen);
         updateBarDisplay.setMinVal(-0.5f);
         assertEquals(0f, updateBarDisplay.getMinVal());

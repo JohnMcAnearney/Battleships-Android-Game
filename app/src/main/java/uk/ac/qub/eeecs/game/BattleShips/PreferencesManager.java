@@ -42,7 +42,7 @@ public class PreferencesManager {
      */
     public PreferencesManager(Game mGame) {
         this.mGame = mGame;
-        mActivity=mGame.getActivity();
+        this.mActivity=mGame.getActivity();
         this.mPreferences= PreferenceManager.getDefaultSharedPreferences(mActivity.getApplicationContext());
         this.mPreferencesEditor = this.mPreferences.edit();
 
@@ -71,6 +71,7 @@ public class PreferencesManager {
 
     /**
      * Method that get the volume of effect sounds from shared preferences;
+     * @param key
      * @param currentEffect
      * @return
      */
@@ -81,6 +82,7 @@ public class PreferencesManager {
 
     /**
      * Method that get the boolean if the music is muted or not from shared preferences;
+     * @param key
      * @param muteStatus
      * @return
      */
@@ -91,6 +93,7 @@ public class PreferencesManager {
 
     /**
      * Method that get the boolean if the effect sound is muted or not from shared preferences;
+     * @param key
      * @param muteStatus
      * @return
      */
@@ -101,6 +104,7 @@ public class PreferencesManager {
 
     /**
      * Method that saves the boolean if the effects is muted or not to shared preferences;
+     * @param key
      * @param muteStatus
      * @return
      */
@@ -111,6 +115,7 @@ public class PreferencesManager {
     }
     /**
      * Method that saves the boolean if the music is muted or not to shared preferences;
+     * @param key
      * @param muteStatus
      * @return
      */
@@ -121,6 +126,7 @@ public class PreferencesManager {
 
     /**
      * Method that saves the new float of the music volume to shared preferences;
+     * @param key
      * @param currentMusic
      */
     public void saveCurrentMusicVolume(String key, float currentMusic){
@@ -130,6 +136,7 @@ public class PreferencesManager {
 
     /**
      * Method that saves the new float of the effect volume to shared preferences;
+     * @param key
      * @param currentEffects
      */
     public void saveCurrentEffectVolume(String key, float currentEffects) {

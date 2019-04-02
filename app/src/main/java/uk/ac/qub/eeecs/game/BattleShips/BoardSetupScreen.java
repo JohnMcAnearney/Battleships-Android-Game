@@ -91,9 +91,10 @@ public class BoardSetupScreen extends GameScreen {
         battleshipTitle = assetManager.getBitmap("Title");
         boardSetupBackground = assetManager.getBitmap("WaterBackground");
         boundsMessage = assetManager.getBitmap("boundsMessage");
+        assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
+
 
         //Mantas Stadnik (40203133) load bitmaps which were used by my methods
-        assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png");
         assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png");
         assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
         assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
@@ -126,6 +127,7 @@ public class BoardSetupScreen extends GameScreen {
             //Check if user touched down on the screen
             if(touchEvent.type == touchEvent.TOUCH_DOWN &&
                     gameShipPlacementState == GameShipPlacementState.SHIP_SELECT) {
+                detectionIfUserSelectedSmallBox(elapsedTime);
             shipSelect(touchEvent);
             }
             // When user lifts their finger off the screen drop the bitmap, and change the game state
@@ -169,6 +171,12 @@ public class BoardSetupScreen extends GameScreen {
                 {
                     //check if a ship has been selected, do nothing no ship has been selected
                 }
+            else
+            {
+                //rotate the ship by 90 degrees
+                rotateShipBy90Degrees();
+            }
+            }
             else if(mPlayButton.isPushTriggered())
             {
                 //TODO - MJ
@@ -181,14 +189,7 @@ public class BoardSetupScreen extends GameScreen {
                 //Enter game loop
 
             }
-            else
-            {
-                //rotate the ship by 90 degrees
-                rotateShipBy90Degrees();
-            }
-            }
             //Calling method to check if user input of x,y are inside a small box
-            detectionIfUserSelectedSmallBox(elapsedTime);
         }
 
         //update the animation frame
@@ -339,10 +340,6 @@ public class BoardSetupScreen extends GameScreen {
                     smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;
 
                 }
-
-                //TODO
-                // add the grid reset here
-               // resetBoardPlacements();
 
                 //draw each of the small boxes
                 /**
@@ -563,24 +560,8 @@ public class BoardSetupScreen extends GameScreen {
             }
             //otherwise just snap to the closest box
             else {
-                switch (selectedShip.getShipLength()) {
-                    case 2:
                         selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        break;
-                    case 3:
-                        selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                        selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        break;
-                    case 4:
-                        selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                        selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        break;
-                    case 5:
-                        selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                        selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                        break;
-                }
             }
 
         }
@@ -591,28 +572,10 @@ public class BoardSetupScreen extends GameScreen {
         calculateClosestBox();
         //same as ship reset but doesnt check out of bounds
         //needed these two separated as there was a strange glitch where it would mark the ship where it wasn't present and I couldn't figure it out.
-        switch (selectedShip.getShipLength()) {
-            case 2:
                 selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
                 selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
                 markShipInBox();
-                break;
-            case 3:
-                selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox();
-                break;
-            case 4:
-                selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox();
-                break;
-            case 5:
-                selectedShip.mBound.x = smallBoxCoordinates[numberOfClosestBox][0];
-                selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
-                markShipInBox();
-                break;
-        }
+
     }
 
     /**

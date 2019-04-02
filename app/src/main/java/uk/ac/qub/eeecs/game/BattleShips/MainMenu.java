@@ -17,8 +17,8 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
-/* Authors : Edgars(40203154), Aileen(40207942), Mantas()
- * Class created by Mantas()
+/* Authors : Edgars(40203154), Aileen(40207942), Mantas(40203133)
+ * Class created by Mantas(40203133)
  * Class populated by Aileen(40207942)
  * Class refactored by Edgars(40203154)
  */

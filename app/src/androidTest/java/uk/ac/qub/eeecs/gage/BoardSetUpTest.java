@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -13,13 +14,22 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Vector;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
+import uk.ac.qub.eeecs.gage.engine.input.GestureHandler;
+import uk.ac.qub.eeecs.gage.engine.input.Input;
+import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
+import uk.ac.qub.eeecs.gage.engine.input.TouchHandler;
 import uk.ac.qub.eeecs.gage.engine.io.FileIO;
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
+import uk.ac.qub.eeecs.gage.util.Vector2;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.game.BattleShips.BoardSetupScreen;
 import uk.ac.qub.eeecs.game.BattleShips.Ship;
@@ -36,8 +46,7 @@ public class BoardSetUpTest {
     private boolean shipOutOfBound;
     private BoundingBox boardBoundingBox ;
     private Ship[] shipArray;   //setting up the ship array so that they can be tested globally
-    // this line causes an empty test suite
-    //private @Mock Bitmap bitmap;
+    enum GameShipPlacementState {SHIP_SELECT,SHIP_DRAG}
 
 
     @Before
@@ -48,21 +57,15 @@ public class BoardSetUpTest {
         game.mFileIO = new FileIO(context);
         game.mAssetManager = new AssetManager(game);
         assetManager = game.getAssetManager();
-        boardScreen = new BoardSetupScreen(game);
+        //boardScreen = new BoardSetupScreen(game);
 
-        //Firstly, Setting up each of the ships as they will be tested quite a bit
-        //load bitmaps
-        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
-        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
-        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
-        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
-        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        Input inputTest = Mockito.mock(Input.class);
         //Set up Ship objects
-        Ship aircraftCarrier = new Ship("AircraftCarrier", 0.5f,0.5f,assetManager.getBitmap("AircraftCarrier"), 5);
-        Ship cargoShip = new Ship("CargoShip", 0.5f,0.5f,assetManager.getBitmap("CargoShip"), 4);
-        Ship cruiseShip = new Ship("CruiseShip", 0.5f,0.5f,assetManager.getBitmap("CruiseShip"), 4);
-        Ship submarine = new Ship("Submarine", 0.5f,0.5f,assetManager.getBitmap("Submarine"), 3);
-        Ship destroyer = new Ship("Destroyer",  0.5f,0.5f,assetManager.getBitmap("Destroyer"), 2);
+        Ship aircraftCarrier = new Ship("AircraftCarrier", 0.5f,0.5f,null, 5);
+        Ship cargoShip = new Ship("CargoShip", 0.5f,0.5f,null, 4);
+        Ship cruiseShip = new Ship("CruiseShip", 0.5f,0.5f,null, 4);
+        Ship submarine = new Ship("Submarine", 0.5f,0.5f,null, 3);
+        Ship destroyer = new Ship("Destroyer",  0.5f,0.5f,null, 2);
         shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
 
         int screenWidth = 1920;
@@ -92,8 +95,6 @@ public class BoardSetUpTest {
     @Test
     public void required_Bitmaps_Loaded()
     {
-
-        assertTrue(assetManager.loadAndAddBitmap("PlayButton", "img/AcceptButton.png"));
         assertTrue(assetManager.loadAndAddBitmap("rotateButton","img/rotateButton.png"));
         assertTrue(assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png"));
         assertTrue(assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png"));
@@ -160,7 +161,7 @@ public class BoardSetUpTest {
 
 
     @Test
-    public void SetUpShipmBound()
+    public void SetUpShipmBoundValidInput()
     {
         //load bitmaps
         assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
@@ -189,6 +190,61 @@ public class BoardSetUpTest {
                     ((100) / 10f) / 2f); }
 
                     assertEquals(29,Math.round(shipArray[0].getmBound().x));
+        assertEquals(194,Math.round(shipArray[0].getmBound().y));
+        assertEquals(250,Math.round(shipArray[0].getmBound().halfWidth));
+        assertEquals(5,Math.round(shipArray[0].getmBound().halfHeight));
+
+        assertEquals(29,Math.round(shipArray[1].getmBound().x));
+        assertEquals(281,Math.round(shipArray[1].getmBound().y));
+        assertEquals(200,Math.round(shipArray[1].getmBound().halfWidth));
+        assertEquals(5,Math.round(shipArray[1].getmBound().halfHeight));
+
+        assertEquals(29,Math.round(shipArray[2].getmBound().x));
+        assertEquals(367,Math.round(shipArray[2].getmBound().y));
+        assertEquals(200,Math.round(shipArray[2].getmBound().halfWidth));
+        assertEquals(5,Math.round(shipArray[2].getmBound().halfHeight));
+
+        assertEquals(29,Math.round(shipArray[3].getmBound().x));
+        assertEquals(454,Math.round(shipArray[3].getmBound().y));
+        assertEquals(100,Math.round(shipArray[3].getmBound().halfWidth));
+        assertEquals(5,Math.round(shipArray[3].getmBound().halfHeight));
+
+        assertEquals(29,Math.round(shipArray[4].getmBound().x));
+        assertEquals(540,Math.round(shipArray[4].getmBound().y));
+        assertEquals(150,Math.round(shipArray[4].getmBound().halfWidth));
+        assertEquals(5,Math.round(shipArray[4].getmBound().halfHeight));
+    }
+
+    @Test
+    public void SetUpShipmBoundNegativeValues()
+    {
+        //load bitmaps
+        assetManager.loadAndAddBitmap("AircraftCarrier", "img/AircraftCarrier.png");
+        assetManager.loadAndAddBitmap("CargoShip", "img/CargoShip.png");
+        assetManager.loadAndAddBitmap("CruiseShip", "img/CruiseShip.png");
+        assetManager.loadAndAddBitmap("Submarine", "img/Submarine.png");
+        assetManager.loadAndAddBitmap("Destroyer", "img/Destroyer.png");
+        //Set up Ship objects
+        Ship aircraftCarrier = new Ship("AircraftCarrier", 0.5f,0.5f,assetManager.getBitmap("AircraftCarrier"), 5);
+        Ship cargoShip = new Ship("CargoShip", 0.5f,0.5f,assetManager.getBitmap("CargoShip"), 4);
+        Ship cruiseShip = new Ship("CruiseShip", 0.5f,0.5f,assetManager.getBitmap("CruiseShip"), 4);
+        Ship submarine = new Ship("Submarine", 0.5f,0.5f,assetManager.getBitmap("Submarine"), 3);
+        Ship destroyer = new Ship("Destroyer",  0.5f,0.5f,assetManager.getBitmap("Destroyer"), 2);
+        Ship[] shipArray = new Ship[]{aircraftCarrier,cargoShip,cruiseShip,destroyer,submarine};
+
+
+        int screenWidth = 1920;
+        int screenHeight = 1080;
+        float screenHeightOffset = 0.1f;
+        //Setting the ships bounding box, including the x,y co-ordinates and the half width and half height using bounding box setter
+        for (Ship ship : shipArray) {
+            screenHeightOffset = screenHeightOffset + 0.08f;
+            ship.setmBound(screenWidth * 0.015f,
+                    screenHeight * screenHeightOffset,
+                    (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f); }
+
+        assertEquals(29,Math.round(shipArray[0].getmBound().x));
         assertEquals(194,Math.round(shipArray[0].getmBound().y));
         assertEquals(250,Math.round(shipArray[0].getmBound().halfWidth));
         assertEquals(5,Math.round(shipArray[0].getmBound().halfHeight));
@@ -307,14 +363,36 @@ public class BoardSetUpTest {
     }
 
     @Test
-    public void binarySearchRowsTest()
+    public void binarySearchRowsTestValidInput()
     {
         float[][] boxArray = setUp2DArrayWithCoors();
 
         //knowing first box in array contains 0,0,5,5 co-ordinates, when calling binarySearchRows
         //with input x 3 and input y 3, box 0 is expected to be returned
         assertEquals(0,binarySearchRows(boxArray,0,0,10,3,3));
-        //Binary search must return -1 when other rows are passed through
+
+        //check if binarySearch is able to search all of the boxes in all rows with inputs contained
+        //in one of the boxes in each row and successfully return the expected box
+        assertEquals(1,binarySearchRows(boxArray,0,0,10,6,2));
+        assertEquals(11,binarySearchRows(boxArray,10,0,10,7,7));
+        assertEquals(22,binarySearchRows(boxArray,20,0,10,14,11));
+        assertEquals(33,binarySearchRows(boxArray,30,0,10,19,16));
+        assertEquals(44,binarySearchRows(boxArray,40,0,10,22,24));
+        assertEquals(55,binarySearchRows(boxArray,50,0,10,28,27));
+        assertEquals(66,binarySearchRows(boxArray,60,0,10,31,33));
+        assertEquals(77,binarySearchRows(boxArray,70,0,10,36,37));
+        assertEquals(88,binarySearchRows(boxArray,80,0,10,43,42));
+        assertEquals(99,binarySearchRows(boxArray,90,0,10,49,49));
+
+    }
+
+    @Test
+    public void binarySearchRowsTestInvalidInput()
+    {
+        float[][] boxArray = setUp2DArrayWithCoors();
+
+
+        //Binary search must return -1 when wrong rows are passed through
         assertEquals(-1,binarySearchRows(boxArray,10,0,10,3,3));
         assertEquals(-1,binarySearchRows(boxArray,20,0,10,3,3));
         assertEquals(-1,binarySearchRows(boxArray,30,0,10,3,3));
@@ -337,19 +415,6 @@ public class BoardSetUpTest {
         assertEquals(-1,binarySearchRows(boxArray,70,0,10,1000,1000));
         assertEquals(-1,binarySearchRows(boxArray,80,0,10,1000,1000));
         assertEquals(-1,binarySearchRows(boxArray,90,0,10,1000,1000));
-
-        //check if binarySearch is able to search all of the boxes in all rows with inputs contained
-        //in one of the boxes in each row and successfully return the expected box
-        assertEquals(1,binarySearchRows(boxArray,0,0,10,6,2));
-        assertEquals(11,binarySearchRows(boxArray,10,0,10,7,7));
-        assertEquals(22,binarySearchRows(boxArray,20,0,10,14,11));
-        assertEquals(33,binarySearchRows(boxArray,30,0,10,19,16));
-        assertEquals(44,binarySearchRows(boxArray,40,0,10,22,24));
-        assertEquals(55,binarySearchRows(boxArray,50,0,10,28,27));
-        assertEquals(66,binarySearchRows(boxArray,60,0,10,31,33));
-        assertEquals(77,binarySearchRows(boxArray,70,0,10,36,37));
-        assertEquals(88,binarySearchRows(boxArray,80,0,10,43,42));
-        assertEquals(99,binarySearchRows(boxArray,90,0,10,49,49));
 
     }
 
@@ -390,7 +455,7 @@ public class BoardSetUpTest {
     }
 
     @Test
-    public void binarySearchBoxTest()
+    public void binarySearchBoxTestValidInputExpectSuccess()
     {
         //As the method in binarySearchBox, binarySearchRow has been tested thoroughly
         //more tests involving the method is not needed therefore an alteration to method
@@ -410,7 +475,19 @@ public class BoardSetUpTest {
         assertEquals(80,binarySearchBox(boxArray,0,100,9,44));
         assertEquals(90,binarySearchBox(boxArray,0,100,1,49));
 
-        //Test y co-ordinates which are out of the box's bounds, box y bounds are 0 to 50
+    }
+
+    @Test
+    public void binarySearchBoxTestInvalidInputExpectSuccess()
+    {
+        //As the method in binarySearchBox, binarySearchRow has been tested thoroughly
+        //more tests involving the method is not needed therefore an alteration to method
+        //binarySearchBox has been made to return numberOfSmallBox only
+
+        //Set up 2D array as it is required to test the method
+        float[][] boxArray = setUp2DArrayWithCoors();
+
+        //Test y co-ordinates which are out of the box's bounds
         assertEquals(-1,binarySearchBox(boxArray,0,100,2,60));
         assertEquals(-1,binarySearchBox(boxArray,0,100,6,70));
         assertEquals(-1,binarySearchBox(boxArray,0,100,11,80));
@@ -425,11 +502,431 @@ public class BoardSetUpTest {
     }
 
     @Test
-    public void detectionIfUserSelectedSmallBox()
+    public void detectionIfUserSelectedSmallBoxBigBoxCoorNotSet()
     {
+        //Setting up variables as if the board has not been set up
+        int bigBoxRightCoor = 0;
+        int x = 22, y = 34;
+        int numberofSmallBoxDetected = 0;
+        boolean smallBoxDetected = false;
+        float[][] smallBoxCoordinates = setUp2DArrayWithCoors();
+
+        if(bigBoxRightCoor == 0){ //if board co-ordinates have not been set, do nothing
+             }
+        else {
+            //if user input x co-ordinate is in the first box x region check if the user has clicked
+            //on one of the boxes in the first box
+            if (x <= bigBoxRightCoor) {
+                //carry out a binary search for a box on the first board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+            //if user input x co-ordinate is in the second box x region check if the user has clicked
+            //on one of the boxes in the second board
+            if (x > bigBoxRightCoor){
+                //carry out a binary search for a box on the second board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+        }
+
+        assertFalse(smallBoxDetected);
 
     }
 
+    @Test
+    public void detectionIfUserSelectedSmallBoxCaseInputInBoardOne()
+    {
+
+        //Setting up variables as if the user clicked on the left hand side board (board one)
+        //and board has been detected
+        int bigBoxRightCoor = 1000;
+        int x = 44, y =33;
+        int numberofSmallBoxDetected = 0;
+        boolean smallBoxDetected = false;
+        float[][] smallBoxCoordinates = setUp2DArrayWithCoors();
+
+        if(bigBoxRightCoor == 0){ //if board co-ordinates have not been set, do nothing
+        }
+        else {
+            //if user input x co-ordinate is in the first box x region check if the user has clicked
+            //on one of the boxes in the first box
+            if (x <= bigBoxRightCoor) {
+                //carry out a binary search for a box on the first board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+            //if user input x co-ordinate is in the second box x region check if the user has clicked
+            //on one of the boxes in the second board
+            if (x > bigBoxRightCoor){
+                //carry out a binary search for a box on the second board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+        }
+
+        assertTrue(smallBoxDetected);
+
+    }
+
+    @Test
+    public void detectionIfUserSelectedSmallBoxCaseInputOutsideBoardOne()
+    {
+
+        //Setting up variables as if the user clicked on the right hand side board (board two)
+        int bigBoxRightCoor = 1;
+        int x = 80, y =70;
+        int numberofSmallBoxDetected = 0;
+        boolean smallBoxDetected = false;
+        float[][] smallBoxCoordinates = setUp2DArrayWithCoors();
+
+        if(bigBoxRightCoor == 0){ //if board co-ordinates have not been set, do nothing
+        }
+        else {
+            //if user input x co-ordinate is in the first box x region check if the user has clicked
+            //on one of the boxes in the first box
+            if (x <= bigBoxRightCoor) {
+                //carry out a binary search for a box on the first board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+            //if user input x co-ordinate is in the second box x region check if the user has clicked
+            //on one of the boxes in the second board
+            if (x > bigBoxRightCoor){
+                //carry out a binary search for a box on the second board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+        }
+
+        assertFalse(smallBoxDetected);
+
+    }
+
+    @Test
+    public void detectionIfUserSelectedSmallBoxCaseInputInBoardTwo()
+    {
+
+        //Setting up variables as if the user clicked on the left hand side board (board one)
+        //and board has been detected
+        int bigBoxRightCoor = 1;
+        int x = 31, y = 42;
+        int numberofSmallBoxDetected = 0;
+        boolean smallBoxDetected = false;
+        float[][] smallBoxCoordinates = setUp2DArrayWithCoors();
+
+        if(bigBoxRightCoor == 0){ //if board co-ordinates have not been set, do nothing
+        }
+        else {
+            //if user input x co-ordinate is in the first box x region check if the user has clicked
+            //on one of the boxes in the first box
+            if (x <= bigBoxRightCoor) {
+                //carry out a binary search for a box on the first board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+            //if user input x co-ordinate is in the second box x region check if the user has clicked
+            //on one of the boxes in the second board
+            if (x > bigBoxRightCoor){
+                //carry out a binary search for a box on the second board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+        }
+
+        assertTrue(smallBoxDetected);
+
+    }
+
+    @Test
+    public void detectionIfUserSelectedSmallBoxCaseInputOutsideBoardTwo()
+    {
+
+        //Setting up variables as if the user clicked on the left hand side board (board one)
+        //and board has been detected
+        int bigBoxRightCoor = 1;
+        int x = 500, y = 300;
+        int numberofSmallBoxDetected = 0;
+        boolean smallBoxDetected = false;
+        float[][] smallBoxCoordinates = setUp2DArrayWithCoors();
+
+        if(bigBoxRightCoor == 0){ //if board co-ordinates have not been set, do nothing
+        }
+        else {
+            //if user input x co-ordinate is in the first box x region check if the user has clicked
+            //on one of the boxes in the first box
+            if (x <= bigBoxRightCoor) {
+                //carry out a binary search for a box on the first board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+            //if user input x co-ordinate is in the second box x region check if the user has clicked
+            //on one of the boxes in the second board
+            if (x > bigBoxRightCoor){
+                //carry out a binary search for a box on the second board setting the return int to numberOfSmallBoxDetected
+                numberofSmallBoxDetected = binarySearchBox(smallBoxCoordinates, 0, 100, x, y);
+                //if a box that a user has clicked on is found set smallBoxDetected flag to true
+                if (numberofSmallBoxDetected >= 0)
+                    smallBoxDetected = true;
+            }
+        }
+
+        assertFalse(smallBoxDetected);
+
+    }
+
+    @Test
+    public void shipSelectInputInsideBox()
+    {
+        //Setting up variables
+        Vector2 dragShipOffset = new Vector2();
+        Ship shipTest = new Ship("Test",0,0,null,0);
+        shipTest.setmBound(0,0,50,50);
+        Ship[] shipArray = {shipTest};
+        TouchEvent touchEvent = new TouchEvent();
+        touchEvent.pointer = 1;
+        touchEvent.x = 25;
+        touchEvent.y = 25;
+        Ship selectedShip = null;
+        int shipToDragPointerIndexOfInput = 0;
+        GameShipPlacementState gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
+
+        for(Ship ship: shipArray)
+        {
+            // Check if the touch was on any of the ships bounding box if yes change game state, store the pointer index and the ship
+            if(boxContainsInput(ship.mBound.x, ship.mBound.x +ship.mBound.getWidth(),ship.mBound.y, ship.mBound.y + ship.mBound.getHeight(),touchEvent.x,touchEvent.y))
+            {
+                // Set x and y coordinates dragShipOffset vector, so when user drags the ship, the ship will be dragged from the point of touch
+                dragShipOffset.set(ship.mBound.x - touchEvent.x, ship.mBound.y - touchEvent.y);
+                selectedShip = ship;
+                shipToDragPointerIndexOfInput = touchEvent.pointer;
+                gameShipPlacementState = GameShipPlacementState.SHIP_DRAG;
+            }
+        }
+
+        assertEquals(1, shipToDragPointerIndexOfInput);
+        assertEquals(GameShipPlacementState.SHIP_DRAG,gameShipPlacementState);
+        assertEquals(shipTest, selectedShip);
+    }
+
+    @Test
+    public void shipSelectInputOutsideBox()
+    {
+        //Setting up variables
+        Vector2 dragShipOffset = new Vector2();
+        Ship shipTest = new Ship("Test",0,0,null,0);
+        shipTest.setmBound(0,0,50,50);
+        Ship[] shipArray = {shipTest};
+        TouchEvent touchEvent = new TouchEvent();
+        touchEvent.pointer = 1;
+        touchEvent.x = 800;
+        touchEvent.y = 800;
+        Ship selectedShip = null;
+        int shipToDragPointerIndexOfInput = 0;
+        GameShipPlacementState gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
+
+        for(Ship ship: shipArray)
+        {
+            // Check if the touch was on any of the ships bounding box if yes change game state, store the pointer index and the ship
+            if(boxContainsInput(ship.mBound.x, ship.mBound.x +ship.mBound.getWidth(),ship.mBound.y, ship.mBound.y + ship.mBound.getHeight(),touchEvent.x,touchEvent.y))
+            {
+                // Set x and y coordinates dragShipOffset vector, so when user drags the ship, the ship will be dragged from the point of touch
+                dragShipOffset.set(ship.mBound.x - touchEvent.x, ship.mBound.y - touchEvent.y);
+                selectedShip = ship;
+                shipToDragPointerIndexOfInput = touchEvent.pointer;
+                gameShipPlacementState = GameShipPlacementState.SHIP_DRAG;
+            }
+        }
+
+        assertEquals(0, shipToDragPointerIndexOfInput);
+        assertEquals(GameShipPlacementState.SHIP_SELECT,gameShipPlacementState);
+        assertEquals(null, selectedShip);
+    }
+
+    @Test
+    public void shipDragValidInput() {
+
+        //Setting up values
+        Ship selectedShip = new Ship("Test",0,0,null,0);
+        selectedShip.setmBound(0,0,50,50);
+        Vector2 dragShipOffset = new Vector2();
+        dragShipOffset.x = 100;
+        dragShipOffset.y = 50;
+        boolean inputExists = true;
+        int inputgetTouchX = 100, inputgetTouchY = 100;
+
+        //I was not able to mock input therefore I used hard coded values
+        if (inputExists) {
+            selectedShip.mBound.x = inputgetTouchX + dragShipOffset.x;
+            selectedShip.mBound.y = inputgetTouchY + dragShipOffset.y;
+        }
+
+        assertEquals(200f, selectedShip.mBound.x);
+        assertEquals(150f, selectedShip.mBound.y);
+    }
+
+    @Test
+    public void shipDragPointerDoesNotExist() {
+
+        //Setting up values
+        Ship selectedShip = new Ship("Test",0,0,null,0);
+        selectedShip.setmBound(0,0,50,50);
+        Vector2 dragShipOffset = new Vector2();
+        dragShipOffset.x = 100;
+        dragShipOffset.y = 50;
+        boolean inputExists = false;
+        int inputgetTouchX = 100, inputgetTouchY = 100;
+        Input input = Mockito.mock(Input.class);
+        int shipToDragPointerIndexOfInput = 0;
+
+        //Pointer does not exist
+        if (input.existsTouch(shipToDragPointerIndexOfInput)) {
+            selectedShip.mBound.x = input.getTouchX(shipToDragPointerIndexOfInput) + dragShipOffset.x;
+            selectedShip.mBound.y = input.getTouchY(shipToDragPointerIndexOfInput) + dragShipOffset.y;
+        }
+
+        assertEquals(0f, selectedShip.mBound.x);
+        assertEquals(0f, selectedShip.mBound.y);
+    }
+
+
+    @Test
+    public void updateBoundingBoxAfterRotationValidInput()
+    {
+        //Set up variables
+        BoundingBox mBound = new BoundingBox(100,100,20,30);
+        boolean boundingBoxSetAfterRotation = false;
+        boolean undoBoundingBoxSetAfterRotation = true;
+
+
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+        boundingBoxSetAfterRotation = true;
+        undoBoundingBoxSetAfterRotation = false;
+
+        assertEquals(20f,mBound.halfHeight);
+        assertEquals(30f,mBound.halfWidth);
+        assertEquals(true,boundingBoxSetAfterRotation);
+        assertEquals(false,undoBoundingBoxSetAfterRotation);
+    }
+
+    @Test
+    public void updateBoundingBoxAfterRotationNullValues()
+    {
+        //Set up variables
+        BoundingBox mBound = new BoundingBox(100,100,0,0);
+        boolean boundingBoxSetAfterRotation = false;
+        boolean undoBoundingBoxSetAfterRotation = true;
+
+
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+        boundingBoxSetAfterRotation = true;
+        undoBoundingBoxSetAfterRotation = false;
+
+        assertEquals(0f,mBound.halfHeight);
+        assertEquals(0f,mBound.halfWidth);
+        assertEquals(true,boundingBoxSetAfterRotation);
+        assertEquals(false,undoBoundingBoxSetAfterRotation);
+    }
+
+    @Test
+    public void updateBoundingBoxAfterRotationNegativeValues()
+    {
+        //Set up variables
+        BoundingBox mBound = new BoundingBox(-200,-100,100,50);
+        boolean boundingBoxSetAfterRotation = false;
+        boolean undoBoundingBoxSetAfterRotation = true;
+
+
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+        boundingBoxSetAfterRotation = true;
+        undoBoundingBoxSetAfterRotation = false;
+
+        assertEquals(100f,mBound.halfHeight);
+        assertEquals(50f,mBound.halfWidth);
+        assertEquals(true,boundingBoxSetAfterRotation);
+        assertEquals(false,undoBoundingBoxSetAfterRotation);
+    }
+
+    @Test
+    public void reverseUpdateBoundingBoxAfterRotationValidValues()
+    {
+        BoundingBox mBound = new BoundingBox(100,100,55,75);
+        boolean boundingBoxSetAfterRotation = true;
+        boolean undoBoundingBoxSetAfterRotation = false;
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+        undoBoundingBoxSetAfterRotation = true;
+        boundingBoxSetAfterRotation = false;
+
+
+        assertEquals(55f,mBound.halfHeight);
+        assertEquals(75f,mBound.halfWidth);
+        assertEquals(false,boundingBoxSetAfterRotation);
+        assertEquals(true,undoBoundingBoxSetAfterRotation);
+    }
+
+    @Test
+    public void reverseUpdateBoundingBoxAfterRotationNullValues()
+    {
+        BoundingBox mBound = new BoundingBox(100,100,0,0);
+        boolean boundingBoxSetAfterRotation = true;
+        boolean undoBoundingBoxSetAfterRotation = false;
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+        undoBoundingBoxSetAfterRotation = true;
+        boundingBoxSetAfterRotation = false;
+
+
+        assertEquals(0f,mBound.halfHeight);
+        assertEquals(0f,mBound.halfWidth);
+        assertEquals(false,boundingBoxSetAfterRotation);
+        assertEquals(true,undoBoundingBoxSetAfterRotation);
+    }
+
+    @Test
+    public void reverseUpdateBoundingBoxAfterRotationNegativeValues()
+    {
+        BoundingBox mBound = new BoundingBox(-100,-200,300,200);
+        boolean boundingBoxSetAfterRotation = true;
+        boolean undoBoundingBoxSetAfterRotation = false;
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+        undoBoundingBoxSetAfterRotation = true;
+        boundingBoxSetAfterRotation = false;
+
+
+        assertEquals(300f,mBound.halfHeight);
+        assertEquals(200f,mBound.halfWidth);
+        assertEquals(false,boundingBoxSetAfterRotation);
+        assertEquals(true,undoBoundingBoxSetAfterRotation);
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     //Tests Made by John McAnearney (40203900)
@@ -856,6 +1353,7 @@ public class BoardSetUpTest {
             }
     }
 
+
     @Test
     public void shipSnapToBox4(){
 
@@ -913,7 +1411,7 @@ public class BoardSetUpTest {
             assertEquals(ship.getmBound().y, smallBoxCoordinates[99][1]);
         }
     }
-    
+
     public boolean checkIfBoxOccupied_ValidData(int boxToBeTested){
 
         boolean occupied = false;

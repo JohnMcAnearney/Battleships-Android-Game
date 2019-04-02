@@ -1,17 +1,16 @@
 package uk.ac.qub.eeecs.gage;
-//@referenced package uk.ac.qub.eeecs.gage.Avant
-
+/*@referenced package uk.ac.qub.eeecs.gage
+* Avant project
+*/
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import uk.ac.qub.eeecs.gage.engine.ScreenManager;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.game.DemoGame;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -56,8 +55,8 @@ public class ScreenManagerTest
     public void getCurrentScreen_Test()
     {
         ScreenManager manager = new ScreenManager(game);
-        manager.addScreen(mainMenu);
         manager.addScreen(gameScreen);
+        manager.addScreen(mainMenu);
         assertEquals(mainMenu, manager.getCurrentScreen());
     }
 
@@ -66,8 +65,8 @@ public class ScreenManagerTest
     public void getScreen_Test()
     {
         ScreenManager manager = new ScreenManager(game);
-        manager.addScreen(mainMenu);
         manager.addScreen(gameScreen);
+        manager.addScreen(mainMenu);
         assertEquals(mainMenu, manager.getScreen(mainMenuName));
     }
 
@@ -76,8 +75,8 @@ public class ScreenManagerTest
     public void removeScreen_Test()
     {
         ScreenManager manager = new ScreenManager(game);
-        manager.addScreen(mainMenu);
         manager.addScreen(gameScreen);
+        manager.addScreen(mainMenu);
         assertTrue(manager.removeScreen(mainMenuName));
     }
 
@@ -86,8 +85,8 @@ public class ScreenManagerTest
     public void removeScreen_NotFound_Test()
     {
         ScreenManager manager = new ScreenManager(game);
-        manager.addScreen(mainMenu);
         manager.addScreen(gameScreen);
+        manager.addScreen(mainMenu);
         manager.removeScreen(mainMenuName);
         assertFalse(manager.removeScreen(mainMenuName));
     }

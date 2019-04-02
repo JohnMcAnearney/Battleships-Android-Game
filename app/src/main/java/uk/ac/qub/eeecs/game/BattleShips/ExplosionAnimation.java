@@ -217,4 +217,36 @@ public class ExplosionAnimation {
             graphics2D.drawBitmap(spritesheet, sourceRect, screenRect, null);
         }
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Bitmap getSpritesheet() {
+        return spritesheet;
+    }
+
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public int getNumRows(){
+        return numRows;
+    }
+
+    public int getNumColumns() {
+        return numColumns;
+    }
+
+    public float getTotalPeriod() {
+        return totalPeriod;
+    }
+
+    public int getStartFrame() {
+        return startFrame;
+    }
 }

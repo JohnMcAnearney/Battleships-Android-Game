@@ -57,7 +57,7 @@ public class BoardSetUpTest {
         game.mFileIO = new FileIO(context);
         game.mAssetManager = new AssetManager(game);
         assetManager = game.getAssetManager();
-        //boardScreen = new BoardSetupScreen(game);
+
 
         Input inputTest = Mockito.mock(Input.class);
         //Set up Ship objects

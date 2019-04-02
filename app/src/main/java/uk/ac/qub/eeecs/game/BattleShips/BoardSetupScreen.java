@@ -275,7 +275,7 @@ public class BoardSetupScreen extends GameScreen {
         }
 
         //Call the explosion animation method in the object's class
-        explosionAnimation.draw(elapsedTime,graphics2D);
+        explosionAnimation.draw(graphics2D);
 
         //Set up and draw messages used for testing
         textPaint.setTextSize(50.0f);

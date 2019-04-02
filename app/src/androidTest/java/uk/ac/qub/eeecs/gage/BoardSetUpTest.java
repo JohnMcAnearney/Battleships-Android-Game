@@ -704,12 +704,12 @@ public class BoardSetUpTest {
 
     }
     @Test
-    public void TestCalculateClosestBoxIs79_WhenShipOutsideOfBoundOnLeftSide() {
+    public void TestCalculateClosestBoxIs20_WhenShipOutsideOfBoundOnLeftSide() {
 
         float[][] smallBoxCoordinates = setupBoard();
 
         for(Ship ship : shipArray) {
-            //                              +80 because of each box width being ~69 pixels
+            //                              -80 because of each box width being ~69 pixels
             //this depends on the screen size, this test assumes 1920 pixels wide (which most screens are)
             ship.setmBound(smallBoxCoordinates[20][0] - 80, smallBoxCoordinates[20][1] + 5, (100 * ship.getShipLength()) / 2.0f,
                     ((100) / 10f) / 2f);
@@ -717,6 +717,72 @@ public class BoardSetUpTest {
 
         //assert for each ship the closest box is box 62
         assertTrue(calculateClosestBox() == 20);
+
+        //assert that the closest is not 1 and 2 blocks either side
+        assertFalse(calculateClosestBox() == 0);
+        assertFalse(calculateClosestBox() == 10);
+        assertFalse(calculateClosestBox() == 30);
+        assertFalse(calculateClosestBox() == 40);
+
+    }
+    @Test
+    public void TestCalculateClosestBoxIs20_WhenShipOutsideOfBoundOnLeftSideEXTREMEEEEE() {
+
+        float[][] smallBoxCoordinates = setupBoard();
+
+        for(Ship ship : shipArray) {
+            //                              -80 because of each box width being ~69 pixels
+            //this depends on the screen size, this test assumes 1920 pixels wide (which most screens are)
+            ship.setmBound(smallBoxCoordinates[20][0] - 800, smallBoxCoordinates[20][1] + 5, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+        }
+
+        //assert for each ship the closest box is box 62
+        assertTrue(calculateClosestBox() == 20);
+
+        //assert that the closest is not 1 and 2 blocks either side
+        assertFalse(calculateClosestBox() == 0);
+        assertFalse(calculateClosestBox() == 10);
+        assertFalse(calculateClosestBox() == 30);
+        assertFalse(calculateClosestBox() == 40);
+
+    }
+    @Test
+    public void TestCalculateClosestBoxIs9_WhenShipOutsideOfBoundOnTopRightSideOfScreenEXTREMEEEEE() {
+
+        float[][] smallBoxCoordinates = setupBoard();
+
+        for(Ship ship : shipArray) {
+            //                              -80 because of each box width being ~69 pixels
+            //this depends on the screen size, this test assumes 1920 pixels wide (which most screens are)
+            ship.setmBound(smallBoxCoordinates[9][0] + 1000, smallBoxCoordinates[9][1] - 800, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+        }
+
+        //assert for each ship the closest box is box 62
+        assertTrue(calculateClosestBox() == 9);
+
+        //assert that the closest is not 1 and 2 blocks either side
+        assertFalse(calculateClosestBox() == 0);
+        assertFalse(calculateClosestBox() == 10);
+        assertFalse(calculateClosestBox() == 30);
+        assertFalse(calculateClosestBox() == 40);
+
+    }
+
+    public void TestCalculateClosestBoxIs99_WhenShipOutsideOfBoundOnBottomRightSideOfScreenEXTREMEEEEE() {
+
+        float[][] smallBoxCoordinates = setupBoard();
+
+        for(Ship ship : shipArray) {
+            //                              -80 because of each box width being ~69 pixels
+            //this depends on the screen size, this test assumes 1920 pixels wide (which most screens are)
+            ship.setmBound(smallBoxCoordinates[9][0] + 1000, smallBoxCoordinates[9][1] + 800, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+        }
+
+        //assert for each ship the closest box is box 62
+        assertTrue(calculateClosestBox() == 9);
 
         //assert that the closest is not 1 and 2 blocks either side
         assertFalse(calculateClosestBox() == 0);
@@ -816,20 +882,38 @@ public class BoardSetUpTest {
         float[][] smallBoxCoordinates = setupBoard();
 
         for(Ship ship : shipArray) {
-            ship.setmBound(smallBoxCoordinates[4][0] + 5, smallBoxCoordinates[4][1] + 5, (100 * ship.getShipLength()) / 2.0f,
+            ship.setmBound(smallBoxCoordinates[13][0] + 5, smallBoxCoordinates[13][1] + 5, (100 * ship.getShipLength()) / 2.0f,
                     ((100) / 10f) / 2f);
         }
 
-        shipSnapToBox(4);
+        shipSnapToBox(13);
 
         for(Ship ship: shipArray) {
 
-            assertTrue(calculateClosestBox() == 4);
-            assertEquals(ship.getmBound().x, smallBoxCoordinates[4][0]);
-            assertEquals(ship.getmBound().y, smallBoxCoordinates[4][1]);
+            assertTrue(calculateClosestBox() == 13);
+            assertEquals(ship.getmBound().x, smallBoxCoordinates[13][0]);
+            assertEquals(ship.getmBound().y, smallBoxCoordinates[13][1]);
         }
     }
+    @Test
+    public void shipSnapToBox99_ExtremeCase(){
+        float[][] smallBoxCoordinates = setupBoard();
 
+        for(Ship ship : shipArray) {
+            ship.setmBound(smallBoxCoordinates[99][0] + 1000, smallBoxCoordinates[99][1] + 500, (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+        }
+
+        shipSnapToBox(99);
+
+        for(Ship ship: shipArray) {
+
+            assertTrue(calculateClosestBox() == 99);
+            assertEquals(ship.getmBound().x, smallBoxCoordinates[99][0]);
+            assertEquals(ship.getmBound().y, smallBoxCoordinates[99][1]);
+        }
+    }
+    
     public boolean checkIfBoxOccupied_ValidData(int boxToBeTested){
 
         boolean occupied = false;

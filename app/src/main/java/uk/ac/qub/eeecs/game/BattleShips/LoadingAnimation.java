@@ -123,17 +123,26 @@ public class LoadingAnimation
         mPlaying = false;
     }
 
+    // Getter for the frame height
+    public int getFrameHeight() { return mFrameHeight; }
+
+    // Getter for the frame width
+    public int getFrameWidth() { return mFrameWidth; }
+
     // Getter for the current frame
-    protected int getCurrentFrame()
+    public int getCurrentFrame()
     {
         return mCurrentFrame;
     }
 
     // Getter for the end frame
-    protected int getEndFrame()
+    public int getEndFrame()
     {
         return mEndFrame;
     }
+
+    // Getter for the start frame
+    public int getStartFrame() { return mStartFrame; }
 
     /**
      * Method which starts the playing of the image strip in a given location

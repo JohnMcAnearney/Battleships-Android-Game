@@ -279,7 +279,7 @@ public class BoardSetupScreen extends GameScreen {
             drawMessageToScreen(graphics2D);
         }
 
-        //Call the explosion animation method in the object's class
+        //Call the explosion animation draw method in the object's class
         explosionAnimation.draw(graphics2D);
 
         //Set up and draw messages used for testing

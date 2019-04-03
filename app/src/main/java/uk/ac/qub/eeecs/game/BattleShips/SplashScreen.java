@@ -37,7 +37,7 @@ public class SplashScreen extends GameScreen
     private Bitmap backgroundBitmap, symbolBitmap;
     private Canvas canvas;
     private Paint paint;
-    private Typeface regularUnderworld;
+    private Typeface audiowide;
     private float canvasTextX, canvasTextY, alphaCount = 0;
     private AssetManager assetManager;
     private Game game;
@@ -74,7 +74,7 @@ public class SplashScreen extends GameScreen
         mGame.getAssetManager().loadAssets("txt/assets/SplashScreenAssets.JSON");
         backgroundBitmap = assetManager.getBitmap("splashBackground");
         symbolBitmap = assetManager.getBitmap("symbol");
-        regularUnderworld = assetManager.getFont("regularUnderworld");
+        audiowide = assetManager.getFont("audiowide");
         paint = new Paint();
     }
 
@@ -101,8 +101,8 @@ public class SplashScreen extends GameScreen
     //this method will draw the desired font type
     private void createFont()
     {
-        assetManager.loadAndAddFont("regularUnderworld", "fonts/underworld.ttf");
-        regularUnderworld = assetManager.getFont("regularUnderworld");
+        assetManager.loadAndAddFont("audiowide", "font/Audiowide.ttf");
+        audiowide = assetManager.getFont("audiowide");
     }
 
     //this method will store the desired text and colour styles
@@ -111,7 +111,7 @@ public class SplashScreen extends GameScreen
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.WHITE);
         paint.setTextSize(game.getScreenWidth() * 0.08f);
-        paint.setTypeface(regularUnderworld);
+        paint.setTypeface(audiowide);
         //this sets the colour's alpha value
         paint.setAlpha(0);
     }

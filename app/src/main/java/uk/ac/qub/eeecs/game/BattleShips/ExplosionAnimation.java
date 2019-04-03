@@ -217,6 +217,7 @@ public class ExplosionAnimation {
         }
     }
 
+    //Getters of the class variables
     public String getName() {
         return name;
     }
@@ -254,15 +255,9 @@ public class ExplosionAnimation {
         return x;
     }
 
-    public float getY()
-    {
-        return y;
-    }
+    public float getY() { return y; }
 
-    public float getRight()
-    {
-        return right;
-    }
+    public float getRight() { return right; }
 
     public float getBottom()
     {

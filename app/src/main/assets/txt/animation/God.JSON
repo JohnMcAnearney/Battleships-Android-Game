@@ -1,0 +1,14 @@
+{
+  "spritesheet" : "img/GOD.png",
+  "numRows" : 1,
+  "numColumns" : 1,
+  "animations": [
+    {
+      "name": "God",
+      "startFrame" : 0,
+      "endFrame" : 1,
+      "totalPeriod" : 1.5,
+      "loopAnimation" : false
+    }
+  ]
+}

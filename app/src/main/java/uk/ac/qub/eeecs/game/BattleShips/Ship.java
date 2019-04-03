@@ -9,7 +9,7 @@ package uk.ac.qub.eeecs.game.BattleShips;
 // Further implementation to the Ship class
 
 /**
- * Authors of the class: Hannah Cunningham (), Mantas Stadnik
+ * Authors of the class: Hannah Cunningham (), Mantas Stadnik (40203133)
  */
 
 import android.graphics.Bitmap;
@@ -25,7 +25,7 @@ import android.graphics.Rect;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import java.lang.String;
 
-public class Ship //extends Sprite
+public class Ship
 {
     //Instance variables for the Ship class
     private String shipType; //data field for the type of ship e.g. Cargo Ship
@@ -37,18 +37,13 @@ public class Ship //extends Sprite
     public BoundingBox mBound = new BoundingBox();
     private boolean selected, afterDrag;
     public Bitmap bitmap;
-    private Paint paint;
     public boolean rotate, isRotated, boundingBoxSetAfterRotation, undoBoundingBoxSetAfterRotation =true;
     private Matrix matrix = new Matrix();
     private int shipLength;
 
-
     //Constructor
     //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
     public Ship(String shipType,float scaleRatioX ,float scaleratioY, Bitmap bitmap, int shipLength)//, GameScreen gameScreen)
-    //{
-    // super(startPositionX, startPositionY, bitmap, gameScreen);
-    //}
     {
         this.shipType = shipType;
         this.scaleRatioX = scaleRatioX;
@@ -57,8 +52,9 @@ public class Ship //extends Sprite
         this.shipLength = shipLength;
     }
 
-
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Methods created by Hannah Cunningham (40203133)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     private void setTargetPosition(float startPositionX, float startPositionY)
     {
         mBound.x = targetPosition.x = startPositionX;
@@ -74,14 +70,13 @@ public class Ship //extends Sprite
         else if (bound.getTop() > mLayerViewport.getHeight())
             setTargetPosition(startPositionX, startPositionY -= (bound.getTop() - mLayerViewport.getHeight()));
     }*/
+
     //Getters
     //Sprint 4 - Implemented and improved on the Ship class' Getters (40201925)
     public String getShipType()
     {
         return shipType;
     }
-
-
 
     public Vector2 getTargetPosition() { return targetPosition;}
 
@@ -104,10 +99,7 @@ public class Ship //extends Sprite
 
     //Setters
     //Sprint 4 - Implemented and improved on the Ship class' Setters (40201925)
-    public void setShipType(String shipType)
-    {
-        this.shipType = shipType;
-    }
+    public void setShipType(String shipType) { this.shipType = shipType; }
 
     public void setTargetPosition(Vector2 targetPosition) { this.targetPosition = targetPosition;}
 
@@ -123,7 +115,9 @@ public class Ship //extends Sprite
 
     public boolean isAfterDrag() { return afterDrag;}
 
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Methods created by Mantas Stadnik (40203133)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * Set the bounding box of the ship
      * @param x
@@ -150,7 +144,7 @@ public class Ship //extends Sprite
     }
 
     /**
-     * Draw the ship method
+     * Draw the ship method using matrix
      * @param graphics2D
      */
     public void drawShip(IGraphics2D graphics2D)

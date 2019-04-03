@@ -263,8 +263,7 @@ public class BoardSetupScreen extends GameScreen {
         drawItems(graphics2D);
         setupBoardBound();
         if(eeCheck) {
-            drawEasterToScreen(graphics2D);
-            easterEgg.play(elapsedTime, eeRect.left, eeRect.top, eeRect.right, eeRect.bottom);
+            drawEasterToScreen(elapsedTime);
             eeCheck = false;
         }
 
@@ -706,17 +705,9 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.drawBitmap(boundsMessage, null, messageRect, messagePaint);
     }
 
-    private void drawEasterToScreen(IGraphics2D graphics2D) {
+    private void drawEasterToScreen(ElapsedTime elapsedTime) {
 
-        Paint messagePaint = new Paint();
-        //https://stackoverflow.com/questions/11285961/how-to-make-a-background-20-transparent-on-android source on how to do transparency
-        //the above was referenced in order to find out how to change the opacity of an image
-        messagePaint.setAlpha(220); //this is an opacity of 80%, no need to convert to hex
-        Rect messageRect = new Rect((graphics2D.getSurfaceWidth()/2) - (battleshipTitle.getWidth()/2),
-                (graphics2D.getSurfaceHeight()/2) - (battleshipTitle.getHeight()/2),
-                (graphics2D.getSurfaceWidth()/2) + (battleshipTitle.getWidth()/2),
-                (graphics2D.getSurfaceHeight()/2) + (battleshipTitle.getHeight()));
-            graphics2D.drawBitmap(boundsMessage, null, messageRect, messagePaint);
+        easterEgg.play(elapsedTime, eeRect.left, eeRect.top, eeRect.right, eeRect.bottom);
 
     }
 

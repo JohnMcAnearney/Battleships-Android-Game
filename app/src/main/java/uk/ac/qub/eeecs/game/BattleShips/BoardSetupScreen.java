@@ -333,10 +333,10 @@ public class BoardSetupScreen extends GameScreen {
 
                 //store all of the small box coordinates in a 2d array
                 if(!smallboxCoordinatesCaptured ) {
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;                       //smallBoxCoordinates[][0] = left x
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;                                        //smallBoxCoordinates[][1] = top y
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;       //smallBoxCoordinates[][2] = right x
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;                       //smallBoxCoordinates[][3] = bottom x
 
                 }
 
@@ -501,7 +501,7 @@ public class BoardSetupScreen extends GameScreen {
     private int calculateClosestBox(){
 
         /**
-         * this is basically all phil's code except with the applicable alterations I needed to suit our game
+         * this was built upon phil's code and with the applicable alterations I needed to suit our game
          */
         //closest box is between smallBoxWidth/2 coor and ship coor
         //set to this becasuse the closest distance will, basically, always be less than this. Always less in this game.
@@ -531,12 +531,11 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     /**
-     * Uses the calculation of the closest box then snaps the selected ship to the appropriate box
+     * Uses the calculation of the closest box then snaps the selected ship to the appropriate box.
      */
     private void shipReset(){
         //get the closest square
         calculateClosestBox();
-        if (Math.sqrt(closestSlotDistanceSqrd) <= MAX_SNAP_TO_DISTANCE){
             //if smallboxcoors[closestbox] is greater than bound then go back some steps
             //if the closest box is any of these then move it back some boxes as before the ship would snap to these and still stick out
             if(numberOfClosestBox == 9|| numberOfClosestBox == 19|| numberOfClosestBox == 29|| numberOfClosestBox == 39|| numberOfClosestBox == 49||
@@ -563,7 +562,7 @@ public class BoardSetupScreen extends GameScreen {
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
             }
 
-        }
+
 
     }
 

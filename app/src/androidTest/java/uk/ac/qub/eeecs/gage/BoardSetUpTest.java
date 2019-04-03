@@ -770,6 +770,7 @@ public class BoardSetUpTest {
 
     }
 
+    @Test
     public void TestCalculateClosestBoxIs99_WhenShipOutsideOfBoundOnBottomRightSideOfScreenEXTREMEEEEE() {
 
         float[][] smallBoxCoordinates = setupBoard();
@@ -834,26 +835,87 @@ public class BoardSetUpTest {
             bigBoxBottomCoor+=smallBoxHeight;
 
         }
-//        //resetting the bounds
-//        smallboxCoordinatesCaptured = true;
-//        bigBoxLeftCoor = bigBoxLeftCoor;
-//        bigBoxTopCoor = bigBoxTopCoor;
-//        bigBoxRightCoor = bigBoxRightCoor;
-//        bigBoxBottomCoor = bigBoxBottomCoor;
 
         return smallBoxCoordinates;
     }
 
     public void shipSnapToBox(int numberOfBoxToBeTested){
 
-        calculateClosestBox(); //knows closest = 4
+        calculateClosestBox();
         float[][] smallBoxCoordinates = setupBoard();
 
         for(Ship ship: shipArray) {
             ship.setmBound(smallBoxCoordinates[numberOfBoxToBeTested][0],smallBoxCoordinates[numberOfBoxToBeTested][1],
                     (100 * ship.getShipLength()) / 2.0f,
                     ((100) / 10f) / 2f);
+        }
+    }
+
+    public void shipReset(int numberOfBoxToBeTested){
+        //get the closest square
+        int closestBox = calculateClosestBox();
+        float screenWidth = 1920f;
+        float BBL = screenWidth/14f;
+        float BBR = BBL * 6f;
+        float[][] smallBoxCoordinates = setupBoard();
+            //if smallboxcoors[closestbox] is greater than bound then go back some steps
+            //if the closest box is any of these then move it back some boxes as before the ship would snap to these and still stick out
+        for(Ship ship : shipArray) {
+            if (closestBox == 9 || closestBox == 19 || closestBox == 29 || closestBox == 39 || closestBox == 49 ||
+                    closestBox == 59 || closestBox == 69 || closestBox == 79 || closestBox == 89 || closestBox == 99) {
+
+                switch (ship.getShipLength()) {
+                    case 2:
+                        ship.setmBound(smallBoxCoordinates[closestBox-1][0],smallBoxCoordinates[closestBox][1],
+                                (((BBR-BBL)/10) * ship.getShipLength()) / 2.0f,
+                                ((100) / 10f) / 2f);
+                        break;
+                    case 3:
+                        ship.setmBound(smallBoxCoordinates[closestBox-2][0],smallBoxCoordinates[closestBox][1],
+                                (((BBR-BBL)/10) * ship.getShipLength()) / 2.0f,
+                                ((100) / 10f) / 2f);
+                        break;
+                    case 4:
+                        ship.setmBound(smallBoxCoordinates[closestBox-3][0],smallBoxCoordinates[closestBox][1],
+                                (((BBR-BBL)/10) * ship.getShipLength()) / 2.0f,
+                                ((100) / 10f) / 2f);
+                        break;
+                    case 5:
+                        ship.setmBound(smallBoxCoordinates[closestBox-4][0],smallBoxCoordinates[closestBox][1],
+                                (((BBR-BBL)/10) * ship.getShipLength()) / 2.0f,
+                                ((100) / 10f) / 2f);
+                        break;
+                }
             }
+            //otherwise just snap to the closest box
+            else {
+                ship.getmBound().x = smallBoxCoordinates[closestBox][0];
+                ship.getmBound().y = smallBoxCoordinates[closestBox][1];
+            }
+        }
+
+    }
+
+    @Test
+    public void shipResetTo79(){
+
+        float[][] smallBoxCoordinates = setupBoard();
+
+        for(Ship ship: shipArray) {
+            ship.setmBound(smallBoxCoordinates[79][0] + 200, smallBoxCoordinates[79][1],
+                    (100 * ship.getShipLength()) / 2.0f,
+                    ((100) / 10f) / 2f);
+        }
+        assertTrue(calculateClosestBox() == 79);
+
+        shipReset(79);
+
+        for(Ship ship: shipArray) {
+            //just rounding here as it was throwing error because of very tiny margins, remove the rounding to check yourself
+            assertEquals(Math.round(ship.getmBound().x + (2*ship.getmBound().halfWidth) ), Math.round(smallBoxCoordinates[79][2]));
+            assertEquals(ship.getmBound().y, smallBoxCoordinates[79][1]);
+        }
+
     }
 
     @Test
@@ -985,6 +1047,68 @@ public class BoardSetUpTest {
     @Test
     public void TestCheckIfBoxOccupiedAndMoveShip_InvalidData2(){
         assertFalse(checkIfBoxOccupied_InvalidData(17));
+    }
+
+    public void markShipInBox(int boxToTest) {
+
+        float[][] smallBoxCoordinates = setupBoard();
+        int holdOriginalBoxToTestValue = boxToTest;
+        for (Ship ship : shipArray) {
+            if (ship.isRotated) {
+                for (int x = 0; x < ship.getShipLength(); x++) {
+                    //mark each box as occupied, starting with the leftmost box the ship is in until the length of the ship
+                    smallBoxCoordinates[boxToTest][4] = 1;
+                    boxToTest += 10;
+                }
+            } else {
+                for (int x = 0; x < ship.getShipLength(); x++) {
+                    //mark each box as occupied, starting with the leftmost box the ship is in until the length of the ship
+                    //have to do -1 of shiplength because the it takes the (box its in + length of ship)
+                    // e.g. length = 5 then total boxes would be 6 total, therefore must do length -1
+                    smallBoxCoordinates[boxToTest][4] = 1;
+                    boxToTest++;
+                }
+            }
+
+            boxToTest = holdOriginalBoxToTestValue;
+            //had to do asserts here instead of in the actual test
+            //this is because there is no global smallBoxCoors array and when i setup a new on in the test methods themselves then it would be a new array and
+            //not the one I have instantiated above
+            if (ship.isRotated) {
+                for (int i = 0; i < ship.getShipLength(); i++) {
+                    assertTrue(smallBoxCoordinates[boxToTest][4] == 1);
+                    boxToTest += 10;
+                }
+            } else {
+                for (int i = 0; i < ship.getShipLength(); i++) {
+                    assertTrue(smallBoxCoordinates[boxToTest][4] == 1);
+                    boxToTest++;
+                }
+            }
+        }
+    }
+
+    @Test
+    public void markShipInBox_notRotated(){
+
+       // float[][] smallBoxCoordinates = setupBoard();
+        int boxToTest = 3;
+        for(Ship ship:shipArray){
+            ship.isRotated = false;
+        }
+            markShipInBox(boxToTest);
+
+    }
+
+    @Test
+    public void markShipInBox_isRotated(){
+
+        // float[][] smallBoxCoordinates = setupBoard();
+        int boxToTest = 3;
+        for(Ship ship:shipArray){
+            ship.isRotated = true;
+        }
+        markShipInBox(boxToTest);
     }
 
 }

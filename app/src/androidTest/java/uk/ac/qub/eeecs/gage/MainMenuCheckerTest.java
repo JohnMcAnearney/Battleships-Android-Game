@@ -14,21 +14,22 @@ import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.ScreenManager;
 import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
+import uk.ac.qub.eeecs.gage.engine.audio.Sound;
 import uk.ac.qub.eeecs.gage.engine.io.FileIO;
-import uk.ac.qub.eeecs.game.BattleShips.InstructionsScreen;
 import uk.ac.qub.eeecs.game.BattleShips.MainMenu;
-import uk.ac.qub.eeecs.game.BattleShips.PauseScreen;
+import uk.ac.qub.eeecs.game.BattleShips.MainMenuChecker;
 import uk.ac.qub.eeecs.game.DemoGame;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /*
-* Author: Edgars(402030154)
-* A test class which will test if the transition to new screens occurs correctly
-*/
+ * Author: Edgars(402030154)
+ * A test class which will test if the transition to a new screens occurs correctly
+ * and a test which makes sure the correct button sound is played
+ */
 @RunWith(AndroidJUnit4.class)
-public class PauseScreenTest
+public class MainMenuCheckerTest
 {
     Context mContext;
     @Mock
@@ -69,33 +70,30 @@ public class PauseScreenTest
         mGame.mFileIO = fileIO;
     }
 
-    // A test which initialises a pause screen and a InstructionsScreen and sees if the moveToNewGameScreen() method works correctly
-    @Test
-    public void changeScreenToInstructionScreen()
-    {
-       PauseScreen pauseScreen = new PauseScreen(mGame);
-       mGame.getScreenManager().addScreen(pauseScreen);
-
-       InstructionsScreen instructionsScreen = new InstructionsScreen(mGame);
-       mGame.getScreenManager().addScreen(instructionsScreen);
-
-       pauseScreen.moveToNewGameScreen(instructionsScreen);
-
-       Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(), instructionsScreen.getName());
-    }
-
-    // A test which initialises a PauseScreen and a MainMenuScreen and sees if the moveToNewGameScreen() method works correctly
+    // A test which initialises a MainMenuChecker and a MainMenuScreen and sees if the moveToNewGameScreen() method works correctly
     @Test
     public void changeScreenToMainMenuScreen()
     {
-        PauseScreen pauseScreen = new PauseScreen(mGame);
-        mGame.getScreenManager().addScreen(pauseScreen);
+        MainMenuChecker mainMenuChecker = new MainMenuChecker(mGame);
+        mGame.getScreenManager().addScreen(mainMenuChecker);
 
         MainMenu mainMenu = new MainMenu(mGame);
         mGame.getScreenManager().addScreen(mainMenu);
 
-        pauseScreen.moveToNewGameScreen(mainMenu);
-
+        mainMenuChecker.moveToNewGameScreen(mainMenu);
         Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(), mainMenu.getName());
+    }
+
+    // A test which initialises a MainMenuChecker and the yesButtonSound and sees if the sound is played correctly
+    @Test
+    public void testYesButtonSound()
+    {
+        MainMenuChecker mainMenuChecker = new MainMenuChecker(mGame);
+        mGame.getScreenManager().addScreen(mainMenuChecker);
+
+        // Initialising the sound file
+        Sound yesButtonSound = mGame.getAssetManager().getSound("sound/ButtonEffectSound.wav");
+
+        Assert.assertEquals(mainMenuChecker.playButtonSound(yesButtonSound), yesButtonSound);
     }
 }

@@ -138,7 +138,7 @@ public class ExplosionAnimation {
         this.right = right;
         this.bottom = bottom;
 
-        // Only commence playback is the animation is not currently playing
+        // Only commence playback if the animation is not currently playing
         if(!isPlaying) {
             animationStartTime = elapsedTime.totalTime;
             currentFrame = startFrame;
@@ -185,10 +185,9 @@ public class ExplosionAnimation {
 
     /**
      * Draw the current animation to a specified square ensuring the correct scale is used
-     * @param elapsedTime
      * @param graphics2D
      */
-    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D) {
+    public void draw(IGraphics2D graphics2D) {
         if (isPlaying) {
             // Build a screen rect using the stored co-ordinates
             screenRect.left = (int) x;
@@ -217,4 +216,62 @@ public class ExplosionAnimation {
             graphics2D.drawBitmap(spritesheet, sourceRect, screenRect, null);
         }
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public Bitmap getSpritesheet() {
+        return spritesheet;
+    }
+
+    public int getFrameHeight() {
+        return frameHeight;
+    }
+
+    public int getFrameWidth() {
+        return frameWidth;
+    }
+
+    public int getNumRows(){
+        return numRows;
+    }
+
+    public int getNumColumns() {
+        return numColumns;
+    }
+
+    public float getTotalPeriod() {
+        return totalPeriod;
+    }
+
+    public int getStartFrame() {
+        return startFrame;
+    }
+
+    public float getX()
+    {
+        return x;
+    }
+
+    public float getY()
+    {
+        return y;
+    }
+
+    public float getRight()
+    {
+        return right;
+    }
+
+    public float getBottom()
+    {
+        return bottom;
+    }
+
+    public boolean getLoopAnimation()
+    {
+        return loopAnimation;
+    }
+
 }

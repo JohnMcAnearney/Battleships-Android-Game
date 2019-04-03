@@ -41,7 +41,7 @@
       "isMusicButton": false
      // "isTextButton": false
 
-    },{
+    }/*,{
       "x": 0.5,
       "y": 2.25,
       "width": 120.0,
@@ -59,7 +59,7 @@
       "volumeValue":0,
       "isMusicButton": false
       //"isTextButton": true
-    }
+    }*/
 
 
   ]

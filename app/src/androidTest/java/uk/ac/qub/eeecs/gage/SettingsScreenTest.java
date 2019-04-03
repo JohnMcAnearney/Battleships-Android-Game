@@ -1,6 +1,4 @@
-package uk.ac.qub.eeecs.gage;
-
-//package uk.ac.qub.eeecs.game.cardDemo;
+/*package uk.ac.qub.eeecs.gage;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,8 +23,7 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class SettingsScreenTest {
     private Context context;
-    private Activity activity;
-    private DemoGame game;
+    private DemoGame mGame;
     private SettingsScreen mSettingsScreen;
     private AudioManager mAudioManager;
     private PreferencesManager mPreferencesManager;
@@ -38,16 +35,14 @@ public class SettingsScreenTest {
     }
 
     private void setupGameManager() {
-        game = new DemoGame();
-        game.mFileIO = new FileIO(context);
-        game.mAssetManager = new AssetManager(game);
-        game.mAudioManager = new AudioManager(game);
-        game.mScreenManager = new ScreenManager(game);
-        mSettingsScreen = new SettingsScreen(game);
-        game.mScreenManager.addScreen(mSettingsScreen);
-        activity=game.getActivity();
-        mPreferencesManager = new PreferencesManager(activity);
-
+        mGame = new DemoGame();
+        mGame.mFileIO = new FileIO(context);
+        mGame.mAssetManager = new AssetManager(mGame);
+        mGame.mAudioManager = new AudioManager(mGame);
+        mGame.mScreenManager = new ScreenManager(mGame);
+        mPreferencesManager = new PreferencesManager(context);
+        mGame.mScreenManager.addScreen(mSettingsScreen);
+        mSettingsScreen = new SettingsScreen(mGame);
     }
     @Test
     public void preformEffectsButtonActions_increaseVolume_effectsEnabled_volumeShouldIncreaseByOne(){
@@ -70,5 +65,4 @@ public class SettingsScreenTest {
 
 */
 
-
-}
+//}

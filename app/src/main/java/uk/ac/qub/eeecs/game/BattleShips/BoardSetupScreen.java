@@ -130,6 +130,12 @@ public class BoardSetupScreen extends GameScreen {
                 detectionIfUserSelectedSmallBox(elapsedTime);
             shipSelect(touchEvent);
             }
+            //if user taps with a second finger while dragging the ship, rotate the bitmap
+            if(touchEvent.type == touchEvent.TOUCH_DOWN
+            && touchEvent.pointer != shipToDragPointerIndexOfInput)
+            {
+                rotateShipBy90Degrees();
+            }
             // When user lifts their finger off the screen drop the bitmap, and change the game state
             if (touchEvent.type == TouchEvent.TOUCH_UP
                     && touchEvent.pointer == shipToDragPointerIndexOfInput
@@ -262,7 +268,6 @@ public class BoardSetupScreen extends GameScreen {
             highlight.setARGB(75,232,0,0);
             highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           //used for testing
             message = "detected" + numberofSmallBoxDetected;                                            //used for testing
-            message = message;
 
         }
         else
@@ -858,11 +863,15 @@ public class BoardSetupScreen extends GameScreen {
      */
     private void rotateShipBy90Degrees()
     {
-        selectedShip.rotate = true;
+        if(selectedShip != null)
+        {
+            selectedShip.rotate = true;
+        }
     }
 
     /**
      * Searches for the number of the small box which the user has clicked on, otherwise returns -1
+     * indicating the user has not clicked on a box
      * @param array
      * @param lower
      * @param higher
@@ -910,7 +919,8 @@ public class BoardSetupScreen extends GameScreen {
 
     /**
      * Searches for the user clicked on small box when the row has been identified, returning
-     * the number of the small box detected otherwise returning -1
+     * the number of the small box detected otherwise returning -1 indicating the user has not
+     * clicked on a box
      * @param array
      * @param numberOfSmallBox
      * @param lower
@@ -938,7 +948,7 @@ public class BoardSetupScreen extends GameScreen {
             if (x < array[mid][0] && x < array[mid][2]){
                 return binarySearchRows(array, numberOfSmallBox, lower, mid % 10 , x, y);}
 
-                //if the user's input x value is higher than the current small box, recursive call
+            //if the user's input x value is higher than the current small box, recursive call
             //current method with the lower bound set to mid
             else if (x > array[mid][0] && x > array[mid][2]){
                 return binarySearchRows(array, numberOfSmallBox, mid % 10 +1 , higher, x, y);}

@@ -8,6 +8,10 @@ package uk.ac.qub.eeecs.game.BattleShips;
 //Sprint 4 - (40201925) User Story 3 - Placement of entity object
 // Further implementation to the Ship class
 
+/**
+ * Authors of the class: Hannah Cunningham (), Mantas Stadnik
+ */
+
 import android.graphics.Bitmap;
 
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
@@ -53,58 +57,7 @@ public class Ship //extends Sprite
         this.shipLength = shipLength;
     }
 
-    private void rotate()
-    {
-        matrix.reset();
-        matrix.setScale(scaleRatioX,scaleratioY);
-        matrix.postRotate(90.0f, mBound.halfWidth, mBound.halfWidth);
-        matrix.postTranslate(mBound.x,mBound.y);
-    }
 
-    public void drawShip(IGraphics2D graphics2D)
-    {
-        if(rotate)
-        {
-            rotate = false;
-            isRotated = !isRotated;
-        }
-
-        if(isRotated) {
-
-            if (!boundingBoxSetAfterRotation){
-                updateBoundingBoxAfterRotation(); }
-            rotate();
-            graphics2D.drawBitmap(bitmap, matrix, null);
-        }
-        else {
-
-            matrix.reset();
-            matrix.setScale(scaleRatioX,scaleratioY);
-            matrix.postTranslate(mBound.x,mBound.y);
-            graphics2D.drawBitmap(bitmap, matrix, null);
-
-            if(!undoBoundingBoxSetAfterRotation){
-                reverseUpdateBoundingBoxAfterRotation();}
-        }
-    }
-
-    private void updateBoundingBoxAfterRotation()
-    {
-        float temp = mBound.halfHeight;
-        mBound.halfHeight = mBound.halfWidth;
-        mBound.halfWidth = temp;
-        boundingBoxSetAfterRotation = true;
-        undoBoundingBoxSetAfterRotation = false;
-    }
-
-    private void reverseUpdateBoundingBoxAfterRotation()
-    {
-        float temp = mBound.halfHeight;
-        mBound.halfHeight = mBound.halfWidth;
-        mBound.halfWidth = temp;
-        undoBoundingBoxSetAfterRotation = true;
-        boundingBoxSetAfterRotation = false;
-    }
 
     private void setTargetPosition(float startPositionX, float startPositionY)
     {
@@ -162,14 +115,6 @@ public class Ship //extends Sprite
 
     public void setShipLength(int shipLength) {this.shipLength = shipLength;}
 
-    public void setmBound(float x, float y, float halfWidth, float halfHeight) {
-        mBound.x = x;
-        mBound.y = y;
-        mBound.halfWidth = halfWidth;
-        mBound.halfHeight = halfHeight;
-    }
-
-
     public void setSelected(boolean selected) { this.selected = selected;}
 
     public void setAfterDrag(boolean afterDrag) { this.afterDrag = afterDrag;}
@@ -179,6 +124,97 @@ public class Ship //extends Sprite
     public boolean isAfterDrag() { return afterDrag;}
 
 
+    /**
+     * Set the bounding box of the ship
+     * @param x
+     * @param y
+     * @param halfWidth
+     * @param halfHeight
+     */
+    public void setmBound(float x, float y, float halfWidth, float halfHeight) {
+        mBound.x = x;
+        mBound.y = y;
+        mBound.halfWidth = halfWidth;
+        mBound.halfHeight = halfHeight;
+    }
 
+    /**
+     *Set the matrix to set the scale of the ship's bitmap, rotate the ship by 90 degrees
+     * on the center of the ship's bitmap and post translate to the bounding box x and y co-ordinates
+     */
+    private void rotate() {
+    matrix.reset();
+    matrix.setScale(scaleRatioX,scaleratioY);
+    matrix.postRotate(90.0f, mBound.halfWidth, mBound.halfWidth);
+    matrix.postTranslate(mBound.x,mBound.y);
+    }
 
+    /**
+     * Draw the ship method
+     * @param graphics2D
+     */
+    public void drawShip(IGraphics2D graphics2D)
+    {
+        //check if the rotate flag is true;
+        if(rotate)
+        {
+            rotate = false;
+            isRotated = !isRotated;
+        }
+
+        if(isRotated) {
+            //if the isRotated flag set to true check if the bitmap needs to be rotated
+            if (!boundingBoxSetAfterRotation){
+                //update the bounding box after rotation
+                updateBoundingBoxAfterRotation(); }
+                //perform rotation
+            rotate();
+            //draw the ship's bitmap
+            graphics2D.drawBitmap(bitmap, matrix, null);
+        }
+        else {
+
+            //if the bitmap does not need to be rotated, reset the matrix and perform scaling
+            //and translation
+            matrix.reset();
+            matrix.setScale(scaleRatioX,scaleratioY);
+            matrix.postTranslate(mBound.x,mBound.y);
+            //draw the ship's bitmap
+            graphics2D.drawBitmap(bitmap, matrix, null);
+
+            //as the ship is not rotated ensure the bounding box is set accordingly
+            if(!undoBoundingBoxSetAfterRotation){
+                reverseUpdateBoundingBoxAfterRotation();}
+        }
+    }
+
+    /**
+     * Manipulate the bounding box to suit the rotated ship's bitmap
+     */
+    private void updateBoundingBoxAfterRotation()
+    {
+        swapHalfWidthAndHeight();
+        boundingBoxSetAfterRotation = true;
+        undoBoundingBoxSetAfterRotation = false;
+    }
+
+    /**
+     * Undo the manipulation of the bounding box when it was rotated
+     */
+    private void reverseUpdateBoundingBoxAfterRotation()
+    {
+        swapHalfWidthAndHeight();
+        undoBoundingBoxSetAfterRotation = true;
+        boundingBoxSetAfterRotation = false;
+    }
+
+    /**
+     * Swap the values of halfHeight and halfWidth of the bounding box
+     */
+    public void swapHalfWidthAndHeight()
+    {
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+    }
 }

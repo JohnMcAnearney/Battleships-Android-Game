@@ -94,6 +94,6 @@ public class MainMenuCheckerTest
         // Initialising the sound file
         Sound yesButtonSound = mGame.getAssetManager().getSound("sound/ButtonEffectSound.wav");
 
-        Assert.assertEquals(mainMenuChecker.playButtonSound(yesButtonSound), mGame.getAssetManager().getSound("sound/ButtonEffectSound.wav"));
+        Assert.assertEquals(mainMenuChecker.playButtonSound(yesButtonSound), yesButtonSound);
     }
 }

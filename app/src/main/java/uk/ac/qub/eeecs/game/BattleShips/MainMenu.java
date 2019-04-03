@@ -11,6 +11,8 @@ import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.audio.AudioManager;
+import uk.ac.qub.eeecs.gage.engine.audio.Music;
+import uk.ac.qub.eeecs.gage.engine.audio.Sound;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
@@ -21,17 +23,21 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
  * Class created by Mantas(40203133)
  * Class populated by Aileen(40207942)
  * Class refactored by Edgars(40203154)
+ * References: QUBBATTLE, AVANT
  */
 public class MainMenu extends GameScreen
 {
     // Defining variables to be used for the main menu screen background
     private Bitmap mBattleShipBackground;
-    private int screenWidth = 0, screenHeight = 0;
-    private Rect rect;
-
+    private int mScreenWidth, mScreenHeight;
+    private Rect mRect;
+    private Sound mButtonSound;
+    private Music mBackgroundMusic;
+    private AudioManager mAudioManager;
+    private AssetManager mAssetManager;
     // Defining all the buttons and a list which will store all of the buttons
     private PushButton mStartButton, mInstructionsButton, mSettingsButton, mTitle;
-    private List<PushButton> mButtonCollection = new ArrayList<>();
+    private List<PushButton> mButtonCollection;
 
     /**
      * CONSTRUCTOR - for the MainMenu class, which runs two methods which set up the screen
@@ -39,11 +45,19 @@ public class MainMenu extends GameScreen
      */
     public MainMenu(Game game) {
         super("MenuScreen", game);
+        mAudioManager = mGame.getAudioManager();
+        mAssetManager = mGame.getAssetManager();
+        mButtonCollection= new ArrayList<>();
+        mScreenHeight=0;
+        mScreenWidth=0;
         // Load all of the assets
         loadAssets();
 
         // Create all of the push buttons
         createButtons();
+
+        //Play the background music
+        playBackgroundMusic(mBackgroundMusic);
     }
 
     /**
@@ -90,10 +104,10 @@ public class MainMenu extends GameScreen
      */
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
-        if (screenHeight == 0 || screenWidth == 0)
+        if (mScreenHeight == 0 || mScreenWidth == 0)
         {
-            screenWidth = graphics2D.getSurfaceWidth();
-            screenHeight = graphics2D.getSurfaceHeight();
+            mScreenWidth = graphics2D.getSurfaceWidth();
+            mScreenHeight = graphics2D.getSurfaceHeight();
             updateRect();
         }
     }
@@ -101,7 +115,7 @@ public class MainMenu extends GameScreen
     // Method which creates a new rectangle size of the screen
     private void updateRect()
     {
-        rect = new Rect(0, 0, screenWidth, screenHeight);
+        mRect = new Rect(0, 0, mScreenWidth, mScreenHeight);
     }
 
     // Create the buttons and set their sound to true and also add each button to the mButtonCollection List.
@@ -134,14 +148,13 @@ public class MainMenu extends GameScreen
     // Method which loads all the assets for the screen
     private void loadAssets()
     {
-        // Initialising the asset manager
-        AssetManager assetManager = mGame.getAssetManager();
-
         // Loading in the JSON file
-        mGame.getAssetManager().loadAssets("txt/assets/MainMenuScreenAssets.JSON");
+        mAssetManager.loadAssets("txt/assets/MainMenuScreenAssets.JSON");
 
         // Initialising the BattleShip Background with an appropriate bitmap
-        mBattleShipBackground = assetManager.getBitmap("BattleshipBackground");
+        mBattleShipBackground = mAssetManager.getBitmap("BattleshipBackground");
+        mButtonSound = mAssetManager.getSound("ButtonsEffect");
+        mBackgroundMusic=mAssetManager.getMusic("RickRoll");
     }
 
     /**
@@ -165,7 +178,7 @@ public class MainMenu extends GameScreen
     {
         getWidthAndHeightOfScreen(graphics2D);
         graphics2D.clear(Color.WHITE);
-        graphics2D.drawBitmap(mBattleShipBackground,null,rect,null);
+        graphics2D.drawBitmap(mBattleShipBackground,null,mRect,null);
     }
 
     /**
@@ -198,7 +211,7 @@ public class MainMenu extends GameScreen
         }
         else if(mTitle.isPushTriggered())
         {
-            // Add functionality - sound plays etc.
+            playSoundEffect();
         }
     }
 
@@ -206,6 +219,23 @@ public class MainMenu extends GameScreen
     {
         mGame.getScreenManager().addScreen(newScreen);
     }
-
+    //40207942
+    //Have made method return sound so to allow testing
+    public Sound playSoundEffect(){
+        if(mGame.getAudioManager().getEffectsEnabled()){
+           mGame.getAudioManager().play(mButtonSound);
+        }
+        return mButtonSound;
+    }
+    //40207942
+    //Note: Would include shared preferences but have not so to be able to test the screen
+    public void playBackgroundMusic(Music musicToPlay) {
+        if(mAudioManager.getMusicEnabled()==true) {
+            if(!mGame.getAudioManager().isMusicPlaying()) {
+                mAudioManager.setMusicVolume(mAudioManager.getMusicVolume());
+                mAudioManager.playMusic(musicToPlay);
+            }
+        }
+    }
 
 }

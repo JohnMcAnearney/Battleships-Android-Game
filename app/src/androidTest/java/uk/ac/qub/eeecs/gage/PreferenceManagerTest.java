@@ -18,6 +18,7 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class PreferenceManagerTest {
     /*Created 100% by AT: 40207942*/
+    /*References: QUBBATTLE, TRIBALHUNTER, AVANT, LECTURE CODE*/
 
     private Context context;
     private DemoGame mGame;

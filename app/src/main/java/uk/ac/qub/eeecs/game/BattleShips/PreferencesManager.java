@@ -9,6 +9,7 @@ import uk.ac.qub.eeecs.gage.Game;
 
 public class PreferencesManager {
     /*Created 100% by AT: 40207942*/
+    /*References: QUBBATTLE, TRIBALHUNTER, AVANT, LECTURE CODE*/
 
     /**
     * Preference manager was created to store the shared preferences of the game

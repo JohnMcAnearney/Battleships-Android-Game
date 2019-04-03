@@ -21,8 +21,8 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 
 /* Author : Edgars (40203154)
  * This is a pause screen class which will be accessible through the game screen, by clicking
- * a pause button; allowing the player to change their settings, return to main menu and give them
- * a quick launch option to mute the music
+ * a pause button; allowing the player to change their settings, return to main menu, access the
+ * instructions and give them a quick launch option to mute the music
  */
 public class PauseScreen extends GameScreen
 {
@@ -40,11 +40,11 @@ public class PauseScreen extends GameScreen
     private AudioManager mAudioManager = getGame().getAudioManager();
     private Music mBackgroundMusic;
 
-    /**
+    /*
      * CONSTRUCTOR - for the PauseScreen class, which runs three methods which set up the screen
-     * @param game
-    */
-    public PauseScreen(Game game){
+     */
+    public PauseScreen(Game game)
+    {
         super("PauseScreen", game);
 
         // Method which loads all the assets
@@ -57,9 +57,8 @@ public class PauseScreen extends GameScreen
         createButtons();
     }
 
-    /**
+    /*
      * Update method for the PauseScreen class
-     * @param elapsedTime
      */
     @Override
     public void update(ElapsedTime elapsedTime)
@@ -80,10 +79,8 @@ public class PauseScreen extends GameScreen
         }
     }
 
-    /**
+    /*
      * Draw method for the PauseScreen class
-     * @param elapsedTime
-     * @param graphics2D
      */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
@@ -95,8 +92,9 @@ public class PauseScreen extends GameScreen
         drawButtons(elapsedTime, graphics2D);
     }
 
-    // ----METHODS----
-
+    /*
+     * METHODS
+     */
     // Method which loads all the assets
     private void loadAssets()
     {
@@ -123,10 +121,7 @@ public class PauseScreen extends GameScreen
         mScreenHeight = 0;
     }
 
-    /**
-     * Method which draws all the appropriate bitmaps within the screen
-     * @param graphics2D
-     */
+    // Method which draws all the appropriate bitmaps within the screen
     private void drawBitmaps(IGraphics2D graphics2D)
     {
         // Drawing the background image
@@ -134,13 +129,17 @@ public class PauseScreen extends GameScreen
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mPauseBackground,null, mRect,null);
 
-        // Working out variables which will hold, 1% of the device screen width and height to allow for easy usage
+        /*
+         * Working out variables which will hold, 1% of the device screen width and height
+         * to allow for easy usage
+         */
         int onePercentOfScreenHeight, onePercentOfScreenWidth;
         onePercentOfScreenHeight = graphics2D.getSurfaceHeight()/100;
         onePercentOfScreenWidth = graphics2D.getSurfaceWidth()/100;
 
         // Drawing the loading title bitmap
-        Rect titleRectangle = new Rect(onePercentOfScreenWidth*30, onePercentOfScreenHeight, onePercentOfScreenWidth*75, onePercentOfScreenHeight*35);
+        Rect titleRectangle = new Rect(onePercentOfScreenWidth*30, onePercentOfScreenHeight,
+                onePercentOfScreenWidth*75, onePercentOfScreenHeight*35);
         graphics2D.drawBitmap(mPause, null, titleRectangle, mPaint);
     }
 
@@ -152,38 +151,43 @@ public class PauseScreen extends GameScreen
         float viewportHeight = mDefaultLayerViewport.getHeight();
 
         // Main Menu Button
-        mMainMenu = new PushButton(viewportWidth / 2,viewportHeight  / 2, viewportWidth / 4.2f, viewportHeight / 9,
+        mMainMenu = new PushButton(viewportWidth / 2,viewportHeight  / 2,
+                viewportWidth / 4.2f, viewportHeight / 9,
                 "MainMenuButton", "MainMenuButtonP", this);
         mButtonCollection.add(mMainMenu);
 
         // Instruction Button
-        mInstructionsButton = new PushButton(viewportWidth / 2, viewportHeight / 5.5f, viewportWidth / 4, viewportHeight / 8,
-                "InstructionsButton", "InstructionsButtonP", this);
+        mInstructionsButton = new PushButton(viewportWidth / 2, viewportHeight / 5.5f,
+                viewportWidth / 4, viewportHeight / 8,
+                "InstructionsButton", "InstructionsButtonP",
+                this);
         mButtonCollection.add(mInstructionsButton);
 
         // Settings Button
-        mSettingsButton = new PushButton(viewportWidth / 2, viewportHeight / 3f, viewportWidth / 4, viewportHeight / 8,
+        mSettingsButton = new PushButton(viewportWidth / 2, viewportHeight / 3f,
+                viewportWidth / 4, viewportHeight / 8,
                 "SettingsButton", "SettingsButtonP", this);
         mButtonCollection.add(mSettingsButton);
 
         // Back Button
-        mBackButton = new PushButton(viewportWidth * 0.95f, viewportHeight * 0.1f, viewportWidth * 0.075f, viewportHeight * 0.1f,
-                "SettingsBackButton", "SettingsBackButtonP", this);
+        mBackButton = new PushButton(viewportWidth * 0.95f, viewportHeight * 0.1f,
+                viewportWidth * 0.075f, viewportHeight * 0.1f,
+                "SettingsBackButton", "SettingsBackButtonP",
+                this);
 
         mButtonCollection.add(mBackButton);
 
         // Volume Button
-        mVolumeButton = new PushButton(viewportWidth * 0.05f, viewportHeight * 0.1f, viewportWidth * 0.075f, viewportHeight * 0.1f,
+        mVolumeButton = new PushButton(viewportWidth * 0.05f, viewportHeight * 0.1f,
+                viewportWidth * 0.075f, viewportHeight * 0.1f,
                 "VolumeOn", this);
         mButtonCollection.add(mVolumeButton);
 
     }
 
-    /**
+    /*
      * Method which draws all the push buttons using a for loop to cycle through all of the buttons
      * in the collection and applying the draw() method
-     * @param elapsedTime
-     * @param graphics2D
      */
     private void drawButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
@@ -193,10 +197,9 @@ public class PauseScreen extends GameScreen
         }
     }
 
-    /**
+    /*
      * Method which carries out all the push button updates, this is done by running through a for
      * loop and calling the update() method on each button
-     * @param elapsedTime
      */
     private void updateAllPushButtons(ElapsedTime elapsedTime)
     {
@@ -236,10 +239,7 @@ public class PauseScreen extends GameScreen
         }
     }
 
-    /**
-     * Method which gets the screen width and height of the device screen
-     * @param graphics2D
-     */
+    // Method which gets the screen width and height of the device screen
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
         if (mScreenHeight == 0 || mScreenWidth == 0) {
@@ -256,8 +256,8 @@ public class PauseScreen extends GameScreen
     }
 
     /*
-     * Method which performs the mute button actions - Method taken from Aileen(40207942),
-     * adjusted method slightly to suit my class
+     * Reference @ Aileen(40207942) 'SettingsScreen' class
+     * Method which performs the mute button actions
      */
     private void performMuteButtonActions(){
 
@@ -275,8 +275,8 @@ public class PauseScreen extends GameScreen
     }
 
     /*
-     * Method which starts the music and also checks if the music is playing - Method taken from
-     * Aileen(40207942), adjusted method slightly to suit my class
+     * Reference @ Aileen(40207942) 'SettingsScreen' class
+     * Method which starts the music and also checks if the music is playing
      */
     private void playBackgroundMusicIfNotPlaying()
     {
@@ -288,10 +288,7 @@ public class PauseScreen extends GameScreen
         }
     }
 
-    /**
-     * Method which allows you to move to a new game screen of your choice
-     * @param newScreen
-     */
+    // Method which allows you to move to a new game screen of your choice
     public void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);

@@ -7,17 +7,20 @@ import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 
-/* Author : Edgars (40203154)
+/*
+* Author : Edgars (40203154)
 * This is a custom animation class which will take an Image Strip/Spritesheet and animate it,
 * allowing for the animation to then be used in the LoadingScreen class to allow for a loading
-* animation to be drawn to the screen
+* animation to be drawn to the screen, taking reference from Mantas(40203133)
+* 'ExplosionAnimation' class as my class wasn't fully functional beforehand
 */
 public class LoadingAnimation
 {
     // Declaring all the relevant variables to the spritesheet
     private String mName;
     private Bitmap mSpritesheet;
-    private int mNumOfRows, mNumOfColumns, mFrameWidth, mFrameHeight, mStartFrame, mEndFrame, mCurrentFrame;
+    private int mNumOfRows, mNumOfColumns, mFrameWidth, mFrameHeight, mStartFrame, mEndFrame,
+            mCurrentFrame;
     private double mStartTime;
     private float mTotalTime, mTimeSinceAnimationStart;
     private boolean mPlaying, mLoopAnimation;
@@ -29,10 +32,8 @@ public class LoadingAnimation
     private Rect mSourceRect = new Rect();
     private Rect mScreenRect = new Rect();
 
-    /**
+    /*
      * CONSTRUCTOR - for the LoadingAnimation class, which runs a methods which sets up the screen
-     * @param animationSettings
-     * @param stripIndex
      */
     public LoadingAnimation(AnimationSettings animationSettings, int stripIndex)
     {
@@ -40,9 +41,8 @@ public class LoadingAnimation
         initialiseVariables(animationSettings, stripIndex);
     }
 
-    /**
+    /*
      * Update method for the LoadingAnimation class
-     * @param elapsedTime
      */
     public void update(ElapsedTime elapsedTime)
     {
@@ -59,15 +59,14 @@ public class LoadingAnimation
         appropriateAnimationFrame();
     }
 
-    /**
+    /*
      * Draw method for the LoadingAnimation class
-     * @param graphics2D
      */
     public void draw(IGraphics2D graphics2D)
     {
         // If statement which executes the draw method only if the animation is set to playing
-       if(mPlaying)
-       {
+        if(mPlaying)
+        {
             // Method which builds the screen rectangle, using the specified game object
             buildRectangle();
 
@@ -76,9 +75,13 @@ public class LoadingAnimation
 
             // Calculating the location of the current frame within the image strip
             int rowIndex = mCurrentFrame / mNumOfRows;
+            // Reference @ Mantas(40203133) 'ExplosionAnimation' class
             int columnIndex = mCurrentFrame % mNumOfColumns;
 
-            // Offset the source rectangle onto the current frame
+            /*
+             * Reference @ Mantas(40203133) 'ExplosionAnimation' class
+             * Offset the source rectangle onto the current frame
+             */
             mSourceRect.left = mSourceRect.left + ( columnIndex * mFrameWidth );
             mSourceRect.right = mSourceRect.right + ( columnIndex * mFrameWidth );
             mSourceRect.top = mSourceRect.top + ( rowIndex * mFrameHeight );
@@ -86,16 +89,13 @@ public class LoadingAnimation
 
             // Draw the actual frame
             graphics2D.drawBitmap(mSpritesheet, mSourceRect, mScreenRect, null);
-       }
+        }
     }
 
-    //----METHODS----
-
-    /**
-     * Method which initialises all of the variables needed within the class
-     * @param animationSettings
-     * @param stripIndex
+    /*
+     * METHODS
      */
+    // Method which initialises all of the variables needed within the class
     private void initialiseVariables(AnimationSettings animationSettings, int stripIndex)
     {
         // Assign variables with appropriate values from the animationSettings class
@@ -123,35 +123,7 @@ public class LoadingAnimation
         mPlaying = false;
     }
 
-    // Getter for the frame height
-    public int getFrameHeight() { return mFrameHeight; }
-
-    // Getter for the frame width
-    public int getFrameWidth() { return mFrameWidth; }
-
-    // Getter for the current frame
-    public int getCurrentFrame()
-    {
-        return mCurrentFrame;
-    }
-
-    // Getter for the end frame
-    public int getEndFrame()
-    {
-        return mEndFrame;
-    }
-
-    // Getter for the start frame
-    public int getStartFrame() { return mStartFrame; }
-
-    /**
-     * Method which starts the playing of the image strip in a given location
-     * @param elapsedTime
-     * @param x
-     * @param y
-     * @param right
-     * @param bottom
-     */
+    // Method which starts the playing of the image strip in a given location
     public void playAnimation(ElapsedTime elapsedTime, float x, float y, float right, float bottom)
     {
         // Setting the location variables to those specified in the method when it's called
@@ -175,13 +147,17 @@ public class LoadingAnimation
         mPlaying = false;
     }
 
-    // Method which selects the appropriate animation frame
+    /*
+     * Reference @ Mantas(40203133) 'ExplosionAnimation' class
+     * Method which selects the appropriate animation frame
+     */
     private void selectAnimationFrame()
     {
         float positionOfAnimation = mTimeSinceAnimationStart / mTotalTime;
         positionOfAnimation -= (int)positionOfAnimation;
 
-        mCurrentFrame = (int)((float)(mEndFrame - mStartFrame + 1) * positionOfAnimation) + mStartFrame;
+        mCurrentFrame = (int)((float)(mEndFrame - mStartFrame + 1) * positionOfAnimation)
+                + mStartFrame;
     }
 
     /*
@@ -211,12 +187,15 @@ public class LoadingAnimation
     {
         // Building the rectangle to the specified game object
         mScreenRect.left = (int)x;
-        mScreenRect.right = (int)right;
         mScreenRect.top = (int)y;
+        mScreenRect.right = (int)right;
         mScreenRect.bottom = (int)bottom;
     }
 
-    // Method which builds the source rectangle
+    /*
+     * Reference @ Mantas(40203133) 'ExplosionAnimation' class
+     * Method which builds the source rectangle
+     */
     private void buildSourceRectangle()
     {
         mSourceRect.left = 0;
@@ -224,4 +203,22 @@ public class LoadingAnimation
         mSourceRect.top = 0;
         mSourceRect.bottom = mFrameHeight;
     }
+
+    /*
+     * Getters
+     */
+    // Getter for the frame height
+    public int getFrameHeight() { return mFrameHeight; }
+
+    // Getter for the frame width
+    public int getFrameWidth() { return mFrameWidth; }
+
+    // Getter for the current frame
+    public int getCurrentFrame() { return mCurrentFrame; }
+
+    // Getter for the end frame
+    public int getEndFrame() { return mEndFrame; }
+
+    // Getter for the start frame
+    public int getStartFrame() { return mStartFrame; }
 }

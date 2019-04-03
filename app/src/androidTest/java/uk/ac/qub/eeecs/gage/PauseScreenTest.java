@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 /*
 * Author: Edgars(402030154)
-* A test class which will test if the transition to new screens occurs correctly
+* A test class which will test if the transition to new screens occur correctly
 */
 @RunWith(AndroidJUnit4.class)
 public class PauseScreenTest
@@ -53,7 +53,10 @@ public class PauseScreenTest
         AudioManager testAudioManager = mock(AudioManager.class);
         when(mGame.getAudioManager()).thenReturn(testAudioManager);
 
-        // Setting up a ScreenManager to allow for testing of the screen transitions within the PauseScreen
+        /*
+         * Setting up a ScreenManager to allow for testing of the screen transitions within
+         * the PauseScreen
+         */
         ScreenManager testScreenManager = new ScreenManager(mGame);
         when(mGame.getScreenManager()).thenReturn(testScreenManager);
 
@@ -69,33 +72,47 @@ public class PauseScreenTest
         mGame.mFileIO = fileIO;
     }
 
-    // A test which initialises a pause screen and a InstructionsScreen and sees if the moveToNewGameScreen() method works correctly
+    /*
+     * A test which initialises a pause screen and a InstructionsScreen and sees if the
+     * moveToNewGameScreen() method works correctly
+     */
     @Test
     public void changeScreenToInstructionScreen()
     {
-       PauseScreen pauseScreen = new PauseScreen(mGame);
-       mGame.getScreenManager().addScreen(pauseScreen);
-
-       InstructionsScreen instructionsScreen = new InstructionsScreen(mGame);
-       mGame.getScreenManager().addScreen(instructionsScreen);
-
-       pauseScreen.moveToNewGameScreen(instructionsScreen);
-
-       Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(), instructionsScreen.getName());
-    }
-
-    // A test which initialises a PauseScreen and a MainMenuScreen and sees if the moveToNewGameScreen() method works correctly
-    @Test
-    public void changeScreenToMainMenuScreen()
-    {
+        // Initialising a Pause Screen
         PauseScreen pauseScreen = new PauseScreen(mGame);
         mGame.getScreenManager().addScreen(pauseScreen);
 
+        // Initialising a Instructions Screen
+        InstructionsScreen instructionsScreen = new InstructionsScreen(mGame);
+        mGame.getScreenManager().addScreen(instructionsScreen);
+
+        // Calling the method which causes the screen transition
+        pauseScreen.moveToNewGameScreen(instructionsScreen);
+
+        Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(),
+                instructionsScreen.getName());
+    }
+
+    /*
+     * A test which initialises a PauseScreen and a MainMenuScreen and sees if the
+     * moveToNewGameScreen() method works correctly
+     */
+    @Test
+    public void changeScreenToMainMenuScreen()
+    {
+        // Initialising a Pause Screen
+        PauseScreen pauseScreen = new PauseScreen(mGame);
+        mGame.getScreenManager().addScreen(pauseScreen);
+
+        // Initialising a Main Menu Screen
         MainMenu mainMenu = new MainMenu(mGame);
         mGame.getScreenManager().addScreen(mainMenu);
 
+        // Calling the method which causes the screen transition
         pauseScreen.moveToNewGameScreen(mainMenu);
 
-        Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(), mainMenu.getName());
+        Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(),
+                mainMenu.getName());
     }
 }

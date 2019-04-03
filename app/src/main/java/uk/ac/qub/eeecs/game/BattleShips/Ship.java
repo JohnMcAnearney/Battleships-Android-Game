@@ -78,8 +78,6 @@ public class Ship
         return shipType;
     }
 
-
-
     public Vector2 getTargetPosition() { return targetPosition;}
 
     public Vector2 getScreenCentre() { return screenCentre;}
@@ -146,7 +144,7 @@ public class Ship
     }
 
     /**
-     * Draw the ship method
+     * Draw the ship method using matrix
      * @param graphics2D
      */
     public void drawShip(IGraphics2D graphics2D)

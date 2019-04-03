@@ -27,6 +27,9 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class MainMenuScreenTest {
+
+    /*Created 100% by AT: 40207942*/
+    /*References: QUBBATTLE, TRIBALHUNTER, AVANT, LECTURE CODE*/
     private Context mContext;
     private DemoGame mGame;
     private MainMenu mMainMenuScreen;

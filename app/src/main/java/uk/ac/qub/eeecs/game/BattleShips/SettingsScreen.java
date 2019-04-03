@@ -187,7 +187,7 @@ public class SettingsScreen extends GameScreen {
             loadedJSON = mGame.getFileIO().loadJSON(buttonsToConstructJSONFile);
         } catch (IOException e) {
             throw new RuntimeException(
-                    "DemoMenuScreen.constructButtons: Cannot load JSON [" + buttonsToConstructJSONFile + "]");
+                    "Cannot load JSON [" + buttonsToConstructJSONFile + "]");
         }
         try {
             JSONObject settings = new JSONObject(loadedJSON);
@@ -219,7 +219,7 @@ public class SettingsScreen extends GameScreen {
             }
         } catch (JSONException | IllegalArgumentException e) {
             throw new RuntimeException(
-                    "DemoMenuScreen.constructButtons: JSON parsing error [" + e.getMessage() + "]");
+                    "JSON error [" + e.getMessage() + "]");
         }
     }
 

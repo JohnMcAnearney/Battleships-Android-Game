@@ -4,16 +4,23 @@ package uk.ac.qub.eeecs.game.BattleShips;
 //fleet with their ships in whatever way they wish
 
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.*;
 import android.text.method.Touch;
 
+import java.time.Clock;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
+import uk.ac.qub.eeecs.gage.engine.graphics.CanvasGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
@@ -43,6 +50,9 @@ public class BoardSetupScreen extends GameScreen {
     float closestSlotDistanceSqrd = Float.MAX_VALUE;
     int numberOfClosestBox = 0;
     private PushButton[] pushButtonArray;      //Array to store all of the buttons
+    private Rect titleRect = new Rect();
+    private boolean eeCheck = false;
+
 
     ////////////////////////////////////////// - BOX VARIABLES - //////////////////////////////////////////////////////////////////
 
@@ -146,6 +156,8 @@ public class BoardSetupScreen extends GameScreen {
             {
                 rotateShipBy90Degrees();
             }
+
+            easterEgg(touchEvent);
         }
         //If game is in shipDrag state, call method shipDrag
         if(gameShipPlacementState == GameShipPlacementState.SHIP_DRAG)
@@ -245,6 +257,10 @@ public class BoardSetupScreen extends GameScreen {
         //Collective method which draws required items, boards and static images
         drawItems(graphics2D);
         setupBoardBound();
+        if(eeCheck) {
+            drawEasterToScreen(graphics2D);
+            eeCheck = false;
+        }
 
         //Set up ship bounds and create ship objects only once
         if (!shipSetUp ) {
@@ -433,9 +449,28 @@ public class BoardSetupScreen extends GameScreen {
         //draws background image
         graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
         //draws the battlehships title at the top of the screen. titleTop returns 1% of screen, therefore multiply by whatever you desire.
+        graphics2D.drawBitmap(battleshipTitle, null, setupTitleBound(graphics2D), paint);
+    }
+
+    /**
+     * This method may seem to be unnecessary but i need it to implement an easter egg when you long press the title ;)
+     * @param graphics2D - used to obtain surface width and height
+     * @return - the rect of the title, i.e. where it will be placed
+     */
+
+    public Rect setupTitleBound(IGraphics2D graphics2D){
         int titleLeft = graphics2D.getSurfaceWidth()/3, titleTop = graphics2D.getSurfaceHeight()/graphics2D.getSurfaceHeight();
-        Rect titleRect = new Rect(titleLeft, titleTop*10, titleLeft*2, titleTop*160);
-        graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
+        titleRect = new Rect(titleLeft, titleTop*10, titleLeft*2, titleTop*160);
+        return  titleRect;
+    }
+
+    public boolean easterEgg(TouchEvent touchEvent){
+        if(touchEvent.type == touchEvent.TOUCH_LONG_PRESS && titleRect != null){
+            if(boxContainsInput(titleRect.left,titleRect.right, titleRect.top, titleRect.bottom, touchEvent.x, touchEvent.y)){
+                return eeCheck = true;
+            }
+        }
+        return eeCheck;
     }
 
     /**
@@ -656,6 +691,20 @@ public class BoardSetupScreen extends GameScreen {
                 (graphics2D.getSurfaceWidth()/2) + (battleshipTitle.getWidth()/2),
                 (graphics2D.getSurfaceHeight()/2) + (battleshipTitle.getHeight()));
         graphics2D.drawBitmap(boundsMessage, null, messageRect, messagePaint);
+    }
+
+    private void drawEasterToScreen(IGraphics2D graphics2D) {
+
+        Paint messagePaint = new Paint();
+        //https://stackoverflow.com/questions/11285961/how-to-make-a-background-20-transparent-on-android source on how to do transparency
+        //the above was referenced in order to find out how to change the opacity of an image
+        messagePaint.setAlpha(220); //this is an opacity of 80%, no need to convert to hex
+        Rect messageRect = new Rect((graphics2D.getSurfaceWidth()/2) - (battleshipTitle.getWidth()/2),
+                (graphics2D.getSurfaceHeight()/2) - (battleshipTitle.getHeight()/2),
+                (graphics2D.getSurfaceWidth()/2) + (battleshipTitle.getWidth()/2),
+                (graphics2D.getSurfaceHeight()/2) + (battleshipTitle.getHeight()));
+            graphics2D.drawBitmap(boundsMessage, null, messageRect, messagePaint);
+
     }
 
     ////////////////////////////////////////////// - Collective methods - //////////////////////////////////////////////////////////////////////////

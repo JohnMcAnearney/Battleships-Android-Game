@@ -2,18 +2,15 @@ package uk.ac.qub.eeecs.game.BattleShips;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.preference.PreferenceManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,15 +73,26 @@ public class SettingsScreen extends GameScreen {
 
 
     /**
+     * CONSTRUCTOR
      * @param mGame
      */
     public SettingsScreen(Game mGame) {
         super("SettingsScreen", mGame);
-        //Setting the properties
+        init(mGame);
+        loadAssets();
+        playBackgroundMusic(mBackgroundMusic);
+        createBarDisplayVolume();
+        createButtons();
+        }
+
+
+     public void init(Game mGame){
          mActivity= mGame.getActivity();
          mContext= mGame.getActivity().getApplicationContext();
+
          mPreferencesManager = new PreferencesManager(mGame);
          mAssetManager = mGame.getAssetManager();
+         mAudioManager = mGame.getAudioManager();
 
          mScreenHeight=0;
          mScreenWidth=0;
@@ -95,16 +103,11 @@ public class SettingsScreen extends GameScreen {
          mMusicButtonVolumeControls = new HashMap<>();
          mEffectButtonVolumeControls = new HashMap<>();
 
-         mAudioManager = mGame.getAudioManager();
+     }
 
 
 
-        //Call the methods that happen at the beginning
-        loadAssets();
-        playBackgroundMusic(mBackgroundMusic);
-        createBarDisplayVolume();
-        createButtons();
-        }
+
 
     /**
     * Method to load all of the game assets
@@ -357,6 +360,9 @@ public class SettingsScreen extends GameScreen {
      * Method checks if music is playing when button triggered
      * Then stops the music and changes the bitmap image to the mute one
      * Else sets bitmap to unmute and plays the background music
+     * Note both mute methods do work on shared prefernces for the settings screen however the main menu screen does not use
+     * shared prefernces for audio so test it after going the to the settings screen once.
+     * It remembers the shared preferences but the main menu doesnt so click mute one on the music all everything works
      * */
 
     public void preformMuteMusicButtonActions(){
@@ -375,7 +381,7 @@ public class SettingsScreen extends GameScreen {
     }
 
     /**
-     * Method to mute sfx
+     * Method to mute effects sound
      */
     public void preformMuteEffectButtonActions(){
         boolean isEffectsMuted = mPreferencesManager.loadMuteEffectStatus(MUTE_EFFECT_SHAREDPREF_KEY,mAudioManager.getEffectsEnabled());

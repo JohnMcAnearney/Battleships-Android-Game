@@ -23,6 +23,7 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
  * Class created by Mantas(40203133)
  * Class populated by Aileen(40207942)
  * Class refactored by Edgars(40203154)
+ * References: QUBBATTLE, AVANT
  */
 public class MainMenu extends GameScreen
 {

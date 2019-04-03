@@ -34,7 +34,7 @@ public class BoardSetupScreen extends GameScreen {
 
     /**
      * Class Authors: John McAnearney 40203900 and Mantas Stadnik 40203133
-     * John McA KEY: I used camelCase for all except FINAL variables where I_USED_THIS_SYNYAX
+     * John McA KEY: I used camelCase for all except FINAL variables where I_USED_THIS_SYNTAX
      */
 
     /////////////////////////////////////////// - GENERAL VARIABLES - /////////////////////////////////////////////////////////////////
@@ -46,12 +46,11 @@ public class BoardSetupScreen extends GameScreen {
     private String message = "Not Detected", message2  ="";
     private float x,y;      // Coordinate values of user input
     private int moveBackground =0;
-    private final float MAX_SNAP_TO_DISTANCE = 1000.0f;
     float closestSlotDistanceSqrd = Float.MAX_VALUE;
     int numberOfClosestBox = 0;
     private PushButton[] pushButtonArray;      //Array to store all of the buttons
     private Rect titleRect = new Rect();
-    private Rect eeRect = new Rect();
+    private Rect eeRect = new Rect();           //ee = abbreviation for easter egg
     private boolean eeCheck = false;
 
 
@@ -72,7 +71,6 @@ public class BoardSetupScreen extends GameScreen {
     private float screenHeight = 0;
     private BoundingBox boardBoundingBox;
     private final int NUMBER_ROWS = 10, NUMBER_COLUMNS = 10;
-    private final int BOARD_TWO_SIZE = 100;
 
     ////////////////////////////////////////// - SHIP VARIABLES - //////////////////////////////////////////////////////////////////
 
@@ -83,7 +81,6 @@ public class BoardSetupScreen extends GameScreen {
     private enum GameShipPlacementState {SHIP_SELECT,SHIP_DRAG} //Game states, will swap between the states when the user will place ships onto the grid before the start of the game
     private GameShipPlacementState gameShipPlacementState = BoardSetupScreen.GameShipPlacementState.SHIP_SELECT;  //Initialized enum object set to ship select, for when the game starts
     private Vector2 dragShipOffset = new Vector2(); //Vector to store the x and y coordinates of the ship's coordinates minus the touch location
-    private boolean toRotateShip = false;  //boolean value used as a identifier to rotate the ship
     private boolean shipOutOfBound = false;
 
     ////////////////////////////////////////// - Animation - //////////////////////////////////////////////////////////////////
@@ -476,6 +473,11 @@ public class BoardSetupScreen extends GameScreen {
         return  titleRect;
     }
 
+    /**
+     * Boolean method used to check if the easter egg should play
+     * @param touchEvent - used to find where the user has clicked and if it is in the desired region
+     * @return - true if the click is within the 'battleships' header, false otherwise
+     */
     public boolean easterEgg(TouchEvent touchEvent){
         if(touchEvent.type == touchEvent.TOUCH_LONG_PRESS && titleRect != null){
             if(boxContainsInput(titleRect.left,titleRect.right, titleRect.top, titleRect.bottom, touchEvent.x, touchEvent.y)){
@@ -577,9 +579,7 @@ public class BoardSetupScreen extends GameScreen {
                     closestSlotDistanceSqrd = distanceSqrd;
                 }
             }
-
         }
-
         return numberOfClosestBox;
     }
 
@@ -619,6 +619,9 @@ public class BoardSetupScreen extends GameScreen {
 
     }
 
+    /**
+     * snaps the ship to the closest box and marks that these boxes are occupied
+     */
     private void shipSnapToBox(){
         calculateClosestBox();
         //same as ship reset but doesnt check out of bounds
@@ -705,8 +708,13 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.drawBitmap(boundsMessage, null, messageRect, messagePaint);
     }
 
+    /**
+     * draws an image to the screen for a given time, specified in the JSON file.
+     * @param elapsedTime - used as a necessary parameter for the draw method above, where this method is called
+     */
     private void drawEasterToScreen(ElapsedTime elapsedTime) {
 
+        //this code uses mantas' class and methods to play the animation
         easterEgg.play(elapsedTime, eeRect.left, eeRect.top, eeRect.right, eeRect.bottom);
 
     }

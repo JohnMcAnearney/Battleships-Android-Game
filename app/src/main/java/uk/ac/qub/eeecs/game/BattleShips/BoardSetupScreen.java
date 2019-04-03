@@ -130,12 +130,6 @@ public class BoardSetupScreen extends GameScreen {
                 detectionIfUserSelectedSmallBox(elapsedTime);
             shipSelect(touchEvent);
             }
-            //if user taps with a second finger while dragging the ship, rotate the bitmap
-            if(touchEvent.type == touchEvent.TOUCH_DOWN
-            && touchEvent.pointer != shipToDragPointerIndexOfInput)
-            {
-                rotateShipBy90Degrees();
-            }
             // When user lifts their finger off the screen drop the bitmap, and change the game state
             if (touchEvent.type == TouchEvent.TOUCH_UP
                     && touchEvent.pointer == shipToDragPointerIndexOfInput
@@ -145,8 +139,14 @@ public class BoardSetupScreen extends GameScreen {
                 //Set the gamestate to ship select since the user is no longer pressing onto the screen
                 gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
             }
+            //if user taps with a second finger while dragging the ship, rotate the bitmap
+            if(touchEvent.type == touchEvent.TOUCH_DOWN
+                    && touchEvent.pointer != shipToDragPointerIndexOfInput
+                    && gameShipPlacementState == GameShipPlacementState.SHIP_DRAG)
+            {
+                rotateShipBy90Degrees();
+            }
         }
-
         //If game is in shipDrag state, call method shipDrag
         if(gameShipPlacementState == GameShipPlacementState.SHIP_DRAG)
             shipDrag(input);

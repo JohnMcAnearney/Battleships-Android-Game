@@ -51,6 +51,7 @@ public class BoardSetupScreen extends GameScreen {
     int numberOfClosestBox = 0;
     private PushButton[] pushButtonArray;      //Array to store all of the buttons
     private Rect titleRect = new Rect();
+    private Rect eeRect = new Rect();
     private boolean eeCheck = false;
 
 
@@ -86,8 +87,10 @@ public class BoardSetupScreen extends GameScreen {
     private boolean shipOutOfBound = false;
 
     ////////////////////////////////////////// - Animation - //////////////////////////////////////////////////////////////////
-    private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimation
+    private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimationp
+    private static ExplosionAnimation easterEgg;
     private static AnimationSettings animationSettings;        //Object holder for animationSettings
+    private static AnimationSettings eeAnimationSettings;
 
     ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
@@ -116,10 +119,12 @@ public class BoardSetupScreen extends GameScreen {
          * to be used for an explosion animation
          */
         animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");
+        eeAnimationSettings = new AnimationSettings(assetManager,"txt/animation/God.JSON" );
         /**
          * create explosion animation object which will allow for explosion to be drawn
          */
         explosionAnimation = new ExplosionAnimation(animationSettings,0);
+        easterEgg = new ExplosionAnimation(eeAnimationSettings, 0);
     }
 
 
@@ -212,7 +217,7 @@ public class BoardSetupScreen extends GameScreen {
 
         //update the animation frame
         explosionAnimation.update(elapsedTime);
-
+        easterEgg.update(elapsedTime);
 
         moveBackground += elapsedTime.stepTime * 50.0f;
         if(moveBackground> 300){
@@ -259,6 +264,7 @@ public class BoardSetupScreen extends GameScreen {
         setupBoardBound();
         if(eeCheck) {
             drawEasterToScreen(graphics2D);
+            easterEgg.play(elapsedTime, eeRect.left, eeRect.top, eeRect.right, eeRect.bottom);
             eeCheck = false;
         }
 
@@ -297,6 +303,7 @@ public class BoardSetupScreen extends GameScreen {
 
         //Call the explosion animation draw method in the object's class
         explosionAnimation.draw(graphics2D);
+        easterEgg.draw(graphics2D);
 
         //Set up and draw messages used for testing
         textPaint.setTextSize(50.0f);
@@ -459,8 +466,14 @@ public class BoardSetupScreen extends GameScreen {
      */
 
     public Rect setupTitleBound(IGraphics2D graphics2D){
+        //draws the battlehships title at the top of the screen. titleTop returns 1% of screen, therefore multiply by whatever you desire.
         int titleLeft = graphics2D.getSurfaceWidth()/3, titleTop = graphics2D.getSurfaceHeight()/graphics2D.getSurfaceHeight();
         titleRect = new Rect(titleLeft, titleTop*10, titleLeft*2, titleTop*160);
+
+        //setting up the easter egg bound here too for ease
+        int eeLeft = graphics2D.getSurfaceWidth()/3, eeTop = graphics2D.getSurfaceHeight()/graphics2D.getSurfaceHeight();
+        eeRect = new Rect(eeLeft, eeTop*250, eeLeft*2, eeTop*900);
+
         return  titleRect;
     }
 

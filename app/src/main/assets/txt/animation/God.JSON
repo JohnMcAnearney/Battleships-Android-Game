@@ -6,8 +6,8 @@
     {
       "name": "God",
       "startFrame" : 0,
-      "endFrame" : 1,
-      "totalPeriod" : 1.5,
+      "endFrame" : 0,
+      "totalPeriod" : 3,
       "loopAnimation" : false
     }
   ]

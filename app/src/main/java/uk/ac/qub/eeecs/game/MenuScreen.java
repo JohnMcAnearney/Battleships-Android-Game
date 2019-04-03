@@ -14,10 +14,12 @@ import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.game.BattleShips.DemoScreen;
 import uk.ac.qub.eeecs.game.BattleShips.MainMenu;
+import uk.ac.qub.eeecs.game.BattleShips.SplashScreen;
 import uk.ac.qub.eeecs.game.cardDemo.CardDemoScreen;
 import uk.ac.qub.eeecs.game.miscDemos.DemoMenuScreen;
 import uk.ac.qub.eeecs.game.platformDemo.PlatformDemoScreen;
 import uk.ac.qub.eeecs.game.spaceDemo.SpaceshipDemoScreen;
+import java.util.ArrayList;
 
 /**
  * An exceedingly basic menu screen with a couple of touch buttons
@@ -140,7 +142,7 @@ public class MenuScreen extends GameScreen {
             else if(mPerformanceButton.isPushTriggered())
                 mGame.getScreenManager().addScreen(new PerformanceScreen(mGame));    ///!!!!!!!!!! Who ever is doing P1 delete comment brackets
             else if(mBattleShipButton.isPushTriggered())
-                mGame.getScreenManager().addScreen(new MainMenu(mGame));
+                mGame.getScreenManager().addScreen(new SplashScreen(mGame));
         }
     }
 

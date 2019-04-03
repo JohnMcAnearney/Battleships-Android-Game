@@ -64,7 +64,7 @@ public class SplashScreenTest
     @Test
     public void fontsToBeLoaded()
     {
-        assertTrue(assetManager.loadAndAddFont("regularUnderworld", "fonts/underWorld.ttf"));
+        assertTrue(assetManager.loadAndAddFont("audiowide", "font/Audiowide.ttf"));
     }
 
     @Test

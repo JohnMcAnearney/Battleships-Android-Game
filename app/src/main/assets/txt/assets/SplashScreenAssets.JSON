@@ -14,8 +14,8 @@
     },
     {
       "type": "Font",
-      "name": "regularUnderworld",
-      "file": "fonts/underworld.ttf"
+      "name": "audiowide",
+      "file": "font/Audiowide.ttf"
 
     }
   ]

@@ -20,7 +20,8 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
-/* Author : Edgars (40203154)
+/*
+ * Author : Edgars (40203154)
  * This is a Main Menu checker class, which will appear if the user selects to return to the main
  * menu from the pause screen. This screen will prompt the user with the consequences if they do
  * decide to return to the main menu and plays a sound if they do.

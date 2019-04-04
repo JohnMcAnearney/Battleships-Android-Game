@@ -24,9 +24,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /*
-* Author: Edgars(402030154)
-* A test class which will test if the transition to new screens occur correctly
-*/
+ * Author: Edgars(402030154)
+ * A test class which will test if the transition to new screens occur correctly
+ */
 @RunWith(AndroidJUnit4.class)
 public class PauseScreenTest
 {

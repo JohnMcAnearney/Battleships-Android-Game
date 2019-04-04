@@ -53,7 +53,7 @@ public class BoardSetupScreen extends GameScreen {
     private float smallBoxWidth = 0;
     private float smallBoxHeight = 0;
     private boolean smallBoxDetected = false;      //if user clicked inside a small box this will be true
-    private float[][] smallBoxCoordinates = new float[200][5];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom
+    private float[][] smallBoxCoordinates = new float[200][5];        //2D array to store all of the small box co-ordinates, storing left, top, right,bottom and state. The state has 4 different values - 0=Empty ; 1=Ship ; 2=Miss ; 3=Hit
     private int numberOfSmallBoxesDrawn = -1;          //counter for how many small boxes have been drawn
     private int numberofSmallBoxDetected ;             //holds the 2d array index of the small box detected
     private boolean smallboxCoordinatesCaptured = false, smallboxCoordinatesCaptured2 = false;  //if the smallBoxCoordinates array has been populated by capturing the co ordinates for both boards this will be set to true
@@ -79,6 +79,13 @@ public class BoardSetupScreen extends GameScreen {
     private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimation
     private static AnimationSettings animationSettings;        //Object holder for animationSettings
 
+    ////////////////////////////////////////// - Game Variables - ///////////////////////////////////////////////////////////////
+
+    private boolean gameInProgress = false;         //Used to allow the mPlayButton to be used as both a start-game and end-turn button
+    private boolean playerToShoot = true;           //Used to verify whether the player has taken their shot this turn
+    private BattleshipsAI AI;                       //Declare AI here so that it can be used freely
+    private int lastAIBoxDetected;                  //Used to store the last numberOfSmallBoxDetected from the AI's board
+    boolean lost = true;                            //Used to check if the player/AI lost after each turn
     ////////////////////////////////////////// - Constructor + UPDATE AND DRAW - //////////////////////////////////////////////////////////////////
     public BoardSetupScreen(Game game){
         super("BoardSetupBackground", game);
@@ -110,6 +117,11 @@ public class BoardSetupScreen extends GameScreen {
          * create explosion animation object which will allow for explosion to be drawn
          */
         explosionAnimation = new ExplosionAnimation(animationSettings,0);
+
+        //Michal Jonak (40204308) reset the game variables
+        gameInProgress = false;
+        playerToShoot = true;
+
     }
 
 
@@ -179,15 +191,55 @@ public class BoardSetupScreen extends GameScreen {
             }
             else if(mPlayButton.isPushTriggered())
             {
-                //TODO - MJ
-                prepareBoard();
-                //^^Check all ships have been placed
-                //^^place bitmaps in the correct positions
-                //Create AI class
-                //Place AI ships
-                //Turn indicator
-                //Enter game loop
 
+                if(!gameInProgress) {
+                    int playerBoard[] = new int[100];
+                    for (int i = 0; i < 100; i++) {
+                        playerBoard[i] = (int) smallBoxCoordinates[i][4];
+                    }
+                    AI = new BattleshipsAI(1, playerBoard);      //Create AI Class
+                    AI.setupBoard();                                  //Place AI Ships
+                    gameInProgress = true;
+                    playerToShoot = false;
+                }else if(!playerToShoot){
+                        System.out.println(lastAIBoxDetected);
+                        smallBoxCoordinates[lastAIBoxDetected][4] += 2;
+                        smallBoxCoordinates[AI.nextShot()][4] += 2;
+                        playerToShoot = true;
+                        //Check if the player hit the last ship
+                        lost = true;
+                        for(int i = 0; i < 100; i++){
+                            if(AI.checkAIBoard(i)==1){
+                                lost = false;
+                                break;
+                            }
+                        }
+                        if(lost){
+                            //AI LOST
+                        }
+                        //Check if the AI hit the last ship
+                        for(int i = 0; i < 100; i++){
+                            if(smallBoxCoordinates[i][4] == 1){
+                                lost = false;
+                                break;
+                            }
+                        }
+                        if (lost){
+                            //PLAYER LOST
+                        }
+
+
+                        //This loop is used to print both boards to the console for testing
+                        for (int i = 0; i<200; i++) {
+                            System.out.print((int)(smallBoxCoordinates[i][4]) + " ");
+                            if((i+1)%10 == 0)
+                                System.out.println();
+                            if((i+1)%100 == 0)
+                                System.out.println("----------------------");
+
+                        }
+
+                }
             }
             //Calling method to check if user input of x,y are inside a small box
         }
@@ -204,27 +256,6 @@ public class BoardSetupScreen extends GameScreen {
         message2 = "X CoOr: "+String.valueOf(x) + "\n" +"YcoOr:" + String.valueOf(y);
     }
 
-    //Prepares the board to allow the player to play the game
-    private void prepareBoard() {
-        if(!checkAllShipsPlaced()){
-            //Display warning
-        } else {
-            //All the ships have been placed
-
-        }
-    }
-    //Iterates through the smallBoxCoordinate array to check if all the ships have been placed
-    private boolean checkAllShipsPlaced() {
-        int noOfShipSquares = 0;
-        for (int i =0; i<100; i++){
-            if(smallBoxCoordinates[i][4] == 1){
-                noOfShipSquares++;
-            }
-        }
-        if(noOfShipSquares == 17){return true;}
-        return false;
-    }
-
     Paint textPaint = new Paint();
     Paint highlight = new Paint();
 
@@ -239,7 +270,17 @@ public class BoardSetupScreen extends GameScreen {
         //Collective method which draws required items, boards and static images
         drawItems(graphics2D);
         setupBoardBound();
-
+//todo
+    /*    if(gameInProgress) {
+            for (int i = 0; i < 200; i++) {
+                if (smallBoxCoordinates[4][i] == 3) {
+                    graphics2D.drawText("x", smallBoxCoordinates[0][i] + smallBoxWidth / 2, smallBoxCoordinates[1][i] + smallBoxHeight / 2, textPaint);
+                } else if (smallBoxCoordinates[4][i] == 2) {
+                    graphics2D.drawText("~", smallBoxCoordinates[0][i] + smallBoxWidth / 2, smallBoxCoordinates[1][i] + smallBoxHeight / 2, textPaint);
+                }
+            }
+        }
+*/
         //Set up ship bounds and create ship objects only once
         if (!shipSetUp ) {
             createShipObjects(graphics2D);
@@ -262,7 +303,12 @@ public class BoardSetupScreen extends GameScreen {
             highlight.setARGB(75,232,0,0);
             highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           //used for testing
             message = "detected" + numberofSmallBoxDetected;                                            //used for testing
-            message = message;
+            System.out.println(numberofSmallBoxDetected);                                               //used for testing
+            if(numberofSmallBoxDetected > 99){
+                lastAIBoxDetected = numberofSmallBoxDetected;
+                playerToShoot = false;
+            }
+          //  message = message;
 
         }
         else
@@ -283,6 +329,7 @@ public class BoardSetupScreen extends GameScreen {
         graphics2D.drawText(message, 100.0f, 100.0f, textPaint);
         graphics2D.drawText(message2, 100.0f, 200.0f, textPaint);
 
+
         //Create all of the buttons used in this gamescreen collectively
         createButtons();
 
@@ -293,6 +340,7 @@ public class BoardSetupScreen extends GameScreen {
         //Draw all of the buttons
         drawAllButtons(elapsedTime,graphics2D);
     }
+
 
     ////////////////////////////////////////////// - OUR OWN METHODS - /////////////////////////////////////////////////////////////////////////
 
@@ -356,6 +404,7 @@ public class BoardSetupScreen extends GameScreen {
                 moveConstLeft += smallBoxWidth;
             }
 
+
             //after first row is drawn, move down a row and draw 10 more boxes.
             //these two lines move the boxes down a row
             bigBoxTopCoor+=smallBoxHeight;
@@ -368,6 +417,8 @@ public class BoardSetupScreen extends GameScreen {
         bigBoxTopCoor = bigBoxTop;
         bigBoxRightCoor = bigBoxRight;
         bigBoxBottomCoor = bigBoxBottom;
+
+
     }
 
     /**
@@ -617,7 +668,7 @@ public class BoardSetupScreen extends GameScreen {
 
         //if box is occupied by a ship and the user clicks the box, it is a hit
         if(smallBoxDetected == true && smallBoxCoordinates[currentBox][4] == 1){
-            message = "HIT!";
+           // message = "HIT!";
 
             //////////////////////////////////////////////////////////////////////////////////////////
             //                                      - Mantas Stadnik -                              //
@@ -633,7 +684,7 @@ public class BoardSetupScreen extends GameScreen {
 
         //otherwise its a miss
         else{
-            message = "MISS!";
+           // message = "MISS!";
         }
 
     }

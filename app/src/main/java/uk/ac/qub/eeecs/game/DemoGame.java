@@ -17,6 +17,7 @@ public class DemoGame extends Game {
     /**
      * Create a new demo game
      */
+
     public DemoGame() {
         super();
     }

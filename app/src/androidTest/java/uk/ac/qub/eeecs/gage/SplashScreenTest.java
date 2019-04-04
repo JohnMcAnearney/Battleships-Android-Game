@@ -21,8 +21,9 @@ import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.io.FileIO;
 import uk.ac.qub.eeecs.game.BattleShips.SplashScreen;
 
-/**
- * @author Hannah Cunningham (40201925)
+/*
+ * @author: Hannah Cunningham (40201925)
+ * @reference: Lecture
  */
 
 @RunWith(AndroidJUnit4.class)
@@ -57,7 +58,8 @@ public class SplashScreenTest
     @Test
     public void bitmapsToBeLoaded()
     {
-        assertTrue(assetManager.loadAndAddBitmap("splashBackground", "img/splashBackground.png"));
+        assertTrue(assetManager.loadAndAddBitmap("splashBackground",
+                "img/splashBackground.png"));
         assertTrue(assetManager.loadAndAddBitmap("symbol", "img/symbol.png"));
     }
 

@@ -19,8 +19,9 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.game.BattleShips.Key;
 import uk.ac.qub.eeecs.game.DemoGame;
 
-/**
+/*
  * @author Hannah Cunningham (40201925)
+ * @reference: package uk.ac.qub.eeecs.gage.screens - RAGNORAK
  */
 
 @RunWith(AndroidJUnit4.class)

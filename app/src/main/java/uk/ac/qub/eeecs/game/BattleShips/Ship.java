@@ -1,29 +1,22 @@
 package uk.ac.qub.eeecs.game.BattleShips;
-//Sprint 3 User Story 13 - Creating the four different battleship
-//classes via inheritance
-
-//I will first create the main Ship class
-//I will further implement each ship size at a later stage
-
 //Sprint 4 - (40201925) User Story 3 - Placement of entity object
-// Further implementation to the Ship class
-
-/**
- * Authors of the class: Hannah Cunningham (), Mantas Stadnik (40203133)
- */
-
+//Further implementation to the Ship class
 import android.graphics.Bitmap;
 
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
 import uk.ac.qub.eeecs.gage.util.Vector2;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.gage.world.LayerViewport;
-import uk.ac.qub.eeecs.gage.world.Sprite;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import java.lang.String;
+
+/*
+ * Authors of this class: Hannah Cunningham (40201925), Mantas Stadnik (40203133)
+ */
+
 
 public class Ship
 {
@@ -41,9 +34,10 @@ public class Ship
     private Matrix matrix = new Matrix();
     private int shipLength;
 
-    //Constructor
-    //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
-    public Ship(String shipType,float scaleRatioX ,float scaleratioY, Bitmap bitmap, int shipLength)//, GameScreen gameScreen)
+    //Constructor - created by: Hannah Cunningham (40201925)
+    //Sprint 4 - Implemented additional code to the constructor of the ship class
+    public Ship(String shipType,float scaleRatioX ,float scaleratioY, Bitmap bitmap, int shipLength)
+    //, GameScreen gameScreen)
     {
         this.shipType = shipType;
         this.scaleRatioX = scaleRatioX;
@@ -52,9 +46,7 @@ public class Ship
         this.shipLength = shipLength;
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //Methods created by Hannah Cunningham (40203133)
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Method created by Hannah Cunningham (40201925)
     private void setTargetPosition(float startPositionX, float startPositionY)
     {
         mBound.x = targetPosition.x = startPositionX;
@@ -71,49 +63,35 @@ public class Ship
             setTargetPosition(startPositionX, startPositionY -= (bound.getTop() - mLayerViewport.getHeight()));
     }*/
 
-    //Getters
-    //Sprint 4 - Implemented and improved on the Ship class' Getters (40201925)
-    public String getShipType()
-    {
-        return shipType;
-    }
+    /*Getters & Setters
+    *Sprint 4 - Implemented and improved on the Ship class' Getters & Setters
+    *created by Hannah Cunningham (40201925)
+    */
+    public String getShipType() { return shipType; }
+    public void setShipType(String shipType) { this.shipType = shipType; }
 
     public Vector2 getTargetPosition() { return targetPosition;}
+    public void setTargetPosition(Vector2 targetPosition) { this.targetPosition = targetPosition;}
 
     public Vector2 getScreenCentre() { return screenCentre;}
-
-    public Bitmap getBitmap(){return bitmap;}
-
-    public BoundingBox getmBound() { return mBound;}
+    public void setScreenCentre(Vector2 screenCentre) { this.screenCentre = screenCentre;}
 
     public boolean getSelected() {return selected;}
+    public void setSelected(boolean selected) { this.selected = selected;}
 
     public boolean getAfterDrag() { return afterDrag;}
+    public void setAfterDrag(boolean afterDrag) { this.afterDrag = afterDrag;}
 
     public int getShipLength(){return shipLength;}
+    public void setShipLength(int shipLength) {this.shipLength = shipLength;}
 
     public float getScaleRatioX() { return scaleRatioX;}
 
     public float getScaleratioY() {return scaleratioY;}
 
+    public Bitmap getBitmap(){return bitmap;}
 
-    //Setters
-    //Sprint 4 - Implemented and improved on the Ship class' Setters (40201925)
-    public void setShipType(String shipType) { this.shipType = shipType; }
-
-    public void setTargetPosition(Vector2 targetPosition) { this.targetPosition = targetPosition;}
-
-    public void setScreenCentre(Vector2 screenCentre) { this.screenCentre = screenCentre;}
-
-    public void setShipLength(int shipLength) {this.shipLength = shipLength;}
-
-    public void setSelected(boolean selected) { this.selected = selected;}
-
-    public void setAfterDrag(boolean afterDrag) { this.afterDrag = afterDrag;}
-
-    public boolean isSelected() { return selected;}
-
-    public boolean isAfterDrag() { return afterDrag;}
+    public BoundingBox getmBound() { return mBound;}
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Methods created by Mantas Stadnik (40203133)

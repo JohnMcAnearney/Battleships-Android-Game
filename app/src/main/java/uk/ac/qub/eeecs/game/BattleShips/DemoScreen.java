@@ -1,6 +1,4 @@
 package uk.ac.qub.eeecs.game.BattleShips;
-//based on lecture example
-
 import java.util.ArrayList;
 import java.util.List;
 import android.graphics.Bitmap;
@@ -16,9 +14,10 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.gage.Game;
 
-/**
+/*
  * Demo Screen which extends from GameScreen to aid with key class for textual input
- * @author Hannah Cunningham (40201925)
+ * @author: Hannah Cunningham (40201925)
+ * @reference: lecture example
  */
 
 public class DemoScreen extends GameScreen
@@ -53,7 +52,8 @@ public class DemoScreen extends GameScreen
         for (int keyIdx = 0; keyIdx < mKeyLabels.length();
              keyIdx++)
         {
-            Key key = new Key(keyX, keyY, keyWidth, keyHeight, mKeyLabels.charAt(keyIdx), this);
+            Key key = new Key(keyX, keyY, keyWidth, keyHeight, mKeyLabels.charAt(keyIdx),
+                    this);
             key.setmLinkedStringBuffer(mName);
             mKeys.add(key);
 
@@ -100,8 +100,9 @@ public class DemoScreen extends GameScreen
 
     private Paint textPaint = new Paint();
 
-    //this method will override the draw method in the gameScreen class to desired
-    //specifications for each key in the key class,
+    /*this method will override the draw method in the gameScreen class to desired
+    *specifications for each key in the key class,
+    */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {

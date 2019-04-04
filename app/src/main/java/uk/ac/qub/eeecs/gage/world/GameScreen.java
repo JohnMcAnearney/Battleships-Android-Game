@@ -102,7 +102,9 @@ public abstract class GameScreen {
      *
      * @param elapsedTime Elapsed time information for the frame
      */
+
     public abstract void update(ElapsedTime elapsedTime);
+//    public abstract void update(ElapsedTime elapsedTime, IGraphics2D iGraphics2D);*/
 
     /**
      * Draw the game screen. Invoked automatically from the game.
@@ -133,4 +135,6 @@ public abstract class GameScreen {
      */
     public void dispose() {
     }
+
+
 }

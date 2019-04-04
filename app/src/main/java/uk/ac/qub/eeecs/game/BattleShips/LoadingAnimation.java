@@ -8,12 +8,12 @@ import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 
 /*
-* Author : Edgars (40203154)
-* This is a custom animation class which will take an Image Strip/Spritesheet and animate it,
-* allowing for the animation to then be used in the LoadingScreen class to allow for a loading
-* animation to be drawn to the screen, taking reference from Mantas(40203133)
-* 'ExplosionAnimation' class as my class wasn't fully functional beforehand
-*/
+ * Author : Edgars (40203154)
+ * This is a custom animation class which will take an Image Strip/Spritesheet and animate it,
+ * allowing for the animation to then be used in the LoadingScreen class to allow for a loading
+ * animation to be drawn to the screen, taking reference from Mantas(40203133)
+ * 'ExplosionAnimation' class as my class wasn't fully functional beforehand
+ */
 public class LoadingAnimation
 {
     // Declaring all the relevant variables to the spritesheet

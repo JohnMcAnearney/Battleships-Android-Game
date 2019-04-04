@@ -1,8 +1,4 @@
-/*
-*@reference package uk.ac.qub.eeecs.ragnarok.screens;
- */
 package uk.ac.qub.eeecs.game.BattleShips;
-
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
@@ -21,10 +17,14 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import java.util.List;
 
-/**
- * This is a developed splash screen class
- * @author Hannah Cunningham (40201925)
+/*
+ * This is a developed splash screen class which will be displayed at the beginning
+ * of the game once executed and will then return to the main menu screen
+ * @author: Hannah Cunningham (40201925)
+ * @reference: package uk.ac.qub.eeecs.ragnarok.screens;
+ * @reference: lecture code
  */
+
 
 public class SplashScreen extends GameScreen
 {
@@ -78,8 +78,12 @@ public class SplashScreen extends GameScreen
         paint = new Paint();
     }
 
-    //the below method will create a new background for the game screen and is referenced from: https://stackoverflow.com/questions/30425789/convert-immutable-bitmap-file-to-mutable-bitmap
-    //this particular method will convert an immutable bitmap file, such as the "splashBackground" image to scale, to a mutable bitmap
+    /*
+     *@reference https://stackoverflow.com/questions/30425789/convert-immutable-bitmap-file-to-mutable-bitmap
+     * This particular method will convert an immutable bitmap file, such as the "splashBackground"
+     * image to scale, to a mutable bitmap
+     *
+     */
     private void createBackground()
     {
         assetManager.loadAndAddBitmap("splashBackground", "img/splashBackground.png");
@@ -87,25 +91,28 @@ public class SplashScreen extends GameScreen
                 mScreenViewport.width, mScreenViewport.height, false);
         //the below demonstrates that the background bitmap will store each pixel on 4 bytes
         Bitmap backgroundBitmapMutable = backgroundBitmap.copy(Bitmap.Config.ARGB_8888, true);
-        background = new GameObject(game.getScreenWidth() * 0.5f, game.getScreenHeight() * 0.5f, game.getScreenWidth(), game.getScreenHeight(), backgroundBitmapMutable, this);
+        background = new GameObject(game.getScreenWidth() * 0.5f, game.getScreenHeight() * 0.5f,
+                game.getScreenWidth(), game.getScreenHeight(), backgroundBitmapMutable, this);
     }
 
     //this method will load and draw the symbol bitmap from gameObject
     private void createSymbol()
     {
         assetManager.loadAndAddBitmap("symbol", "img/symbol.png");
-        symbolBitmap = Bitmap.createScaledBitmap(assetManager.getBitmap("symbol"), 400, 400, false);
-        symbol = new GameObject(game.getScreenWidth()* 0.5f, game.getScreenHeight() * 0.5f, symbolBitmap, this);
+        symbolBitmap = Bitmap.createScaledBitmap(assetManager.getBitmap("symbol"),
+                400, 400, false);
+        symbol = new GameObject(game.getScreenWidth()* 0.5f, game.getScreenHeight() * 0.5f,
+                symbolBitmap, this);
     }
 
-    //this method will draw the desired font type
+    //this method will draw the desired font type for the Battleship title
     private void createFont()
     {
         assetManager.loadAndAddFont("audiowide", "font/Audiowide.ttf");
         audiowide = assetManager.getFont("audiowide");
     }
 
-    //this method will store the desired text and colour styles
+    //this method will store the desired text and colour styles for the Battleship title
     private void createPaint()
     {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -116,8 +123,9 @@ public class SplashScreen extends GameScreen
         paint.setAlpha(0);
     }
 
-    /*this method will create a canvas which initially represents a blank rectangular area on the game screen of a
-      given width and height which will capture and draw the background "splashBackground" image
+    /*this method will create a canvas which initially represents a blank rectangular
+     *area on the game screen of a given width and height which will capture and draw the background
+     *"splashBackground" image
      */
     private void createCanvas()
     {
@@ -138,12 +146,16 @@ public class SplashScreen extends GameScreen
         canvas.drawText("Battleships", canvasTextX, canvasTextY, paint);
     }
 
-    //Update method for the Splash Screen class which will update its elapsed time information using
-    //an if statement
+    /*
+    *Update method for the Splash Screen class which will update its elapsed time information using
+    *an if statement
+     */
     @Override
     public void update(ElapsedTime elapsedTime)
     {
-        //this particular if statement will gradually increase the opacity over a period of time
+        /*this particular if statement will gradually increase the opacity over a period of time
+        *to the battleship title
+        */
         if (paint.getAlpha() < 100)
         {
             if(alphaCount % 3 == 0)
@@ -154,7 +166,9 @@ public class SplashScreen extends GameScreen
             alphaCount ++;
         }
 
-        //the below method will get the current time and check for a timeout to return to the main menu
+        /*the below method will get the current time and check for a
+        * timeout to return to the main menu
+        */
         currentTime = System.currentTimeMillis();
         if(currentTime - timeToCreate >= SPLASH_TIMEOUT)
         {
@@ -162,7 +176,9 @@ public class SplashScreen extends GameScreen
         }
 
 
-        //the below method will process any touch events occurring since the last update and if so, return to main menu
+        /*the below method will process any touch events occurring since the last update
+        *and if so, return to main menu
+        */
         Input input = mGame.getInput();
         List<TouchEvent> touchEvents = input.getTouchEvents();
         if (touchEvents.size() > 0)
@@ -171,7 +187,7 @@ public class SplashScreen extends GameScreen
         }
     }
 
-    /**
+    /*
      * the method below will remove the current game screen
      * and then change to the menu screen
      */
@@ -181,7 +197,7 @@ public class SplashScreen extends GameScreen
         mGame.getScreenManager().addScreen(new MainMenu(mGame));
     }
 
-    /**
+    /*
      * the method below will draw the splash screen
      * @param elapsedTime Elapsed time information
      * @param graphics2D Graphics instance

@@ -1,7 +1,4 @@
 package uk.ac.qub.eeecs.gage;
-/*@referenced package uk.ac.qub.eeecs.gage
-* Avant project
-*/
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +13,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-/**
- * @author Hannah Cunningham (40201925)
+/*
+ * @author: Hannah Cunningham (40201925)
+ * @reference: AVANT
  */
 
 @RunWith(MockitoJUnitRunner.class)
@@ -80,7 +78,7 @@ public class ScreenManagerTest
         assertTrue(manager.removeScreen(mainMenuName));
     }
 
-    //test method to remove screen when unsuccessfully
+    //test method to remove screen when unsuccessful
     @Test
     public void removeScreen_NotFound_Test()
     {

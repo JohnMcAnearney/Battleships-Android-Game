@@ -19,7 +19,8 @@ import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.ui.PushButton;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
-/* Author : Edgars (40203154)
+/*
+ * Author : Edgars (40203154)
  * This is a pause screen class which will be accessible through the game screen, by clicking
  * a pause button; allowing the player to change their settings, return to main menu, access the
  * instructions and give them a quick launch option to mute the music

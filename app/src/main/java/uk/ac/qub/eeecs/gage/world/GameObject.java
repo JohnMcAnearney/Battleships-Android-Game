@@ -40,6 +40,8 @@ public class GameObject {
      */
     protected BoundingBox mBound = new BoundingBox();
 
+    protected GameScreen gameScreen;
+
     /**
      * Reusable Rect's used to draw this game object
      */
@@ -54,7 +56,7 @@ public class GameObject {
      * Create a new game object
      *
      */
-    public GameObject() {
+    public GameObject(GameScreen gameScreen) {
         mGameScreen = gameScreen;
     }
 

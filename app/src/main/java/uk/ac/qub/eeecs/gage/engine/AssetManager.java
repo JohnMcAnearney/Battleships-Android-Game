@@ -31,7 +31,7 @@ public class AssetManager {
      * Asset types
      */
     public enum AssetType {
-        Bitmap, Music, Sound, Font, Animation
+        Bitmap, Music, Sound, Font, Typeface, Animation
     }
 
     /**
@@ -142,7 +142,6 @@ public class AssetManager {
         mSounds.put(assetName, asset);
         return true;
     }
-
     /**
      * Add the specified font to the manager
      *
@@ -258,7 +257,6 @@ public class AssetManager {
                     "AssetManager.loadAndAddFont: Cannot load [" + fontFile + "]");
         }
     }
-
     /**
      * Load and add the specified animation settings asset to the store
      *
@@ -399,6 +397,7 @@ public class AssetManager {
 
         return mFonts.get(assetName);
     }
+
 
     /**
      * Retrieve the specified animation settings asset from the manager

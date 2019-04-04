@@ -53,9 +53,8 @@ public class GameObject {
     /**
      * Create a new game object
      *
-     * @param gameScreen Gamescreen to which this object belongs
      */
-    public GameObject(GameScreen gameScreen) {
+    public GameObject() {
         mGameScreen = gameScreen;
     }
 

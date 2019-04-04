@@ -1,6 +1,4 @@
 package uk.ac.qub.eeecs.game.BattleShips;
-//based on lecture example
-
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -14,10 +12,11 @@ import uk.ac.qub.eeecs.gage.world.GameScreen;
 import uk.ac.qub.eeecs.gage.world.LayerViewport;
 import uk.ac.qub.eeecs.gage.world.ScreenViewport;
 
-/**
+/*
  * This is a developed key class
  * which is extended from the PushButton class to aid with textual input functionality
  * @author Hannah Cunningham (40201925)
+ * @reference: lecture example
  */
 
 public class Key extends PushButton
@@ -33,7 +32,8 @@ public class Key extends PushButton
         super(x, y, width, height, "Key", gameScreen);
         processInLayerSpace(true);
 
-        float fontSize = ViewportHelper.convertXDistanceFromLayerToScreen(height, gameScreen.getDefaultLayerViewport(),gameScreen.getDefaultScreenViewport());
+        float fontSize = ViewportHelper.convertXDistanceFromLayerToScreen(height,
+                gameScreen.getDefaultLayerViewport(),gameScreen.getDefaultScreenViewport());
 
         mKey = String.valueOf(Key);
         mKeyPaint = new Paint();
@@ -62,7 +62,8 @@ public class Key extends PushButton
     private Vector2 screenPos = new Vector2();
 
     @Override
-    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D, LayerViewport layerViewport, ScreenViewport screenViewport)
+    public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D, LayerViewport layerViewport,
+                     ScreenViewport screenViewport)
     {
         super.draw(elapsedTime, graphics2D, layerViewport, screenViewport);
         ViewportHelper.convertLayerPosIntoScreen(layerViewport, mBound.x, mBound.y, screenViewport, screenPos);

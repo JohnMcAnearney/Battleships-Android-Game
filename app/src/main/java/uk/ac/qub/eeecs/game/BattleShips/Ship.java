@@ -67,10 +67,7 @@ public class Ship
     *Sprint 4 - Implemented and improved on the Ship class' Getters & Setters
     *created by Hannah Cunningham (40201925)
     */
-    public String getShipType()
-    {
-        return shipType;
-    }
+    public String getShipType() { return shipType; }
     public void setShipType(String shipType) { this.shipType = shipType; }
 
     public Vector2 getTargetPosition() { return targetPosition;}

@@ -153,7 +153,9 @@ public class SplashScreen extends GameScreen
     @Override
     public void update(ElapsedTime elapsedTime)
     {
-        //this particular if statement will gradually increase the opacity over a period of time
+        /*this particular if statement will gradually increase the opacity over a period of time
+        *to the battleship title
+        */
         if (paint.getAlpha() < 100)
         {
             if(alphaCount % 3 == 0)

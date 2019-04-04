@@ -1,7 +1,4 @@
 package uk.ac.qub.eeecs.gage;
-/*@referenced package uk.ac.qub.eeecs.gage
-* Avant project
-*/
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

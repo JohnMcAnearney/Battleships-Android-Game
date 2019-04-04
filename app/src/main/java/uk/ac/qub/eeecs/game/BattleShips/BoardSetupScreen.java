@@ -222,8 +222,12 @@ public class BoardSetupScreen extends GameScreen {
                     }
                     AI = new BattleshipsAI(1, playerBoard);      //Create AI Class
                     AI.setupBoard();                                  //Place AI Ships
+                    for(int i = 0; i<100; i++){
+                        smallBoxCoordinates[i+100][4] = AI.checkAIBoard(i);
+                    }
                     gameInProgress = true;
                     playerToShoot = false;
+
                 }else if(!playerToShoot){
                         System.out.println(lastAIBoxDetected);
                         smallBoxCoordinates[lastAIBoxDetected][4] += 2;
@@ -237,6 +241,7 @@ public class BoardSetupScreen extends GameScreen {
                                 break;
                             }
                         }
+                        //TODO - Add Victory/Loss Messages
                         if(lost){
                             //AI LOST
                         }
@@ -299,17 +304,6 @@ public class BoardSetupScreen extends GameScreen {
             eeCheck = false;
         }
 
-//todo
-    /*    if(gameInProgress) {
-            for (int i = 0; i < 200; i++) {
-                if (smallBoxCoordinates[4][i] == 3) {
-                    graphics2D.drawText("x", smallBoxCoordinates[0][i] + smallBoxWidth / 2, smallBoxCoordinates[1][i] + smallBoxHeight / 2, textPaint);
-                } else if (smallBoxCoordinates[4][i] == 2) {
-                    graphics2D.drawText("~", smallBoxCoordinates[0][i] + smallBoxWidth / 2, smallBoxCoordinates[1][i] + smallBoxHeight / 2, textPaint);
-                }
-            }
-        }
-*/
         //Set up ship bounds and create ship objects only once
         if (!shipSetUp ) {
             createShipObjects(graphics2D);
@@ -354,10 +348,17 @@ public class BoardSetupScreen extends GameScreen {
         //Set up and draw messages used for testing
         textPaint.setTextSize(50.0f);
         textPaint.setTextAlign(Paint.Align.LEFT);
-        graphics2D.drawText(message, 100.0f, 100.0f, textPaint);
-        graphics2D.drawText(message2, 100.0f, 200.0f, textPaint);
-
-
+   //     graphics2D.drawText(message, 100.0f, 100.0f, textPaint);
+   //     graphics2D.drawText(message2, 100.0f, 200.0f, textPaint);
+        textPaint.setTypeface(Typeface.MONOSPACE);
+        if(gameInProgress) {
+            for (int i = 0; i < 200; i++) {
+                if (smallBoxCoordinates[i][4] == 2)
+                    graphics2D.drawText("~", smallBoxCoordinates[i][0] + smallBoxWidth / 5f, smallBoxCoordinates[i][1] + smallBoxHeight / 1.3f, textPaint);
+                if(smallBoxCoordinates[i][4] == 3)
+                    graphics2D.drawText("x", smallBoxCoordinates[i][0] + smallBoxWidth / 5f, smallBoxCoordinates[i][1] + smallBoxHeight / 1.3f, textPaint);
+            }
+        }
         //Create all of the buttons used in this gamescreen collectively
         createButtons();
 

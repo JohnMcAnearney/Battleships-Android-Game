@@ -8,6 +8,10 @@ package uk.ac.qub.eeecs.game.BattleShips;
 //Sprint 4 - (40201925) User Story 3 - Placement of entity object
 // Further implementation to the Ship class
 
+/**
+ * Authors of the class: Hannah Cunningham (), Mantas Stadnik (40203133)
+ */
+
 import android.graphics.Bitmap;
 
 import uk.ac.qub.eeecs.gage.util.BoundingBox;
@@ -21,7 +25,7 @@ import android.graphics.Rect;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import java.lang.String;
 
-public class Ship //extends Sprite
+public class Ship
 {
     //Instance variables for the Ship class
     private String shipType; //data field for the type of ship e.g. Cargo Ship
@@ -33,18 +37,13 @@ public class Ship //extends Sprite
     public BoundingBox mBound = new BoundingBox();
     private boolean selected, afterDrag;
     public Bitmap bitmap;
-    private Paint paint;
     public boolean rotate, isRotated, boundingBoxSetAfterRotation, undoBoundingBoxSetAfterRotation =true;
     private Matrix matrix = new Matrix();
     private int shipLength;
 
-
     //Constructor
     //Sprint 4 - Implemented additional code to the constructor of the ship class (40201925)
     public Ship(String shipType,float scaleRatioX ,float scaleratioY, Bitmap bitmap, int shipLength)//, GameScreen gameScreen)
-    //{
-    // super(startPositionX, startPositionY, bitmap, gameScreen);
-    //}
     {
         this.shipType = shipType;
         this.scaleRatioX = scaleRatioX;
@@ -53,59 +52,9 @@ public class Ship //extends Sprite
         this.shipLength = shipLength;
     }
 
-    private void rotate()
-    {
-        matrix.reset();
-        matrix.setScale(scaleRatioX,scaleratioY);
-        matrix.postRotate(90.0f, mBound.halfWidth, mBound.halfWidth);
-        matrix.postTranslate(mBound.x,mBound.y);
-    }
-
-    public void drawShip(IGraphics2D graphics2D)
-    {
-        if(rotate)
-        {
-            rotate = false;
-            isRotated = !isRotated;
-        }
-
-        if(isRotated) {
-
-            if (!boundingBoxSetAfterRotation){
-                updateBoundingBoxAfterRotation(); }
-            rotate();
-            graphics2D.drawBitmap(bitmap, matrix, null);
-        }
-        else {
-
-            matrix.reset();
-            matrix.setScale(scaleRatioX,scaleratioY);
-            matrix.postTranslate(mBound.x,mBound.y);
-            graphics2D.drawBitmap(bitmap, matrix, null);
-
-            if(!undoBoundingBoxSetAfterRotation){
-                reverseUpdateBoundingBoxAfterRotation();}
-        }
-    }
-
-    private void updateBoundingBoxAfterRotation()
-    {
-        float temp = mBound.halfHeight;
-        mBound.halfHeight = mBound.halfWidth;
-        mBound.halfWidth = temp;
-        boundingBoxSetAfterRotation = true;
-        undoBoundingBoxSetAfterRotation = false;
-    }
-
-    private void reverseUpdateBoundingBoxAfterRotation()
-    {
-        float temp = mBound.halfHeight;
-        mBound.halfHeight = mBound.halfWidth;
-        mBound.halfWidth = temp;
-        undoBoundingBoxSetAfterRotation = true;
-        boundingBoxSetAfterRotation = false;
-    }
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Methods created by Hannah Cunningham (40203133)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     private void setTargetPosition(float startPositionX, float startPositionY)
     {
         mBound.x = targetPosition.x = startPositionX;
@@ -121,14 +70,13 @@ public class Ship //extends Sprite
         else if (bound.getTop() > mLayerViewport.getHeight())
             setTargetPosition(startPositionX, startPositionY -= (bound.getTop() - mLayerViewport.getHeight()));
     }*/
+
     //Getters
     //Sprint 4 - Implemented and improved on the Ship class' Getters (40201925)
     public String getShipType()
     {
         return shipType;
     }
-
-
 
     public Vector2 getTargetPosition() { return targetPosition;}
 
@@ -151,24 +99,13 @@ public class Ship //extends Sprite
 
     //Setters
     //Sprint 4 - Implemented and improved on the Ship class' Setters (40201925)
-    public void setShipType(String shipType)
-    {
-        this.shipType = shipType;
-    }
+    public void setShipType(String shipType) { this.shipType = shipType; }
 
     public void setTargetPosition(Vector2 targetPosition) { this.targetPosition = targetPosition;}
 
     public void setScreenCentre(Vector2 screenCentre) { this.screenCentre = screenCentre;}
 
     public void setShipLength(int shipLength) {this.shipLength = shipLength;}
-
-    public void setmBound(float x, float y, float halfWidth, float halfHeight) {
-        mBound.x = x;
-        mBound.y = y;
-        mBound.halfWidth = halfWidth;
-        mBound.halfHeight = halfHeight;
-    }
-
 
     public void setSelected(boolean selected) { this.selected = selected;}
 
@@ -178,7 +115,100 @@ public class Ship //extends Sprite
 
     public boolean isAfterDrag() { return afterDrag;}
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //Methods created by Mantas Stadnik (40203133)
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Set the bounding box of the ship
+     * @param x
+     * @param y
+     * @param halfWidth
+     * @param halfHeight
+     */
+    public void setmBound(float x, float y, float halfWidth, float halfHeight) {
+        mBound.x = x;
+        mBound.y = y;
+        mBound.halfWidth = halfWidth;
+        mBound.halfHeight = halfHeight;
+    }
 
+    /**
+     *Set the matrix to set the scale of the ship's bitmap, rotate the ship by 90 degrees
+     * on the center of the ship's bitmap and post translate to the bounding box x and y co-ordinates
+     */
+    private void rotate() {
+    matrix.reset();
+    matrix.setScale(scaleRatioX,scaleratioY);
+    matrix.postRotate(90.0f, mBound.halfWidth, mBound.halfWidth);
+    matrix.postTranslate(mBound.x,mBound.y);
+    }
 
+    /**
+     * Draw the ship method using matrix
+     * @param graphics2D
+     */
+    public void drawShip(IGraphics2D graphics2D)
+    {
+        //check if the rotate flag is true;
+        if(rotate)
+        {
+            rotate = false;
+            isRotated = !isRotated;
+        }
 
+        if(isRotated) {
+            //if the isRotated flag set to true check if the bitmap needs to be rotated
+            if (!boundingBoxSetAfterRotation){
+                //update the bounding box after rotation
+                updateBoundingBoxAfterRotation(); }
+                //perform rotation
+            rotate();
+            //draw the ship's bitmap
+            graphics2D.drawBitmap(bitmap, matrix, null);
+        }
+        else {
+
+            //if the bitmap does not need to be rotated, reset the matrix and perform scaling
+            //and translation
+            matrix.reset();
+            matrix.setScale(scaleRatioX,scaleratioY);
+            matrix.postTranslate(mBound.x,mBound.y);
+            //draw the ship's bitmap
+            graphics2D.drawBitmap(bitmap, matrix, null);
+
+            //as the ship is not rotated ensure the bounding box is set accordingly
+            if(!undoBoundingBoxSetAfterRotation){
+                reverseUpdateBoundingBoxAfterRotation();}
+        }
+    }
+
+    /**
+     * Manipulate the bounding box to suit the rotated ship's bitmap
+     */
+    private void updateBoundingBoxAfterRotation()
+    {
+        swapHalfWidthAndHeight();
+        boundingBoxSetAfterRotation = true;
+        undoBoundingBoxSetAfterRotation = false;
+    }
+
+    /**
+     * Undo the manipulation of the bounding box when it was rotated
+     */
+    private void reverseUpdateBoundingBoxAfterRotation()
+    {
+        swapHalfWidthAndHeight();
+        undoBoundingBoxSetAfterRotation = true;
+        boundingBoxSetAfterRotation = false;
+    }
+
+    /**
+     * Swap the values of halfHeight and halfWidth of the bounding box
+     */
+    public void swapHalfWidthAndHeight()
+    {
+        float temp = mBound.halfHeight;
+        mBound.halfHeight = mBound.halfWidth;
+        mBound.halfWidth = temp;
+    }
 }

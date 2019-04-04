@@ -4,16 +4,23 @@ package uk.ac.qub.eeecs.game.BattleShips;
 //fleet with their ships in whatever way they wish
 
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.*;
 import android.text.method.Touch;
 
+import java.time.Clock;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import uk.ac.qub.eeecs.gage.Game;
 import uk.ac.qub.eeecs.gage.engine.AssetManager;
 import uk.ac.qub.eeecs.gage.engine.ElapsedTime;
 import uk.ac.qub.eeecs.gage.engine.animation.AnimationSettings;
+import uk.ac.qub.eeecs.gage.engine.graphics.CanvasGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.graphics.IGraphics2D;
 import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
@@ -43,6 +50,10 @@ public class BoardSetupScreen extends GameScreen {
     float closestSlotDistanceSqrd = Float.MAX_VALUE;
     int numberOfClosestBox = 0;
     private PushButton[] pushButtonArray;      //Array to store all of the buttons
+    private Rect titleRect = new Rect();
+    private Rect eeRect = new Rect();
+    private boolean eeCheck = false;
+
 
     ////////////////////////////////////////// - BOX VARIABLES - //////////////////////////////////////////////////////////////////
 
@@ -76,8 +87,10 @@ public class BoardSetupScreen extends GameScreen {
     private boolean shipOutOfBound = false;
 
     ////////////////////////////////////////// - Animation - //////////////////////////////////////////////////////////////////
-    private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimation
+    private static ExplosionAnimation explosionAnimation ;     //Object holder for explosionAnimationp
+    private static ExplosionAnimation easterEgg;
     private static AnimationSettings animationSettings;        //Object holder for animationSettings
+    private static AnimationSettings eeAnimationSettings;
 
     ////////////////////////////////////////// - Game Variables - ///////////////////////////////////////////////////////////////
 
@@ -113,10 +126,12 @@ public class BoardSetupScreen extends GameScreen {
          * to be used for an explosion animation
          */
         animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");
+        eeAnimationSettings = new AnimationSettings(assetManager,"txt/animation/God.JSON" );
         /**
          * create explosion animation object which will allow for explosion to be drawn
          */
         explosionAnimation = new ExplosionAnimation(animationSettings,0);
+        easterEgg = new ExplosionAnimation(eeAnimationSettings, 0);
 
         //Michal Jonak (40204308) reset the game variables
         gameInProgress = false;
@@ -151,8 +166,16 @@ public class BoardSetupScreen extends GameScreen {
                 //Set the gamestate to ship select since the user is no longer pressing onto the screen
                 gameShipPlacementState = GameShipPlacementState.SHIP_SELECT;
             }
-        }
+            //if user taps with a second finger while dragging the ship, rotate the bitmap
+            if(touchEvent.type == touchEvent.TOUCH_DOWN
+                    && touchEvent.pointer != shipToDragPointerIndexOfInput
+                    && gameShipPlacementState == GameShipPlacementState.SHIP_DRAG)
+            {
+                rotateShipBy90Degrees();
+            }
 
+            easterEgg(touchEvent);
+        }
         //If game is in shipDrag state, call method shipDrag
         if(gameShipPlacementState == GameShipPlacementState.SHIP_DRAG)
             shipDrag(input);
@@ -246,7 +269,7 @@ public class BoardSetupScreen extends GameScreen {
 
         //update the animation frame
         explosionAnimation.update(elapsedTime);
-
+        easterEgg.update(elapsedTime);
 
         moveBackground += elapsedTime.stepTime * 50.0f;
         if(moveBackground> 300){
@@ -270,6 +293,12 @@ public class BoardSetupScreen extends GameScreen {
         //Collective method which draws required items, boards and static images
         drawItems(graphics2D);
         setupBoardBound();
+        if(eeCheck) {
+            drawEasterToScreen(graphics2D);
+            easterEgg.play(elapsedTime, eeRect.left, eeRect.top, eeRect.right, eeRect.bottom);
+            eeCheck = false;
+        }
+
 //todo
     /*    if(gameInProgress) {
             for (int i = 0; i < 200; i++) {
@@ -304,12 +333,10 @@ public class BoardSetupScreen extends GameScreen {
             highlightBoxGiven(numberofSmallBoxDetected,highlight,graphics2D);                           //used for testing
             message = "detected" + numberofSmallBoxDetected;                                            //used for testing
             System.out.println(numberofSmallBoxDetected);                                               //used for testing
-            if(numberofSmallBoxDetected > 99){
+            if(numberofSmallBoxDetected > 99) {
                 lastAIBoxDetected = numberofSmallBoxDetected;
                 playerToShoot = false;
             }
-          //  message = message;
-
         }
         else
         {
@@ -320,8 +347,9 @@ public class BoardSetupScreen extends GameScreen {
             drawMessageToScreen(graphics2D);
         }
 
-        //Call the explosion animation method in the object's class
+        //Call the explosion animation draw method in the object's class
         explosionAnimation.draw(graphics2D);
+        easterEgg.draw(graphics2D);
 
         //Set up and draw messages used for testing
         textPaint.setTextSize(50.0f);
@@ -382,10 +410,10 @@ public class BoardSetupScreen extends GameScreen {
 
                 //store all of the small box coordinates in a 2d array
                 if(!smallboxCoordinatesCaptured ) {
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;
-                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][0] = bigBoxLeftCoor + moveConstLeft;                       //smallBoxCoordinates[][0] = left x
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][1] = bigBoxTopCoor;                                        //smallBoxCoordinates[][1] = top y
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][2] = bigBoxLeftCoor + smallBoxWidth + moveConstLeft;       //smallBoxCoordinates[][2] = right x
+                    smallBoxCoordinates[numberOfSmallBoxesDrawn][3] = bigBoxTopCoor + smallBoxHeight;                       //smallBoxCoordinates[][3] = bottom x
 
                 }
 
@@ -479,9 +507,34 @@ public class BoardSetupScreen extends GameScreen {
         //draws background image
         graphics2D.drawBitmap(boardSetupBackground, bcgMatrix, paint);
         //draws the battlehships title at the top of the screen. titleTop returns 1% of screen, therefore multiply by whatever you desire.
+        graphics2D.drawBitmap(battleshipTitle, null, setupTitleBound(graphics2D), paint);
+    }
+
+    /**
+     * This method may seem to be unnecessary but i need it to implement an easter egg when you long press the title ;)
+     * @param graphics2D - used to obtain surface width and height
+     * @return - the rect of the title, i.e. where it will be placed
+     */
+
+    public Rect setupTitleBound(IGraphics2D graphics2D){
+        //draws the battlehships title at the top of the screen. titleTop returns 1% of screen, therefore multiply by whatever you desire.
         int titleLeft = graphics2D.getSurfaceWidth()/3, titleTop = graphics2D.getSurfaceHeight()/graphics2D.getSurfaceHeight();
-        Rect titleRect = new Rect(titleLeft, titleTop*10, titleLeft*2, titleTop*160);
-        graphics2D.drawBitmap(battleshipTitle, null, titleRect, paint);
+        titleRect = new Rect(titleLeft, titleTop*10, titleLeft*2, titleTop*160);
+
+        //setting up the easter egg bound here too for ease
+        int eeLeft = graphics2D.getSurfaceWidth()/3, eeTop = graphics2D.getSurfaceHeight()/graphics2D.getSurfaceHeight();
+        eeRect = new Rect(eeLeft, eeTop*250, eeLeft*2, eeTop*900);
+
+        return  titleRect;
+    }
+
+    public boolean easterEgg(TouchEvent touchEvent){
+        if(touchEvent.type == touchEvent.TOUCH_LONG_PRESS && titleRect != null){
+            if(boxContainsInput(titleRect.left,titleRect.right, titleRect.top, titleRect.bottom, touchEvent.x, touchEvent.y)){
+                return eeCheck = true;
+            }
+        }
+        return eeCheck;
     }
 
     /**
@@ -553,7 +606,7 @@ public class BoardSetupScreen extends GameScreen {
     private int calculateClosestBox(){
 
         /**
-         * this is basically all phil's code except with the applicable alterations I needed to suit our game
+         * this was built upon phil's code and with the applicable alterations I needed to suit our game
          */
         //closest box is between smallBoxWidth/2 coor and ship coor
         //set to this becasuse the closest distance will, basically, always be less than this. Always less in this game.
@@ -583,12 +636,11 @@ public class BoardSetupScreen extends GameScreen {
     }
 
     /**
-     * Uses the calculation of the closest box then snaps the selected ship to the appropriate box
+     * Uses the calculation of the closest box then snaps the selected ship to the appropriate box.
      */
     private void shipReset(){
         //get the closest square
         calculateClosestBox();
-        if (Math.sqrt(closestSlotDistanceSqrd) <= MAX_SNAP_TO_DISTANCE){
             //if smallboxcoors[closestbox] is greater than bound then go back some steps
             //if the closest box is any of these then move it back some boxes as before the ship would snap to these and still stick out
             if(numberOfClosestBox == 9|| numberOfClosestBox == 19|| numberOfClosestBox == 29|| numberOfClosestBox == 39|| numberOfClosestBox == 49||
@@ -615,7 +667,7 @@ public class BoardSetupScreen extends GameScreen {
                         selectedShip.mBound.y = smallBoxCoordinates[numberOfClosestBox][1];
             }
 
-        }
+
 
     }
 
@@ -703,6 +755,20 @@ public class BoardSetupScreen extends GameScreen {
                 (graphics2D.getSurfaceWidth()/2) + (battleshipTitle.getWidth()/2),
                 (graphics2D.getSurfaceHeight()/2) + (battleshipTitle.getHeight()));
         graphics2D.drawBitmap(boundsMessage, null, messageRect, messagePaint);
+    }
+
+    private void drawEasterToScreen(IGraphics2D graphics2D) {
+
+        Paint messagePaint = new Paint();
+        //https://stackoverflow.com/questions/11285961/how-to-make-a-background-20-transparent-on-android source on how to do transparency
+        //the above was referenced in order to find out how to change the opacity of an image
+        messagePaint.setAlpha(220); //this is an opacity of 80%, no need to convert to hex
+        Rect messageRect = new Rect((graphics2D.getSurfaceWidth()/2) - (battleshipTitle.getWidth()/2),
+                (graphics2D.getSurfaceHeight()/2) - (battleshipTitle.getHeight()/2),
+                (graphics2D.getSurfaceWidth()/2) + (battleshipTitle.getWidth()/2),
+                (graphics2D.getSurfaceHeight()/2) + (battleshipTitle.getHeight()));
+            graphics2D.drawBitmap(boundsMessage, null, messageRect, messagePaint);
+
     }
 
     ////////////////////////////////////////////// - Collective methods - //////////////////////////////////////////////////////////////////////////
@@ -909,11 +975,15 @@ public class BoardSetupScreen extends GameScreen {
      */
     private void rotateShipBy90Degrees()
     {
-        selectedShip.rotate = true;
+        if(selectedShip != null)
+        {
+            selectedShip.rotate = true;
+        }
     }
 
     /**
      * Searches for the number of the small box which the user has clicked on, otherwise returns -1
+     * indicating the user has not clicked on a box
      * @param array
      * @param lower
      * @param higher
@@ -961,7 +1031,8 @@ public class BoardSetupScreen extends GameScreen {
 
     /**
      * Searches for the user clicked on small box when the row has been identified, returning
-     * the number of the small box detected otherwise returning -1
+     * the number of the small box detected otherwise returning -1 indicating the user has not
+     * clicked on a box
      * @param array
      * @param numberOfSmallBox
      * @param lower
@@ -989,7 +1060,7 @@ public class BoardSetupScreen extends GameScreen {
             if (x < array[mid][0] && x < array[mid][2]){
                 return binarySearchRows(array, numberOfSmallBox, lower, mid % 10 , x, y);}
 
-                //if the user's input x value is higher than the current small box, recursive call
+            //if the user's input x value is higher than the current small box, recursive call
             //current method with the lower bound set to mid
             else if (x > array[mid][0] && x > array[mid][2]){
                 return binarySearchRows(array, numberOfSmallBox, mid % 10 +1 , higher, x, y);}

@@ -54,7 +54,10 @@ public class MainMenuCheckerTest
         AudioManager testAudioManager = mock(AudioManager.class);
         when(mGame.getAudioManager()).thenReturn(testAudioManager);
 
-        // Setting up a ScreenManager to allow for testing of the screen transitions within the PauseScreen
+        /*
+         * Setting up a ScreenManager to allow for testing of the screen transitions within
+         * the PauseScreen
+         */
         ScreenManager testScreenManager = new ScreenManager(mGame);
         when(mGame.getScreenManager()).thenReturn(testScreenManager);
 
@@ -70,29 +73,40 @@ public class MainMenuCheckerTest
         mGame.mFileIO = fileIO;
     }
 
-    // A test which initialises a MainMenuChecker and a MainMenuScreen and sees if the moveToNewGameScreen() method works correctly
+    /*
+     * A test which initialises a MainMenuChecker and a MainMenuScreen and sees if the
+     * moveToNewGameScreen() method works correctly
+     */
     @Test
     public void changeScreenToMainMenuScreen()
     {
+        // Initialising a mainMenuChecker class
         MainMenuChecker mainMenuChecker = new MainMenuChecker(mGame);
         mGame.getScreenManager().addScreen(mainMenuChecker);
 
+        // Initialising a MainMenu class
         MainMenu mainMenu = new MainMenu(mGame);
         mGame.getScreenManager().addScreen(mainMenu);
 
         mainMenuChecker.moveToNewGameScreen(mainMenu);
-        Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(), mainMenu.getName());
+        Assert.assertEquals(mGame.getScreenManager().getCurrentScreen().getName(),
+                mainMenu.getName());
     }
 
-    // A test which initialises a MainMenuChecker and the yesButtonSound and sees if the sound is played correctly
+    /*
+     * A test which initialises a MainMenuChecker and the yesButtonSound and sees if the sound is
+     * played correctly
+     */
     @Test
     public void testYesButtonSound()
     {
+        // Initialising a mainMenuChecker class
         MainMenuChecker mainMenuChecker = new MainMenuChecker(mGame);
         mGame.getScreenManager().addScreen(mainMenuChecker);
 
         // Initialising the sound file
-        Sound yesButtonSound = mGame.getAssetManager().getSound("sound/ButtonEffectSound.wav");
+        Sound yesButtonSound = mGame.getAssetManager().getSound(
+                "sound/ButtonEffectSound.wav");
 
         Assert.assertEquals(mainMenuChecker.playButtonSound(yesButtonSound), yesButtonSound);
     }

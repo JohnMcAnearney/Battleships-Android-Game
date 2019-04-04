@@ -19,10 +19,11 @@ import uk.ac.qub.eeecs.gage.engine.input.Input;
 import uk.ac.qub.eeecs.gage.engine.input.TouchEvent;
 import uk.ac.qub.eeecs.gage.world.GameScreen;
 
-/* Author : Edgars (40203154)
- * This is a loading screen class, which will appear before the game begins to simulate actual loading
- * within the game, it will display a 'Loading' bitmap and a animation which will help as a indication
- * that a loading process is happening.
+/*
+ * Author : Edgars (40203154)
+ * This is a loading screen class, which will appear before the game begins to simulate actual
+ * loading within the game, it will display a 'Loading' bitmap and a animation which will help as a
+ * indication that a loading process is happening.
  */
 public class LoadingScreen extends GameScreen
 {
@@ -37,15 +38,14 @@ public class LoadingScreen extends GameScreen
     private Music mBackgroundMusic;
 
     // Defining variables related to the loading and playing a loading animation
-    private static LoadingAnimation mLoadingAnimation;
     private static AnimationSettings mAnimationSettings;
+    private static LoadingAnimation mLoadingAnimation;
 
     // Defining random number generator
     private Random mRand;
 
-     /**
+     /*
      * CONSTRUCTOR - for the LoadingScreen class, which runs two methods which set up the screen
-     * @param game
      */
     public LoadingScreen(Game game)
     {
@@ -58,15 +58,14 @@ public class LoadingScreen extends GameScreen
         playBackgroundMusicIfNotPlaying();
     }
 
-    /**
+    /*
      * Update method for the LoadingScreen class
-     * @param elapsedTime
      */
     @Override
     public void update(ElapsedTime elapsedTime)
     {
         // Method which plays the animation
-        playAnimation(elapsedTime, 0);
+        playAnimation(elapsedTime);
 
         // Used to process any touch input within the screen
         Input input = mGame.getInput();
@@ -81,10 +80,8 @@ public class LoadingScreen extends GameScreen
         }
     }
 
-    /**
+    /*
      * Draw method for the LoadingScreen class
-     * @param elapsedTime
-     * @param graphics2D
      */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
@@ -96,8 +93,9 @@ public class LoadingScreen extends GameScreen
         mLoadingAnimation.draw(graphics2D);
     }
 
-    //----METHODS----
-
+    /*
+     * METHODS
+     */
     // Method which loads all the assets
     private void loadAssets()
     {
@@ -124,7 +122,8 @@ public class LoadingScreen extends GameScreen
         mPaint = new Paint();
 
         // Loading in the spritesheet JSON file using animation settings
-        mAnimationSettings = new AnimationSettings(assetManager, "txt/animation/LoadingAnimation.JSON");
+        mAnimationSettings = new AnimationSettings(assetManager,
+                "txt/animation/LoadingAnimation.JSON");
 
         // Creating a new animation object so that the animation can be used within the class
         mLoadingAnimation = new LoadingAnimation(mAnimationSettings, 0);
@@ -133,13 +132,11 @@ public class LoadingScreen extends GameScreen
         mRand = new Random();
     }
 
-    /**
-     * Method which will play through the animation and will also delay the animation at a semi-random
-     * time to help and to give the effect of the game loading
-     * @param elapsedTime
-     * @param stripIndex
+    /*
+     * Method which will play through the animation and will also delay the animation at a
+     * semi-random time to help and to give the effect of the game loading
      */
-    private void playAnimation(ElapsedTime elapsedTime, int stripIndex)
+    private void playAnimation(ElapsedTime elapsedTime)
     {
         // Line of code which will update the animation
         mLoadingAnimation.update(elapsedTime);
@@ -149,14 +146,16 @@ public class LoadingScreen extends GameScreen
         int onePercHeight = (mGame.getScreenHeight()/100);
 
         // Start to play the animation at a given location as the screen is loaded
-        mLoadingAnimation.playAnimation(elapsedTime, onePercWidth*81, onePercHeight*75, onePercWidth*93, onePercHeight*99);
+        mLoadingAnimation.playAnimation(elapsedTime, onePercWidth*81, onePercHeight*75,
+                onePercWidth*93, onePercHeight*99);
 
         /*
          * If statement which checks when the loading animation has reached the half way point minus
          * (Between 0 - 10) frames and executes a delay in loading and then checks if the animation
          * has stopped playing if it has, move to the game screen
          */
-        if(mLoadingAnimation.getCurrentFrame() == ((mLoadingAnimation.getEndFrame()/2)-mRand.nextInt(10)))
+        if(mLoadingAnimation.getCurrentFrame() ==
+                ((mLoadingAnimation.getEndFrame()/2) - mRand.nextInt(10)))
         {
             delayLoading();
         }
@@ -166,10 +165,7 @@ public class LoadingScreen extends GameScreen
         }
     }
 
-    /**
-     * Method which gets the screen width and height of the device screen
-     * @param graphics2D
-     */
+    //Method which gets the screen width and height of the device screen
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
         if (mScreenHeight == 0 || mScreenWidth == 0) {
@@ -185,17 +181,17 @@ public class LoadingScreen extends GameScreen
         mRect = new Rect(0,0,mScreenWidth,mScreenHeight);
     }
 
-    /**
-     * Method which takes a integer (seconds) and then sets up an appropriate time delay
-     * @param seconds
-     */
+    // Method which takes a integer (seconds) and then sets up an appropriate time delay
     private void delay(int seconds) throws InterruptedException
     {
         int sleepTime = seconds*1000;
         Thread.sleep(sleepTime);
     }
 
-    // Method which applies the delay method, this is done to allow for more control over the delay method if needed
+    /*
+     * Method which applies the delay method, this is done to allow for more control over the delay
+     * method if needed
+     */
     private void delayLoading()
     {
         try
@@ -212,21 +208,20 @@ public class LoadingScreen extends GameScreen
     }
 
     /*
-     * Method which starts the music and also checks if the music is playing - Method taken from
-     * Aileen(40207942), adjusted method slightly to suit my class
+     * Reference @ Aileen(40207942) 'SettingsScreen' class
+     * Method which starts the music and also checks if the music is playing
      */
     private void playBackgroundMusicIfNotPlaying()
     {
-        if(!mAudioManager.isMusicPlaying())
+        if(mAudioManager.getMusicEnabled() == true)
         {
-            mAudioManager.playMusic(mBackgroundMusic);
+            if (!mAudioManager.isMusicPlaying()) {
+                mAudioManager.playMusic(mBackgroundMusic);
+            }
         }
     }
 
-    /**
-     * Method which draws all the appropriate bitmaps within the screen
-     * @param graphics2D
-     */
+    // Method which draws all the appropriate bitmaps within the screen
     private void drawBitmaps(IGraphics2D graphics2D)
     {
         // Drawing the background image
@@ -234,20 +229,21 @@ public class LoadingScreen extends GameScreen
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mLoadingBackground,null, mRect,null);
 
-        // Working out variables which will hold, 1% of the device screen width and height to allow for easy usage
+        /*
+         * Working out variables which will hold, 1% of the device screen width and height to
+         * allow for easy usage
+         */
         int onePercentOfScreenHeight, onePercentOfScreenWidth;
         onePercentOfScreenHeight = graphics2D.getSurfaceHeight()/100;
         onePercentOfScreenWidth = graphics2D.getSurfaceWidth()/100;
 
         // Drawing the loading title bitmap
-        Rect titleRectangle = new Rect(onePercentOfScreenWidth*28, onePercentOfScreenHeight, onePercentOfScreenWidth*73, onePercentOfScreenHeight*35);
+        Rect titleRectangle = new Rect(onePercentOfScreenWidth*28, onePercentOfScreenHeight,
+                onePercentOfScreenWidth*73, onePercentOfScreenHeight*35);
         graphics2D.drawBitmap(mLoadingTitle, null, titleRectangle, mPaint);
     }
 
-    /**
-     * Method which allows you to move to a new game screen of your choice
-     * @param newScreen
-     */
+    // Method which allows you to move to a new game screen of your choice
     public void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);

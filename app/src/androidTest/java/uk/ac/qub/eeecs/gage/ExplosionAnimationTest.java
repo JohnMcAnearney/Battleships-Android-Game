@@ -120,7 +120,7 @@ public class ExplosionAnimationTest {
             AnimationSettings animationSettings = new AnimationSettings(assetManager,"txt/animation/ExplosionAnimation.JSON");;
             ExplosionAnimation explosionAnimation = new ExplosionAnimation(animationSettings, 0);
 
-            assertEquals(0,explosionAnimation.getLoopAnimation());
+            assertFalse(explosionAnimation.getLoopAnimation());
     }
 
     @Test

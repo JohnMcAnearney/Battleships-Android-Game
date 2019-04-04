@@ -42,11 +42,11 @@ public class MainMenuChecker extends GameScreen
     private Music mBackgroundMusic;
     private Sound mYesButtonSound;
 
-    /**
+    /*
      * CONSTRUCTOR - for the MainMenuChecker class, which runs three methods which set up the screen
-     * @param game
      */
-    public MainMenuChecker(Game game) {
+    public MainMenuChecker(Game game)
+    {
         super("MainMenuChecker", game);
 
         // Method which loads all the assets
@@ -59,9 +59,8 @@ public class MainMenuChecker extends GameScreen
         createButtons();
     }
 
-    /**
+    /*
      * Update method for the MainMenuChecker class
-     * @param elapsedTime
      */
     @Override
     public void update(ElapsedTime elapsedTime)
@@ -84,10 +83,8 @@ public class MainMenuChecker extends GameScreen
         }
     }
 
-    /**
+    /*
      * Draw method for the MainMenuChecker class
-     * @param elapsedTime
-     * @param graphics2D
      */
     @Override
     public void draw(ElapsedTime elapsedTime, IGraphics2D graphics2D)
@@ -99,8 +96,9 @@ public class MainMenuChecker extends GameScreen
         drawButtons(elapsedTime, graphics2D);
     }
 
-    //----METHODS----
-
+    /*
+     * METHODS
+     */
     // Method which loads all the assets
     private void loadAssets()
     {
@@ -108,7 +106,8 @@ public class MainMenuChecker extends GameScreen
         AssetManager assetManager = mGame.getAssetManager();
 
         // Loading in the JSON file
-        mGame.getAssetManager().loadAssets("txt/assets/MainMenuCheckerAssets.JSON");
+        mGame.getAssetManager().loadAssets(
+                "txt/assets/MainMenuCheckerAssets.JSON");
 
         // Initialising the Loading Background with an appropriate bitmap
         mMainMenuCheckerBackground = assetManager.getBitmap("BattleshipBackground");
@@ -138,21 +137,21 @@ public class MainMenuChecker extends GameScreen
         float viewportHeight = mDefaultLayerViewport.getHeight();
 
         // Yes Button
-        mYesButton = new PushButton(viewportWidth / 2,viewportHeight  / 2, viewportWidth / 4.2f, viewportHeight / 9,
+        mYesButton = new PushButton(viewportWidth / 2,viewportHeight  / 2,
+                viewportWidth / 4.2f, viewportHeight / 9,
                 "YesButton", "YesButtonP", this);
         mButtonCollection.add(mYesButton);
 
         // No Button
-        mNoButton = new PushButton(viewportWidth / 2, viewportHeight / 3f, viewportWidth / 4.2f, viewportHeight / 9,
+        mNoButton = new PushButton(viewportWidth / 2, viewportHeight / 3f,
+                viewportWidth / 4.2f, viewportHeight / 9,
                 "NoButton", "NoButtonP", this);
         mButtonCollection.add(mNoButton);
     }
 
-    /**
+    /*
      * Method which draws all the push buttons using a for loop to cycle through all of the buttons
      * in the collection and applying the draw() method
-     * @param elapsedTime
-     * @param graphics2D
      */
     private void drawButtons(ElapsedTime elapsedTime, IGraphics2D graphics2D)
     {
@@ -162,10 +161,9 @@ public class MainMenuChecker extends GameScreen
         }
     }
 
-    /**
+    /*
      * Method which carries out all the push button updates, this is done by running through a for
      * loop and calling the update() method on each button
-     * @param elapsedTime
      */
     private void updateAllPushButtons(ElapsedTime elapsedTime)
     {
@@ -195,10 +193,7 @@ public class MainMenuChecker extends GameScreen
         }
     }
 
-    /**
-     * Method which gets the screen width and height of the device screen
-     * @param graphics2D
-     */
+    // Method which gets the screen width and height of the device screen
     private void getWidthAndHeightOfScreen(IGraphics2D graphics2D)
     {
         if (mScreenHeight == 0 || mScreenWidth == 0) {
@@ -226,10 +221,7 @@ public class MainMenuChecker extends GameScreen
         }
     }
 
-    /**
-     * Method which draws all the appropriate bitmaps within the screen
-     * @param graphics2D
-     */
+    // Method which draws all the appropriate bitmaps within the screen
     private void drawBitmaps(IGraphics2D graphics2D)
     {
         // Drawing the background image
@@ -237,20 +229,21 @@ public class MainMenuChecker extends GameScreen
         graphics2D.clear(Color.WHITE);
         graphics2D.drawBitmap(mMainMenuCheckerBackground,null, mRect,null);
 
-        // Working out variables which will hold, 1% of the device screen width and height to allow for easy usage
+        /*
+         * Working out variables which will hold, 1% of the device screen width and height to
+         * allow for easy usage
+         */
         int onePercentOfScreenHeight, onePercentOfScreenWidth;
         onePercentOfScreenHeight = graphics2D.getSurfaceHeight()/100;
         onePercentOfScreenWidth = graphics2D.getSurfaceWidth()/100;
 
         // Drawing the loading title bitmap
-        Rect titleRectangle = new Rect(onePercentOfScreenWidth, onePercentOfScreenHeight, onePercentOfScreenWidth*100, onePercentOfScreenHeight*35);
+        Rect titleRectangle = new Rect(onePercentOfScreenWidth, onePercentOfScreenHeight,
+                onePercentOfScreenWidth*100, onePercentOfScreenHeight*35);
         graphics2D.drawBitmap(mMainMenuCheckerTitle, null, titleRectangle, mPaint);
     }
 
-    /**
-     * Method which allows you to move to a new game screen of your choice
-     * @param newScreen
-     */
+    // Method which allows you to move to a new game screen of your choice
     public void moveToNewGameScreen(GameScreen newScreen)
     {
         mGame.getScreenManager().addScreen(newScreen);
@@ -262,10 +255,7 @@ public class MainMenuChecker extends GameScreen
         mGame.getScreenManager().removeScreen(this);
     }
 
-    /**
-     * Method which takes in a sound file and then plays the button sound
-     * @param sound
-     */
+    // Method which takes in a sound file and then plays the button sound
     public Sound playButtonSound(Sound sound)
     {
         if (mAudioManager.getEffectsEnabled())

@@ -1,5 +1,5 @@
 # Battleships-Android-Game
-This was an android game my self and other created during our 2nd year in University.
+This was an android game my self and 3 others created for one of our 2nd year modules in University. This project lasted about 10 weeks alongside our other modules.
 
 To run you must have android studio and an emulator or else an android device you can connect via usb. Run the application and play!
 
